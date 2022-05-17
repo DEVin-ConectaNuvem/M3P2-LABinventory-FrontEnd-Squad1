@@ -73,7 +73,7 @@ aside {
   overflow-y: auto;
   z-index: 1;
   width: 200px;
-  background-color: #373B44;
+  background-color: var(--color-dark);
   transition: 0.2s ease-out;
 
 
@@ -132,15 +132,15 @@ aside {
 
 a {
   text-decoration: none;
-  color: rgb(190, 221, 229)
+  color: var(--color-primary-light);
 }
 
 a:hover,
 .router-link-exact-active {
   text-decoration: none;
-  background: #373B44;
-  background: -webkit-linear-gradient(to right, #4286f4, #373B44);
-  background: linear-gradient(to right, #4286f4, #373B44);
+  background: var(--color-secondary);
+  background: -webkit-linear-gradient(to right, var(--color-secondary), #373B44);
+  background: linear-gradient(to right, var(--color-secondary), #373B44);
   color: #fff;
   border-right: 2px solid #4286f4;
 

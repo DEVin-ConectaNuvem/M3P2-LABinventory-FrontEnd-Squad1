@@ -18,8 +18,13 @@ import HeaderMain from './components/shared/HeaderMain.vue';
 </template>
 
 <style>
+@import url('./assets/css/base.css');
+
 .leftSide {
     float:left;
+    
 }
+
+
 
 </style>

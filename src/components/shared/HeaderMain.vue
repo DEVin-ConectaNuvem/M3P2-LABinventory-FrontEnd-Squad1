@@ -34,13 +34,13 @@
 header {
     width: 100%;
     height: 60px;
-    background-color: #373B44
+    background-color: var(--color-dark);
 }
 
 i {
-    background: #373B44;
-    background: -webkit-linear-gradient(to right, #4286f4, #373B44);
-    background: linear-gradient(to right, #4286f4, #373B44);
+    background: var(--color-dark);
+    background: -webkit-linear-gradient(to right, var(--color-primary), var(--color-dark));
+    background: linear-gradient(to right, var(--color-primary), var(--color-dark));
     -webkit-background-clip: text;
     -moz-background-clip: text;
     background-clip: text;
