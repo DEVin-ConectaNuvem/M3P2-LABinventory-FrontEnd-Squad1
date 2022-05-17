@@ -1,15 +1,13 @@
 <template>
   <div class="about">
-    
+      <h1>ABOUTVIEW</h1>
   </div>
 </template>
 
 <style>
-@media (min-width: 1024px) {
   .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
+    padding: 20px;
+    text-align: center;
+    color: black;
   }
-}
 </style>
