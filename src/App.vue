@@ -6,22 +6,18 @@ import HeaderMain from './components/shared/HeaderMain.vue';
 
 <template>
   <div>
-
       <SidebarMain class="leftSide"></SidebarMain>
       <HeaderMain></HeaderMain>
 
     <main>
       <RouterView/>
     </main>
-
-
   </div>
 
 
 </template>
 
 <style>
-
 .leftSide {
     float:left;
 }
