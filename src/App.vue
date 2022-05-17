@@ -1,24 +1,29 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-
+import { RouterView } from 'vue-router'
+import SidebarMain from './components/shared/SidebarMain.vue';
+import HeaderMain from './components/shared/HeaderMain.vue';
 </script>
 
 <template>
   <div>
-   
 
-    <div class="">
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
+      <SidebarMain class="leftSide"></SidebarMain>
+      <HeaderMain></HeaderMain>
+
+    <main>
+      <RouterView/>
+    </main>
+
 
   </div>
 
-  <RouterView />
+
 </template>
 
 <style>
+
+.leftSide {
+    float:left;
+}
 
 </style>
