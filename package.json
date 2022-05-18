@@ -7,9 +7,11 @@
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
-    "firebase": "^9.8.1",
+    "vee-validate": "^4.5.11",
     "vue": "^3.2.33",
+    "vue-gravatar": "^1.4.1",
     "vue-router": "^4.0.14",
+    "vue-toast-notification": "^3.0.2",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

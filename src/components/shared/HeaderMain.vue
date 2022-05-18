@@ -33,7 +33,7 @@
 <style lang="scss" scoped>
 header {
     width: 100%;
-    height: 60px;
+    height: 4rem;
     background-color: var(--color-dark);
 }
 

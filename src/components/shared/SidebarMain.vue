@@ -1,6 +1,4 @@
 <template>
-
-
   <aside :class="isVisible ? 'isVisible' : ''">
     <div class="d-flex flex-column flex-shrink-0 p-3 text-white">
       <div class="brand">
@@ -19,7 +17,7 @@
         <hr>
         <span> Colaboradores</span>
         <li>
-          <RouterLink to="/about" class="nav-link">
+          <RouterLink to="/login" class="nav-link">
             <i class="fa-solid fa-user-tie"></i>
             <span> Cadastrar</span>
           </RouterLink>
@@ -34,7 +32,6 @@
           <RouterLink to="/produtos/cadastro" class="nav-link">
             <i class="fa-solid fa-circle-plus"></i>
             <span> Cadastrar</span>
-
           </RouterLink>
           <RouterLink to="/produtos/emprestimo" class="nav-link">
             <i class="fa-solid fa-address-book"></i>
@@ -69,13 +66,12 @@ aside {
   top: 0;
   left: 0;
   height: 100vh;
-  color: #fff;
+  color: var(--color-white);
   overflow-y: auto;
   z-index: 1;
   width: 200px;
   background-color: var(--color-dark);
   transition: 0.2s ease-out;
-
 
   .brand {
     margin: 0 auto;
@@ -85,7 +81,6 @@ aside {
   i {
     font-size: 1.5rem;
   }
-
   .toggleIcon {
     text-align: end;
 
@@ -93,8 +88,6 @@ aside {
       cursor: pointer;
     }
   }
-
-
 }
 
 .isVisible {
@@ -121,7 +114,7 @@ aside {
   }
 
   img {
-    width: 3rem;
+    width: 2rem;
   }
 
 }
@@ -141,8 +134,7 @@ a:hover,
   background: var(--color-secondary);
   background: -webkit-linear-gradient(to right, var(--color-secondary), #373B44);
   background: linear-gradient(to right, var(--color-secondary), #373B44);
-  color: #fff;
-  border-right: 2px solid #4286f4;
-
+  color: var(--color-white);
+  border-right: 2px solid var(--color-primary);
 }
 </style>
