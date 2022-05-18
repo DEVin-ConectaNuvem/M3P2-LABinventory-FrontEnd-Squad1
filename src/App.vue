@@ -19,6 +19,9 @@ import HeaderMain from './components/shared/HeaderMain.vue';
 
 <style>
 @import url('./assets/css/base.css');
+a{
+  cursor: pointer;
+}
 
 .leftSide {
     float:left;

@@ -125,7 +125,7 @@ aside {
 
 a {
   text-decoration: none;
-  color: var(--color-primary-light);
+  color: var(--color-grey);
 }
 
 a:hover,
