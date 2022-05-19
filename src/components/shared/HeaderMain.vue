@@ -8,8 +8,11 @@
             <div class="dropdown text-end ">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                     id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="../../assets/icons/account-avatar-profile-user-13-svgrepo-com.svg" width="32" height="32"
-                        class="rounded-circle me-2">
+                    <div class="avatar">
+                    <vue-gravatar class="avatar" email="edumartinsrib@live.com" size="40" />
+                    </div>
+                    <!-- <img src="../../assets/icons/account-avatar-profile-user-13-svgrepo-com.svg" width="32" height="32"
+                        class="rounded-circle me-2"> -->
                     <strong>Usuário</strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
@@ -35,6 +38,11 @@ header {
     width: 100%;
     height: 4rem;
     background-color: var(--color-dark);
+}
+
+.avatar{
+    border-radius: 10px;
+    margin-right: 0.2rem;
 }
 
 i {

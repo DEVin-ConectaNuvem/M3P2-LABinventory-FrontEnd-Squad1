@@ -7,11 +7,12 @@
     "preview": "vite preview --port 5050"
   },
   "dependencies": {
+    "@vee-validate/rules": "^4.5.11",
     "vee-validate": "^4.5.11",
     "vue": "^3.2.33",
-    "vue-gravatar": "^1.4.1",
     "vue-router": "^4.0.14",
     "vue-toast-notification": "^3.0.2",
+    "vue3-gravatar": "^3.0.0",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

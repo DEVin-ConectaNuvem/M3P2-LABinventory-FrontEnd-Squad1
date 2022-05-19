@@ -2,15 +2,18 @@
 import { RouterView } from 'vue-router'
 import SidebarMain from './components/shared/SidebarMain.vue';
 import HeaderMain from './components/shared/HeaderMain.vue';
+
+
+
 </script>
 
 <template>
   <div>
-      <SidebarMain class="leftSide"></SidebarMain>
-      <HeaderMain></HeaderMain>
+    <SidebarMain class="leftSide"></SidebarMain>
+    <HeaderMain></HeaderMain>
 
     <main>
-      <RouterView/>
+      <RouterView />
     </main>
   </div>
 
@@ -19,15 +22,13 @@ import HeaderMain from './components/shared/HeaderMain.vue';
 
 <style>
 @import url('./assets/css/base.css');
-a{
+
+a {
   cursor: pointer;
 }
 
 .leftSide {
-    float:left;
-    
+  float: left;
+
 }
-
-
-
 </style>
