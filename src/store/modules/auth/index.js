@@ -29,20 +29,6 @@ export default {
     },
   },
   actions: {
-    logIn({ commit }, payload) {
-      commit("SET_LOGIN_IN", payload);
-    },
-    logOut({ commit }) {
-      commit("SET_LOGIN_OUT");
-    },
-    setUsers({ commit }, payload) {
-      commit("SET_USERS", payload);
-    },
-    getUsers({ commit }) {
-      const users = localStorage.getItem("users");
-      if (users) {
-        commit("SET_USERS", JSON.parse(users));
-      }
-    },
+   
   },
 };

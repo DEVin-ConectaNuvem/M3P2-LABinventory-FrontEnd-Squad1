@@ -13,7 +13,7 @@
                     <h4 class="mt-1 mb-5 pb-1">Nós somos o DEVInventary</h4>
                   </div>
 
-                  <form>
+                  <form @submit.prevent="register.register ? registerUser() : loginUser()">
                     <p v-text="register.textMain"></p>
 
 
@@ -21,16 +21,17 @@
                       <div class="input-group-prepend">
                         <span class="input-group-text">@</span>
                       </div>
-                      <input type="text" class="form-control" name="email" placeholder="Digite o e-mail" aria-label="Email"
-                        v-model="login.email">
+                      <input type="text" class="form-control" name="email" placeholder="Digite o e-mail"
+                        aria-label="Email" v-model="login.email">
                     </div>
-                   
+
 
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text">&#128273</span>
                       </div>
-                      <input type="password" class="form-control" placeholder="Digite sua senha" aria-label="senha" v-model="login.password">
+                      <input type="password" class="form-control" placeholder="Digite sua senha" aria-label="senha"
+                        v-model="login.password">
                     </div>
 
                     <transition>
@@ -44,8 +45,9 @@
                     </transition>
 
                     <div class="text-center ">
-                      <button :class="register.register ? 'btn btnRegister mb-3' : 'btn btnLogin mb-3'" type="button"
-                        v-text="register.button" ></button>
+                      <button :class="register.register ? 'btn btnRegister mb-3' : 'btn btnLogin mb-3'" type="submit"
+                        v-text="register.button" >
+                      </button>
                       <!--  <a class="text-muted ms-2" href="#!">Esqueceu a senha?</a> -->
                     </div>
 
@@ -68,9 +70,14 @@
 </template>
 
 <script setup>
+import { uid } from 'uid';
 import { ref } from 'vue';
+import { useToast } from "vue-toastification";
+
+const toast = useToast();
 
 const login = ref({
+  id: '',
   email: '',
   password: '',
   password2: ''
@@ -92,6 +99,45 @@ function toggleRegister() {
   register.value.button = register.value.register ? 'Cadastrar' : 'Acessar';
   register.value.haveAccount = register.value.register ? 'Já possui conta?' : 'Não possui conta?';
   register.value.createAccount = register.value.register ? 'Entrar' : 'Criar conta';
+}
+
+// chama a função de registro do usuário
+function registerUser() {
+  if (returnUser(login.value.email)) {
+    
+    toast.error('O e-mail informado já possui cadastro!')
+    return;
+  }
+  if (login.value.password === login.value.password2) {
+    login.value.id = uid();
+    let users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
+    users.push(login.value);
+    localStorage.setItem('users', JSON.stringify(users));
+    console.log(users)
+
+  } else {
+    toast.error('As senha não conferem!')
+  }
+}
+
+function loginUser() {
+  let users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
+  let user = users.find(user => user.email === login.value.email && user.password === login.value.password);
+  if (user) {
+    localStorage.setItem('token', JSON.stringify(user.id));
+    toast.success('Usuário logado com sucesso!')
+  } else {
+    toast.error('Usuário ou senha incorretos!')
+  }
+}
+
+function returnUser(email) {
+  let users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
+  let user = users.find(user => user.email === email );
+  if (user) {
+    return true;
+  }
+  return false
 }
 
 </script>
