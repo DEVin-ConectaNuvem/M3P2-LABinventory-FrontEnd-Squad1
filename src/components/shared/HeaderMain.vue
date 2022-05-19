@@ -9,15 +9,15 @@
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                     id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="avatar">
-                    <vue-gravatar class="avatar" email="edumartinsrib@live.com" size="40" />
+                    <vue-gravatar class="avatar" :email="logged.email" size="40" />
                     </div>
                     <!-- <img src="../../assets/icons/account-avatar-profile-user-13-svgrepo-com.svg" width="32" height="32"
                         class="rounded-circle me-2"> -->
-                    <strong>Usuário</strong>
+                    <strong v-text="logged.email"></strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                    <li><a class="dropdown-item" href="#">Configurações</a></li>
-                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                   <!--  <li><a class="dropdown-item" href="#">Configurações</a></li>
+                    <li><a class="dropdown-item" href="#">Perfil</a></li> -->
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -32,9 +32,16 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex';
+import { ref, computed} from 'vue';
 
 const store = useStore()
 const router = useRouter()
+
+const logged = computed(() => {
+    return store.state.authModule.userLogged
+})
+
+
 
 function logOut() {
     store.dispatch('authModule/logOut')
