@@ -71,16 +71,24 @@
 
 <script setup>
 import { uid } from 'uid';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex'
 import { useToast } from "vue-toastification";
+import { useRouter } from 'vue-router';
 
 const toast = useToast();
+const store = useStore();
+const router = useRouter();
+
+/* const statusLogin = computed(() => {
+  return store.state.authModule.isLogged
+}) */
 
 const login = ref({
   id: '',
   email: '',
   password: '',
-  password2: ''
+  password2: '',
 });
 
 // objeto que será usado para manipular o estado de login e registro
@@ -104,33 +112,37 @@ function toggleRegister() {
 // chama a função de registro do usuário
 function registerUser() {
   if (returnUser(login.value.email)) {
-    
     toast.error('O e-mail informado já possui cadastro!')
     return;
   }
   if (login.value.password === login.value.password2) {
     login.value.id = uid();
-    let users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
-    users.push(login.value);
-    localStorage.setItem('users', JSON.stringify(users));
-    console.log(users)
+    const tryRegister = store.dispatch('authModule/RegisterUser', login.value);
 
+    if(tryRegister){
+      toast.success('Cadastro realizado com sucesso!')
+      toggleRegister();
+    } else {
+      toast.error('Erro ao realizar o cadastro!')
+    }
+    
   } else {
     toast.error('As senha não conferem!')
   }
 }
 
-function loginUser() {
-  let users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
-  let user = users.find(user => user.email === login.value.email && user.password === login.value.password);
-  if (user) {
-    localStorage.setItem('token', JSON.stringify(user.id));
-    toast.success('Usuário logado com sucesso!')
-  } else {
-    toast.error('Usuário ou senha incorretos!')
-  }
+// chama a função de login do usuário
+async function loginUser() {
+    const logar = await store.dispatch('authModule/logIn', login.value)
+    if (logar) {
+      toast.success('Login realizado com sucesso!')
+      router.push({name: 'home'})
+    } else {
+      toast.error('Usuário ou senha inválidos!')
+    }
 }
 
+// função para verificar se o usuário já está cadastrado
 function returnUser(email) {
   let users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
   let user = users.find(user => user.email === email );

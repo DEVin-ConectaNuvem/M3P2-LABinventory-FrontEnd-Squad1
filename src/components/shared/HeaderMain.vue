@@ -21,7 +21,7 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">Deslogar</a></li>
+                    <li><a class="dropdown-item" @click="logOut()">Deslogar</a></li>
                 </ul>
             </div>
         </div>
@@ -30,6 +30,18 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex';
+
+const store = useStore()
+const router = useRouter()
+
+function logOut() {
+    store.dispatch('authModule/logOut')
+    router.push({name: 'login'})
+}
+
+
 
 </script>
 

@@ -8,10 +8,13 @@
   },
   "dependencies": {
     "@vee-validate/rules": "^4.5.11",
+    "uid": "^2.0.0",
     "vee-validate": "^4.5.11",
     "vue": "^3.2.33",
+    "vue-loading-overlay": "5.0",
     "vue-router": "^4.0.14",
-    "vue-toast-notification": "^3.0.2",
+    "vue-toast-notification": "3.0",
+    "vue-toastification": "^2.0.0-rc.5",
     "vue3-gravatar": "^3.0.0",
     "vuex": "^4.0.2"
   },
