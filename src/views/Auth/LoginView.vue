@@ -13,7 +13,8 @@
                     <h4 class="mt-1 mb-5 pb-1">Nós somos o DEVInventary</h4>
                   </div>
 
-                  <form @submit.prevent="register.register ? registerUser() : loginUser()">
+                  <VeeForm @submit="register.register ? registerUser() : loginUser()" :validation-schema="schema"
+                    v-slot="{ errors }">
                     <p v-text="register.textMain"></p>
 
 
@@ -21,8 +22,9 @@
                       <div class="input-group-prepend">
                         <span class="input-group-text">@</span>
                       </div>
-                      <input type="text" class="form-control" name="email" placeholder="Digite o e-mail"
-                        aria-label="Email" v-model="form.email" required>
+                      <Veefield type="text" class="form-control" name="email" placeholder="Digite o e-mail"
+                        aria-label="Email" v-model="form.email" required :class="{ 'is-invalid': errors.email }" />
+                      <div class="invalid-feedback">{{ errors.email }}</div>
                     </div>
 
 
@@ -30,8 +32,9 @@
                       <div class="input-group-prepend">
                         <span class="input-group-text">&#128273</span>
                       </div>
-                      <input type="password" class="form-control" placeholder="Digite sua senha" aria-label="senha"
-                        v-model="form.password" required>
+                      <Veefield type="password" class="form-control" placeholder="Digite sua senha" aria-label="senha"
+                        v-model="form.password" required name="password" :class="{ 'is-invalid': errors.password }" />
+                      <div class="invalid-feedback">{{ errors.password }}</div>
                     </div>
 
                     <transition>
@@ -39,8 +42,10 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text">&#128273</span>
                         </div>
-                        <input type="password" class="form-control" placeholder="Digite novamente a sua senha"
-                          aria-label="senha" v-model="form.password2" >
+                        <Veefield type="password" class="form-control" placeholder="Digite novamente a sua senha"
+                          aria-label="senha" v-model="form.password2" name="confirmPassword"
+                          :class="{ 'is-invalid': errors.confirmPassword }" />
+                        <div class="invalid-feedback">{{ errors.confirmPassword }}</div>
                       </div>
                     </transition>
 
@@ -55,7 +60,7 @@
                       <p class="mb-0 me-2" v-text="register.haveAccount"></p>
                       <a class="" @click.stop="toggleRegister" v-text="register.createAccount"></a>
                     </div>
-                  </form>
+                  </VeeForm>
                 </div>
               </div>
               <div class="col-lg-6 d-flex align-items-center">
@@ -71,28 +76,22 @@
 
 <script setup>
 import { uid } from 'uid';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useStore } from 'vuex'
 import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
-import {useLoading} from 'vue-loading-overlay'
-/* import * as yup from "yup";
-import { useForm, useFieldValue } from "vee-validate";
+import { useLoading } from 'vue-loading-overlay'
+import { Form as VeeForm, Field as Veefield } from 'vee-validate';
+import * as Yup from 'yup';
 
-const schema = yup.object({
-  email: yup.required().email(),
-  password: yup.required().min(8),
-  password2: yup.required().min(8).oneOf([yup.ref('password')], 'As senhas não são iguais'),
-
+let schema = Yup.object().shape({
+  email: Yup.string()
+    .required('O email é obrigatório')
+    .email('Email inválido'),
+  password: Yup.string()
+    .min(8, 'A senha deve conter no mínimo 8 caracteres')
+    .required('A senha é obrigatória')
 });
-
-const { setFieldValue, handleSubmit } = useForm({
-   validationSchema: schema,
-   initialValues: {
-      address: { addressType: "personal" },
-   },
-});
- */
 
 const loading = useLoading()
 const toast = useToast();
@@ -116,6 +115,32 @@ const register = ref({
   createAccount: 'Criar conta',
 });
 
+watch(register.value, (newValue) => {
+  if (newValue.register === true) {
+    schema = Yup.object().shape({
+      email: Yup.string()
+        .required('O email é obrigatório')
+        .email('Email inválido'),
+      password: Yup.string()
+        .min(8, 'A senha deve conter no mínimo 8 caracteres')
+        .required('A senha é obrigatória'),
+      confirmPassword: Yup.string()
+        .min(8, 'A senha deve conter no mínimo 8 caracteres')
+        .required('A senha é obrigatória')
+        .oneOf([Yup.ref('password')], 'As senhas não conferem'),
+    });
+  } else {
+    schema = Yup.object().shape({
+      email: Yup.string()
+        .required('O email é obrigatório')
+        .email('Email inválido'),
+      password: Yup.string()
+        .min(8, 'A senha deve conter no mínimo 8 caracteres')
+        .required('A senha é obrigatória')
+    });
+  }
+});
+
 // Função para alternar entre o formulário de login e o formulário de registro
 function toggleRegister() {
   register.value.register = !register.value.register;
@@ -136,13 +161,6 @@ function registerUser() {
     return;
   }
 
-  if (form.value.password !== form.value.password2) {
-    toast.error('As senhas não conferem!', {
-      timeout: 1500,
-    });
-    return;
-  }
-
   store.dispatch('authModule/updateUsers');
 
   store.dispatch('authModule/registerUser', {
@@ -158,7 +176,7 @@ function registerUser() {
     toggleRegister();
     clearForm();
   }).catch(() => {
-    toast.error('Erro ao realizar cadastro!',{
+    toast.error('Erro ao realizar cadastro!', {
       timeout: 1500,
     });;
   });

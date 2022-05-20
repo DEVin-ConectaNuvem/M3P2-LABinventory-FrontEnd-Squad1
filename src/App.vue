@@ -7,7 +7,7 @@ import { computed } from 'vue'
 
 const store = useStore();
 
-// define estado inicial de login via token
+// define estado inicial de login via tokenconfirmPassword
 store.dispatch('authModule/updateToken');
 
 
