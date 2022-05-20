@@ -8,17 +8,20 @@
             <div class="dropdown text-end ">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                     id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="../../assets/icons/account-avatar-profile-user-13-svgrepo-com.svg" width="32" height="32"
-                        class="rounded-circle me-2">
-                    <strong>Usuário</strong>
+                    <div class="avatar">
+                    <vue-gravatar class="avatar" :email="logged.email" size="40" />
+                    </div>
+                    <!-- <img src="../../assets/icons/account-avatar-profile-user-13-svgrepo-com.svg" width="32" height="32"
+                        class="rounded-circle me-2"> -->
+                    <strong v-text="logged.username"></strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                    <li><a class="dropdown-item" href="#">Configurações</a></li>
-                    <li><a class="dropdown-item" href="#">Perfil</a></li>
+                   <!--  <li><a class="dropdown-item" href="#">Configurações</a></li>
+                    <li><a class="dropdown-item" href="#">Perfil</a></li> -->
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">Deslogar</a></li>
+                    <li><a class="dropdown-item" @click="logOut()">Deslogar</a></li>
                 </ul>
             </div>
         </div>
@@ -27,14 +30,38 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
+import { useStore } from 'vuex';
+import { ref, computed} from 'vue';
+
+const store = useStore()
+const router = useRouter()
+
+const logged = computed(() => {
+    return store.state.authModule.userLogged
+})
+
+
+
+function logOut() {
+    store.dispatch('authModule/logOut')
+    router.push({name: 'login'})
+}
+
+
 
 </script>
 
 <style lang="scss" scoped>
 header {
     width: 100%;
-    height: 60px;
+    height: 4rem;
     background-color: var(--color-dark);
+}
+
+.avatar{
+    border-radius: 10px;
+    margin-right: 0.2rem;
 }
 
 i {

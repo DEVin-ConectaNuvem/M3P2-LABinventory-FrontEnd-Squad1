@@ -6,14 +6,41 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/HomeView.vue')
+      component: () => import('../views/HomeView.vue'),
+      beforeEnter: (to) => {
+        const auth = localStorage.getItem('token');
+        if (auth) {
+            return true
+        }
+        return to = '/login';
+    }
     },
     {
-      path: '/about',
-      name: 'about',
-      component: () => import('../views/AboutView.vue')
-    }
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/Auth/LoginView.vue'),
+      beforeEnter: (to) => {
+        const auth = localStorage.getItem('token');
+        if (auth) {
+            return to = "/"
+        }
+        return true;
+    } 
+      
+    },
   ]
 })
+
+/* router.beforeEach(async (to, from) => {
+  if (
+    !statusLogin &&
+    to.name !== 'login'
+  ) {
+
+    return { name: 'Login' }
+  }
+})
+ */
+
 
 export default router
