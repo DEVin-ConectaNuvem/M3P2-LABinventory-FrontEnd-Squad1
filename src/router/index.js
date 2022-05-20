@@ -1,11 +1,4 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { useStore } from 'vuex'
-
-const store = useStore();
-
-const statusLogin = () => {
-  return store.state.authModule.isLogged
-}
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),

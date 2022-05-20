@@ -22,7 +22,7 @@
                         <span class="input-group-text">@</span>
                       </div>
                       <input type="text" class="form-control" name="email" placeholder="Digite o e-mail"
-                        aria-label="Email" v-model="login.email">
+                        aria-label="Email" v-model="form.email" required>
                     </div>
 
 
@@ -31,7 +31,7 @@
                         <span class="input-group-text">&#128273</span>
                       </div>
                       <input type="password" class="form-control" placeholder="Digite sua senha" aria-label="senha"
-                        v-model="login.password">
+                        v-model="form.password" required>
                     </div>
 
                     <transition>
@@ -40,13 +40,13 @@
                           <span class="input-group-text">&#128273</span>
                         </div>
                         <input type="password" class="form-control" placeholder="Digite novamente a sua senha"
-                          aria-label="senha" v-model="login.password2">
+                          aria-label="senha" v-model="form.password2" >
                       </div>
                     </transition>
 
                     <div class="text-center ">
                       <button :class="register.register ? 'btn btnRegister mb-3' : 'btn btnLogin mb-3'" type="submit"
-                        v-text="register.button" >
+                        v-text="register.button">
                       </button>
                       <!--  <a class="text-muted ms-2" href="#!">Esqueceu a senha?</a> -->
                     </div>
@@ -71,20 +71,36 @@
 
 <script setup>
 import { uid } from 'uid';
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { useStore } from 'vuex'
 import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
+import {useLoading} from 'vue-loading-overlay'
+/* import * as yup from "yup";
+import { useForm, useFieldValue } from "vee-validate";
 
+const schema = yup.object({
+  email: yup.required().email(),
+  password: yup.required().min(8),
+  password2: yup.required().min(8).oneOf([yup.ref('password')], 'As senhas não são iguais'),
+
+});
+
+const { setFieldValue, handleSubmit } = useForm({
+   validationSchema: schema,
+   initialValues: {
+      address: { addressType: "personal" },
+   },
+});
+ */
+
+const loading = useLoading()
 const toast = useToast();
 const store = useStore();
 const router = useRouter();
 
-/* const statusLogin = computed(() => {
-  return store.state.authModule.isLogged
-}) */
-
-const login = ref({
+// Objeto para dados do formulário de Login/Registro
+const form = ref({
   id: '',
   email: '',
   password: '',
@@ -111,47 +127,62 @@ function toggleRegister() {
 
 // chama a função de registro do usuário
 function registerUser() {
-  if (returnUser(login.value.email)) {
-    toast.error('O e-mail informado já possui cadastro!')
+  let checkEmail = store.state.authModule.users.find(user => user.email === form.value.email);
+
+  if (checkEmail) {
+    toast.error('O e-mail informado já possui cadastro!', {
+      timeout: 1500,
+    });
     return;
   }
-  if (login.value.password === login.value.password2) {
-    login.value.id = uid();
-    const tryRegister = store.dispatch('authModule/RegisterUser', login.value);
 
-    if(tryRegister){
-      toast.success('Cadastro realizado com sucesso!')
-      toggleRegister();
-    } else {
-      toast.error('Erro ao realizar o cadastro!')
-    }
-    
-  } else {
-    toast.error('As senha não conferem!')
+  if (form.value.password !== form.value.password2) {
+    toast.error('As senhas não conferem!', {
+      timeout: 1500,
+    });
+    return;
   }
+
+  store.dispatch('authModule/updateUsers');
+
+  store.dispatch('authModule/registerUser', {
+    id: uid(),
+    email: form.value.email,
+    username: form.value.email.split('@')[0],
+    password: form.value.password,
+    password2: form.value.password2,
+  }).then(() => {
+    toast.success('Cadastro realizado com sucesso!', {
+      timeout: 1500,
+    });
+    toggleRegister();
+    clearForm();
+  }).catch(() => {
+    toast.error('Erro ao realizar cadastro!',{
+      timeout: 1500,
+    });;
+  });
 }
 
 // chama a função de login do usuário
 async function loginUser() {
-    const logar = await store.dispatch('authModule/logIn', login.value)
-    if (logar) {
-      toast.success('Login realizado com sucesso!')
-      router.push({name: 'home'})
-    } else {
-      toast.error('Usuário ou senha inválidos!')
-    }
-}
-
-// função para verificar se o usuário já está cadastrado
-function returnUser(email) {
-  let users = localStorage.getItem('users') ? JSON.parse(localStorage.getItem('users')) : [];
-  let user = users.find(user => user.email === email );
-  if (user) {
-    return true;
+  const logar = await store.dispatch('authModule/logIn', form.value)
+  if (logar) {
+    toast.success('Login realizado com sucesso!', {
+      timeout: 1500,
+    });
+    router.push({ name: 'home' })
+  } else {
+    toast.error('Usuário ou senha inválidos!', {
+      timeout: 1500,
+    });
   }
-  return false
 }
 
+function clearForm() {
+  form.value.password = '';
+  form.value.password2 = '';
+}
 </script>
 
 <style lang="scss" scoped>

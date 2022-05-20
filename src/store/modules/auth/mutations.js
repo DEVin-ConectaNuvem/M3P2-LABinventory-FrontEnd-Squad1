@@ -1,9 +1,9 @@
 const SET_LOGIN_IN = (state, payload) => {
     state.userLogged = payload;
     state.isLogged = true;
+    console.log(payload)
     const token = {
         id: payload.id,
-        email: payload.email,
     }
     localStorage.setItem('token', JSON.stringify(token));
 }
@@ -23,4 +23,18 @@ const REGISTER_USER = (state, payload) => {
     localStorage.setItem("users", JSON.stringify(state.users));
 }
 
-export {SET_LOGIN_IN, UPDATE_USERS_LOCAL_STORAGE, REGISTER_USER, SET_LOG_OUT}
+const UPDATE_TOKEN = (state) => {
+    const token = JSON.parse(localStorage.getItem('token'));
+    
+    if (token){
+    const user = state.users.find(
+    (user) => user.id === token.id
+    );
+    state.userLogged = token ?  token : {}
+    state.userLogged = user ?  user : {}        
+    }
+    state.isLogged = token ?  true : false;
+}
+
+
+export {SET_LOGIN_IN, UPDATE_USERS_LOCAL_STORAGE, REGISTER_USER, SET_LOG_OUT, UPDATE_TOKEN}

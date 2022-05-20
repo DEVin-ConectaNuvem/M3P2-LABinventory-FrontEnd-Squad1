@@ -13,7 +13,7 @@
                     </div>
                     <!-- <img src="../../assets/icons/account-avatar-profile-user-13-svgrepo-com.svg" width="32" height="32"
                         class="rounded-circle me-2"> -->
-                    <strong v-text="logged.email"></strong>
+                    <strong v-text="logged.username"></strong>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                    <!--  <li><a class="dropdown-item" href="#">Configurações</a></li>

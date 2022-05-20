@@ -7,10 +7,15 @@ import { computed } from 'vue'
 
 const store = useStore();
 
+// define estado inicial de login via token
+store.dispatch('authModule/updateToken');
+
+
+
+// verifica alterações no login
 const statusLogin = computed(() => {
   return store.state.authModule.isLogged
 })
-
 
 </script>
 
@@ -26,7 +31,6 @@ const statusLogin = computed(() => {
       <RouterView />
     </main>
   </div>
-
 
 </template>
 

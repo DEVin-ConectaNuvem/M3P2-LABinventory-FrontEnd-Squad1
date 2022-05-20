@@ -1,29 +1,31 @@
-import { logIn, logOut, RegisterUser } from "./actions";
-import { SET_LOG_OUT, SET_LOGIN_IN, UPDATE_USERS_LOCAL_STORAGE, REGISTER_USER } from "./mutations";
-
-const token = JSON.parse(localStorage.getItem('token'));
-
+import { logIn, logOut, registerUser, updateToken, updateUsers } from "./actions";
+import { SET_LOG_OUT, SET_LOGIN_IN, UPDATE_USERS_LOCAL_STORAGE, REGISTER_USER, UPDATE_TOKEN} from "./mutations";
+import { checkEmailRegistered } from "./getters";
 
 export default {
   namespaced: true,
   state() {
     return {
-      isLogged: token ?  true : false,
-      userLogged: token ?  token : {},
+      isLogged: false,
+      userLogged: {},
       users: [],
     };
   },
-  getters: {
+  actions: {
+    logIn,
+    logOut,
+    registerUser,
+    updateToken,
+    updateUsers,
   },
   mutations: {
     SET_LOG_OUT,
     SET_LOGIN_IN,
     UPDATE_USERS_LOCAL_STORAGE,
     REGISTER_USER,
+    UPDATE_TOKEN,
   },
-  actions: {
-    logIn,
-    logOut,
-    RegisterUser,
-  },
+  getters: {
+    checkEmailRegistered,
+  }
 };
