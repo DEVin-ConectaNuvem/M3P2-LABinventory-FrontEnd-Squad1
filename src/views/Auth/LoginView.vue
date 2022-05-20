@@ -13,10 +13,8 @@
                     <h4 class="mt-1 mb-5 pb-1">Nós somos o DEVInventary</h4>
                   </div>
 
-                  <VeeForm @submit="register.register ? registerUser() : loginUser()" v-slot="{ errors }">
+                  <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit">
                     <p v-text="register.textMain"></p>
-
-
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text">@</span>
@@ -77,17 +75,15 @@
 
 <script setup>
 import { uid } from 'uid';
-import { ref, watch } from 'vue';
+import { ref } from 'vue';
 import { useStore } from 'vuex'
 import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay'
-import { Form as VeeForm, Field as Veefield, } from 'vee-validate';
-import {validateEmail, validatePassword} from '../../validators/validators.js'
-
+import { Form as VeeForm, Field as Veefield } from 'vee-validate';
+import { validateEmail, validatePassword } from '../../validators/validators.js'
 
 const $loading = useLoading()
-
 const toast = useToast();
 const store = useStore();
 const router = useRouter();
@@ -110,13 +106,13 @@ const register = ref({
 });
 
 // Objeto para validação do campo de confirmação de senha
-function validateConfirmPassword(value){
-  if(!value){
+function validateConfirmPassword(value) {
+  if (!value) {
     return 'A confirmação da senha é obrigatória';
-  } else if(value !== form.value.password){
+  } else if (value !== form.value.password) {
     return 'As senhas não conferem';
   }
-  return  value === form.value.password ? true : 'As senhas não conferem';
+  return value === form.value.password ? true : 'As senhas não conferem';
 }
 
 // Função para alternar entre o formulário de login e o formulário de registro
@@ -128,61 +124,64 @@ function toggleRegister() {
   register.value.createAccount = register.value.register ? 'Entrar' : 'Criar conta';
 }
 
-// chama a função de registro do usuário
-function registerUser() {
-  let checkEmail = store.state.authModule.users.find(user => user.email === form.value.email);
-
-  if (checkEmail) {
-    toast.error('O e-mail informado já possui cadastro!', { timeout: 1500 });
-    return;
+function onValidSubmit(values, actions) {
+  if (register.value.register) {
+    let checkEmail = store.state.authModule.users.find(user => user.email === form.value.email);
+    if (checkEmail) {
+      toast.error('O e-mail informado já possui cadastro!', { timeout: 1500 });
+      actions.setFieldError('email', 'O e-mail informado já possui cadastro!')
+      return;
+    }
+    registerUser(actions);
+  } else {
+    loginUser(actions);
   }
+}
+
+// chama a função de registro do usuário
+function registerUser(actions) {
   const loader = $loading.show()
   store.dispatch('authModule/updateUsers');
-
-  store.dispatch('authModule/registerUser', {
-    id: uid(),
-    email: form.value.email,
-    username: form.value.email.split('@')[0],
-    password: form.value.password,
-    password2: form.value.confirmPassword,
-  }).then(() => {
-    loader.hide();
-    toast.success('Cadastro realizado com sucesso!', {
-      timeout: 1500,
-    });
+  setTimeout(() => {
+    store.dispatch('authModule/registerUser', {
+      id: uid(),
+      email: form.value.email.toLowerCase(),
+      username: form.value.email.split('@')[0],
+      password: form.value.password,
+      password2: form.value.confirmPassword,
+    })
+    loader.hide()
+    toast.success('Cadastro realizado com sucesso!', { timeout: 1500 })
     toggleRegister();
-    clearForm();
-  }).catch((err) => {
-     loader.hide();
-    toast.error('Erro ao realizar cadastro!', {
-      title: err,
-      timeout: 1500,
-    });;
-  });
+    actions.resetForm();
+  }, 1000)
 }
 
 // chama a função de login do usuário
-async function loginUser() {
-  const loader = $loading.show()
-  const logar = await store.dispatch('authModule/logIn', form.value)
-  if (logar) {
-    loader.hide();
-    toast.success('Login realizado com sucesso!', {
-      timeout: 1500,
-    });
-    router.push({ name: 'home' })
-  } else {
-    loader.hide();
-    toast.error('Usuário ou senha inválidos!', {
-      timeout: 1500,
-    });
+function loginUser(actions) {
+  const loader = $loading.show();
+  //simula uma requisição...
+  setTimeout(async () => {
+    const logar = await store.dispatch('authModule/logIn', form.value)
+    if (logar) {
+      loader.hide()
+      toast.success('Login realizado com sucesso!', { timeout: 1500 });
+      router.push({ name: 'home' })
+    } else {
+      loader.hide()
+      toast.error('Usuário ou senha inválidos!', { timeout: 1500 });
+      actions.setFieldError('password', 'Usuário ou senha incorretos!')
+    };
+  }, 1000)
+}
+
+function onInvalidSubmit({ errors }) {
+  for (let field in errors) {
+    toast.error(errors[field], { timeout: 1500 });
   }
 }
 
-function clearForm() {
-  form.value.password = '';
-  form.value.confirmPassword = '';
-}
+
 </script>
 
 <style lang="scss" scoped>
@@ -196,7 +195,7 @@ function clearForm() {
   }
 }
 
-.form-control{
+.form-control {
   border: 1px solid var(--color-secondary);
 }
 

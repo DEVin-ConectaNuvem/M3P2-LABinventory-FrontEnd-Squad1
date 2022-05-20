@@ -1,14 +1,15 @@
 
 
 const logIn = async ({ state, commit }, payload) => {
-  commit("UPDATE_USERS_LOCAL_STORAGE");
-  let user = state.users.find(
+  await commit("UPDATE_USERS_LOCAL_STORAGE");
+  let user =  state.users.find(
     (user) => user.email === payload.email && user.password === payload.password
-  );
-  if (user) {
-    await commit("SET_LOGIN_IN", user);
+  )
+  if (user !== undefined && user) {
+    commit("SET_LOGIN_IN", user);
     return true;
   } else {
+     
     return false;
   }
 };
