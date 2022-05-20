@@ -9,6 +9,7 @@ import 'vue-loading-overlay/dist/vue-loading.css';
 import "vue-toastification/dist/index.css";
 import './validators/validators'
 
+
 const app = createApp(App);
 
 app.use(router);
