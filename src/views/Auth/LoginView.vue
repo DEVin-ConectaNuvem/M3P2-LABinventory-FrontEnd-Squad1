@@ -13,8 +13,7 @@
                     <h4 class="mt-1 mb-5 pb-1">Nós somos o DEVInventary</h4>
                   </div>
 
-                  <VeeForm @submit="register.register ? registerUser() : loginUser()" :validation-schema="schema"
-                    v-slot="{ errors }">
+                  <VeeForm @submit="register.register ? registerUser() : loginUser()" v-slot="{ errors }">
                     <p v-text="register.textMain"></p>
 
 
@@ -23,7 +22,8 @@
                         <span class="input-group-text">@</span>
                       </div>
                       <Veefield type="text" class="form-control" name="email" placeholder="Digite o e-mail"
-                        aria-label="Email" v-model="form.email" required :class="{ 'is-invalid': errors.email }" />
+                        aria-label="Email" v-model="form.email" required :class="{ 'is-invalid': errors.email }"
+                        :rules="validateEmail" />
                       <div class="invalid-feedback">{{ errors.email }}</div>
                     </div>
 
@@ -33,7 +33,8 @@
                         <span class="input-group-text">&#128273</span>
                       </div>
                       <Veefield type="password" class="form-control" placeholder="Digite sua senha" aria-label="senha"
-                        v-model="form.password" required name="password" :class="{ 'is-invalid': errors.password }" />
+                        v-model="form.password" required name="password" :class="{ 'is-invalid': errors.password }"
+                        :rules="validatePassword" />
                       <div class="invalid-feedback">{{ errors.password }}</div>
                     </div>
 
@@ -43,8 +44,8 @@
                           <span class="input-group-text">&#128273</span>
                         </div>
                         <Veefield type="password" class="form-control" placeholder="Digite novamente a sua senha"
-                          aria-label="senha" v-model="form.password2" name="confirmPassword"
-                          :class="{ 'is-invalid': errors.confirmPassword }" />
+                          aria-label="senha" v-model="form.confirmPassword" name="confirmPassword"
+                          :rules="validateConfirmPassword" :class="{ 'is-invalid': errors.confirmPassword }" />
                         <div class="invalid-feedback">{{ errors.confirmPassword }}</div>
                       </div>
                     </transition>
@@ -81,19 +82,12 @@ import { useStore } from 'vuex'
 import { useToast } from "vue-toastification";
 import { useRouter } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay'
-import { Form as VeeForm, Field as Veefield } from 'vee-validate';
-import * as Yup from 'yup';
+import { Form as VeeForm, Field as Veefield, } from 'vee-validate';
+import {validateEmail, validatePassword} from '../../validators/validators.js'
 
-let schema = Yup.object().shape({
-  email: Yup.string()
-    .required('O email é obrigatório')
-    .email('Email inválido'),
-  password: Yup.string()
-    .min(8, 'A senha deve conter no mínimo 8 caracteres')
-    .required('A senha é obrigatória')
-});
 
-const loading = useLoading()
+const $loading = useLoading()
+
 const toast = useToast();
 const store = useStore();
 const router = useRouter();
@@ -103,10 +97,10 @@ const form = ref({
   id: '',
   email: '',
   password: '',
-  password2: '',
+  confirmPassword: '',
 });
 
-// objeto que será usado para manipular o estado de login e registro
+// Objeto para dados exibidos em tela conforme Login/Registro
 const register = ref({
   register: false,
   textMain: 'Por favor, faça o login na sua conta',
@@ -115,31 +109,15 @@ const register = ref({
   createAccount: 'Criar conta',
 });
 
-watch(register.value, (newValue) => {
-  if (newValue.register === true) {
-    schema = Yup.object().shape({
-      email: Yup.string()
-        .required('O email é obrigatório')
-        .email('Email inválido'),
-      password: Yup.string()
-        .min(8, 'A senha deve conter no mínimo 8 caracteres')
-        .required('A senha é obrigatória'),
-      confirmPassword: Yup.string()
-        .min(8, 'A senha deve conter no mínimo 8 caracteres')
-        .required('A senha é obrigatória')
-        .oneOf([Yup.ref('password')], 'As senhas não conferem'),
-    });
-  } else {
-    schema = Yup.object().shape({
-      email: Yup.string()
-        .required('O email é obrigatório')
-        .email('Email inválido'),
-      password: Yup.string()
-        .min(8, 'A senha deve conter no mínimo 8 caracteres')
-        .required('A senha é obrigatória')
-    });
+// Objeto para validação do campo de confirmação de senha
+function validateConfirmPassword(value){
+  if(!value){
+    return 'A confirmação da senha é obrigatória';
+  } else if(value !== form.value.password){
+    return 'As senhas não conferem';
   }
-});
+  return  value === form.value.password ? true : 'As senhas não conferem';
+}
 
 // Função para alternar entre o formulário de login e o formulário de registro
 function toggleRegister() {
@@ -155,12 +133,10 @@ function registerUser() {
   let checkEmail = store.state.authModule.users.find(user => user.email === form.value.email);
 
   if (checkEmail) {
-    toast.error('O e-mail informado já possui cadastro!', {
-      timeout: 1500,
-    });
+    toast.error('O e-mail informado já possui cadastro!', { timeout: 1500 });
     return;
   }
-
+  const loader = $loading.show()
   store.dispatch('authModule/updateUsers');
 
   store.dispatch('authModule/registerUser', {
@@ -168,15 +144,18 @@ function registerUser() {
     email: form.value.email,
     username: form.value.email.split('@')[0],
     password: form.value.password,
-    password2: form.value.password2,
+    password2: form.value.confirmPassword,
   }).then(() => {
+    loader.hide();
     toast.success('Cadastro realizado com sucesso!', {
       timeout: 1500,
     });
     toggleRegister();
     clearForm();
-  }).catch(() => {
+  }).catch((err) => {
+     loader.hide();
     toast.error('Erro ao realizar cadastro!', {
+      title: err,
       timeout: 1500,
     });;
   });
@@ -184,13 +163,16 @@ function registerUser() {
 
 // chama a função de login do usuário
 async function loginUser() {
+  const loader = $loading.show()
   const logar = await store.dispatch('authModule/logIn', form.value)
   if (logar) {
+    loader.hide();
     toast.success('Login realizado com sucesso!', {
       timeout: 1500,
     });
     router.push({ name: 'home' })
   } else {
+    loader.hide();
     toast.error('Usuário ou senha inválidos!', {
       timeout: 1500,
     });
@@ -199,7 +181,7 @@ async function loginUser() {
 
 function clearForm() {
   form.value.password = '';
-  form.value.password2 = '';
+  form.value.confirmPassword = '';
 }
 </script>
 
@@ -213,6 +195,11 @@ function clearForm() {
     color: var(--color-white);
   }
 }
+
+.form-control{
+  border: 1px solid var(--color-secondary);
+}
+
 
 .btnLogin {
   background-color: var(--color-secondary);
