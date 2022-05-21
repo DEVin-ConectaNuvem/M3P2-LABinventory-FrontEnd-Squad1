@@ -10,8 +10,6 @@ const store = useStore();
 // define estado inicial de login via tokenconfirmPassword
 store.dispatch('authModule/updateToken');
 
-
-
 // verifica alterações no login
 const statusLogin = computed(() => {
   return store.state.authModule.isLogged
@@ -53,6 +51,7 @@ a {
 
 .leftSide {
   float: left;
+  height: 100vh;
 
 }
 </style>

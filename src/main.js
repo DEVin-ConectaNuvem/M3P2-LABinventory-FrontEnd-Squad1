@@ -10,8 +10,12 @@ import "vue-toastification/dist/index.css";
 import './validators/validators'
 
 
+import VueTheMask from 'vue-the-mask'
+
 const app = createApp(App);
 
+app.directive('mask', VueTheMask);
+app.use(VueTheMask);
 app.use(router);
 app.use(store);
 app.use(VueGravatar);

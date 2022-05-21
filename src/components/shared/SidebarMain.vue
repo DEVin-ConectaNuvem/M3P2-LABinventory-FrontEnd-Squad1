@@ -1,5 +1,5 @@
 <template>
-  <aside :class="isVisible ? 'isVisible' : ''">
+  <aside :class="isVisible ? 'isVisible' : ''" >
     <div class="d-flex flex-column flex-shrink-0 p-3 text-white">
       <div class="brand">
         <img src="../../assets/icons/logoInventary.svg" alt="DEVInventary">

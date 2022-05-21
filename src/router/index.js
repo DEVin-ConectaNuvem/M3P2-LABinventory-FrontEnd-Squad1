@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import LoginView from '../views/Auth/LoginView.vue';
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
@@ -6,7 +7,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: () => import('../views/HomeView.vue'),
+      component: () => import('../views/employers/EmployersView.vue'),
       beforeEnter: (to) => {
         const auth = localStorage.getItem('token');
         if (auth) {
@@ -18,7 +19,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/Auth/LoginView.vue'),
+      component: LoginView,
       beforeEnter: (to) => {
         const auth = localStorage.getItem('token');
         if (auth) {
@@ -26,7 +27,18 @@ const router = createRouter({
         }
         return true;
     } 
-      
+    },
+    {
+      path: '/colaboradores',
+      name: 'colaboradores',
+      component: () => import('../views/employers/EmployersView.vue'),
+      beforeEnter: (to) => {
+        const auth = localStorage.getItem('token');
+        if (auth) {
+            return true
+        }
+        return to = '/login';
+    },
     },
   ]
 })
