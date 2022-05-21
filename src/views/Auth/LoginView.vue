@@ -7,7 +7,6 @@
             <div class="row g-0">
               <div class="col-lg-6">
                 <div class="card-body p-md-5 mx-md-4">
-
                   <div class="text-center">
                     <img src="../../assets/icons/logoInventary.svg" class="img-fluid logo" alt="logo">
                     <h4 class="mt-1 mb-5 pb-1">Nós somos o DEVInventary</h4>
@@ -24,8 +23,7 @@
                         :rules="validateEmail" />
                       <div class="invalid-feedback">{{ errors.email }}</div>
                     </div>
-
-
+                    
                     <div class="input-group mb-3">
                       <div class="input-group-prepend">
                         <span class="input-group-text">&#128273</span>
