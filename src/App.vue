@@ -51,7 +51,7 @@ a {
 
 .leftSide {
   float: left;
-  height: 100vh;
+  height: 100vh!important;
 
 }
 </style>
