@@ -15,13 +15,13 @@
           </RouterLink>
         </li>
         <hr>
-        <span> Colaboradores</span>
+        <span>Colaboradores</span>
         <li>
-          <RouterLink to="/login" class="nav-link">
+          <RouterLink to="/colaboradores" class="nav-link">
             <i class="fa-solid fa-user-tie"></i>
             <span> Cadastrar</span>
           </RouterLink>
-          <RouterLink to="/users/listar" class="nav-link">
+          <RouterLink to="/lista-colaboradores" class="nav-link">
             <i class="fa-solid fa-address-book"></i>
             <span> Listar</span>
           </RouterLink>

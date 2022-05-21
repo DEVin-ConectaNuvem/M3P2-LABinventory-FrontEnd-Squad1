@@ -1,59 +1,59 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import LoginView from '../views/Auth/LoginView.vue';
+import { createRouter, createWebHashHistory } from "vue-router";
+import LoginView from "../views/Auth/LoginView.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
-      name: 'home',
-      component: () => import('../views/employers/EmployersView.vue'),
+      path: "/",
+      name: "home",
+      component: () => import("../views/Collaborators/CollaboratorsView.vue"),
       beforeEnter: (to) => {
-        const auth = localStorage.getItem('token');
+        const auth = localStorage.getItem("token");
         if (auth) {
-            return true
+          return true;
         }
-        return to = '/login';
-    }
+        return (to = "/login");
+      },
     },
     {
-      path: '/login',
-      name: 'login',
+      path: "/login",
+      name: "login",
       component: LoginView,
       beforeEnter: (to) => {
-        const auth = localStorage.getItem('token');
+        const auth = localStorage.getItem("token");
         if (auth) {
-            return to = "/"
+          return (to = "/");
         }
         return true;
-    } 
+      },
     },
     {
-      path: '/colaboradores',
-      name: 'colaboradores',
-      component: () => import('../views/employers/EmployersView.vue'),
+      path: "/colaboradores",
+      name: "colaboradores",
+      component: () => import("../views/Collaborators/CollaboratorsView.vue"),
       beforeEnter: (to) => {
-        const auth = localStorage.getItem('token');
+        const auth = localStorage.getItem("token");
         if (auth) {
-            return true
+          return true;
         }
-        return to = '/login';
-    },
+        return (to = "/login");
+      },
     },
     {
-      path: '/lista-colaboradores',
-      name: 'ListCollaborators',
-      component: () => import('../views/employers/ListCollaboratorsView.vue'),
+      path: "/lista-colaboradores",
+      name: "ListCollaborators",
+      component: () => import("../views/Collaborators/ListCollaboratorsView.vue"),
       beforeEnter: (to) => {
-        const auth = localStorage.getItem('token');
+        const auth = localStorage.getItem("token");
         if (auth) {
-            return true
+          return true;
         }
-        return to = '/login';
+        return (to = "/login");
+      },
     },
-    },
-  ]
-})
+  ],
+});
 
 /* router.beforeEach(async (to, from) => {
   if (
@@ -66,5 +66,4 @@ const router = createRouter({
 })
  */
 
-
-export default router
+export default router;
