@@ -56,12 +56,22 @@
           :aria-labelledby="collaborator.id"
         >
           <div class="accordion-body">
+            <div class="row">
+            <div class="col-sm-12 col-md-6">
             <strong>Email:</strong> {{ collaborator.email }}
             <br />
             <strong>Telefone:</strong> {{ collaborator.phone }}
             <br />
             <strong>Cargo:</strong> {{ collaborator.position }}
             <br />
+            </div>
+            <div class="col-sm-12 col-md-6">
+            <strong>Criado em:</strong> {{ collaborator.createdAt }}
+            <br />
+            <strong>última modificação:</strong> {{ collaborator.updatedAt }}
+            <br />
+            </div>
+            </div>
             <button
               class="btn btn-warning mt-2"
               @click="editCollab(collaborator.id)"
