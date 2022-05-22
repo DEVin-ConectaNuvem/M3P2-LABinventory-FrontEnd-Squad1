@@ -6,7 +6,7 @@ const validateName = string().min(3, 'O nome deve ter no mínimo 3 caracteres').
 const required = string().required('O campo é obrigatório');
 const validateDate = date().required('A data é obrigatória').max(new Date(), 'A data não pode ser superior a data atual');
 const validatePhone = string().min(14, 'O telefone deve ter no mínimo 10 caracteres').required('O telefone é obrigatório');
-const validateNumber = number().required('O número é obrigatório').min(0,'O número deve igual ou maior que zero');
+const validateNumber = number().typeError('O número é obrigatório').min(0,'O número deve igual ou maior que zero').required('O número é obrigatório');
 const validateCEP = string().min(9, 'O CEP deve ter no mínimo 9 caracteres').required('O CEP é obrigatório');
 
 

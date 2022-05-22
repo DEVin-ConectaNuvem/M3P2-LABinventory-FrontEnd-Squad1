@@ -101,11 +101,17 @@
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-4">
                     <label class="form-label">Complemento <span>*</span></label>
-                    <Veefield type="text" name="complement" class="form-control" placeholder="Complemento/referência"
+                    <Veefield type="text" name="complement" class="form-control" placeholder="Complemento"
                         :rules="required" v-model="form.complement" required
                         :class="{ 'is-invalid': errors.complement }" />
-
                     <div class="invalid-feedback">{{ errors.complement }}</div>
+                </div>
+                 <div class="col-sm-12 col-md-6 col-lg-4">
+                    <label class="form-label">Referência <span>*</span></label>
+                    <Veefield type="text" name="reference" class="form-control" placeholder="Ponto de referência"
+                        :rules="required" v-model="form.reference" required
+                        :class="{ 'is-invalid': errors.reference }" />
+                    <div class="invalid-feedback">{{ errors.reference }}</div>
                 </div>
             </div>
             <button type="submit" class="mt-2" :class="infoById ? 'btn btn-primary' : 'btn btn-success'"
@@ -116,7 +122,7 @@
 
 <script setup>
 import { uid } from "uid";
-import { ref, computed, watch } from "vue";
+import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 import ToastNotification from "./components/ToastNotification.vue";
@@ -133,6 +139,7 @@ import {
     validateCEP
 } from "../../validators/validators";
 import axios from "axios";
+import moment from "moment";
 
 
 const $loading = useLoading();
@@ -150,9 +157,6 @@ const content = {
     },
 };
 
-
-
-
 const id = route.params.userId;
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 
@@ -164,7 +168,6 @@ const infoById = computed(() => {
     }
     return false
 })
-
 
 const btnForm = ref(infoById.value ? "Editar" : "Cadastrar");
 
@@ -181,8 +184,11 @@ const form = ref({
     state: infoById.value ? infoById.value.state : "",
     neighborhood: infoById.value ? infoById.value.neighborhood : "",
     street: infoById.value ? infoById.value.street : "",
-    houseNumber: infoById.value ? infoById.value.houseNumber : "",
+    houseNumber: infoById.value ? infoById.value.houseNumber : null,
     complement: infoById.value ? infoById.value.complement : "",
+    reference: infoById.value ? infoById.value.reference : "",
+    createdAt: infoById.value ? infoById.value.createdAt : moment().format('llll'),
+    updatedAt: infoById.value ? moment().format('llll') : "",
 });
 
 function onValidSubmit(values, actions) {
@@ -193,11 +199,11 @@ function onValidSubmit(values, actions) {
     }
 }
 
-
 function newCollaborator(actions) {
     const loader = $loading.show();
     setTimeout(() => {
         infoById.value ? infoById.value.id : form.value.id = "c" + uid();
+        form.value.updatedAt = moment().format('llll');;
         store.dispatch("collaboratorModule/registerCollaborator", form.value);
         actions.resetForm();
         loader.hide();
