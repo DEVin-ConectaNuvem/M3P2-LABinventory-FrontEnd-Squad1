@@ -6,6 +6,7 @@ import VueGravatar from "vue3-gravatar";
 import VueTheMask from "vue-the-mask";
 import VueLoading from "vue-loading-overlay";
 import Toast from "vue-toastification";
+import Paginate from "vuejs-paginate-next";
 import "vue-loading-overlay/dist/vue-loading.css";
 import "vue-toastification/dist/index.css";
 import "./validators/validators";
@@ -16,6 +17,7 @@ app.directive('focus', {
   mounted: (el) => el.focus(),
 })
 
+app.use(Paginate)
 app.use(router);
 app.use(store);
 app.use(Toast, {

@@ -19,6 +19,7 @@
     "vue-toast-notification": "3.0",
     "vue-toastification": "^2.0.0-rc.5",
     "vue3-gravatar": "^3.0.0",
+    "vuejs-paginate-next": "^1.0.2",
     "vuex": "^4.0.2",
     "yup": "^0.32.11"
   },
