@@ -1,5 +1,5 @@
 <template>
-  <aside :class="isVisible ? 'isVisible' : ''">
+  <aside :class="isVisible ? 'isVisible' : ''" >
     <div class="d-flex flex-column flex-shrink-0 p-3 text-white">
       <div class="brand">
         <img src="../../assets/icons/logoInventary.svg" alt="DEVInventary">
@@ -15,13 +15,13 @@
           </RouterLink>
         </li>
         <hr>
-        <span> Colaboradores</span>
+        <span>Colaboradores</span>
         <li>
-          <RouterLink to="/login" class="nav-link">
+          <RouterLink to="/colaboradores" class="nav-link">
             <i class="fa-solid fa-user-tie"></i>
             <span> Cadastrar</span>
           </RouterLink>
-          <RouterLink to="/users/listar" class="nav-link">
+          <RouterLink to="/lista-colaboradores" class="nav-link">
             <i class="fa-solid fa-address-book"></i>
             <span> Listar</span>
           </RouterLink>
