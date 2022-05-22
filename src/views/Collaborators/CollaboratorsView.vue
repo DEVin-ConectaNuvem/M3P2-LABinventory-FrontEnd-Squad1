@@ -1,42 +1,20 @@
 <template>
   <div class="container">
     <h4 class="mb-3">Preencha os campos para cadastrar um novo colaborador</h4>
-    <VeeForm
-      @submit="onValidSubmit"
-      v-slot="{ errors }"
-      @invalid-submit="onInvalidSubmit"
-      class="formCadastro"
-    >
+    <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit" class="formCadastro">
       <div class="row mb-1">
         <h3>Dados de endereço</h3>
         <hr />
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Nome completo <span>*</span></label>
-          <Veefield
-            type="text"
-            name="name"
-            class="form-control"
-            placeholder="Nome completo"
-            v-model.trim="form.name"
-            required
-            :class="{ 'is-invalid': errors.name }"
-            :rules="validateName"
-            v-focus
-          />
+          <Veefield type="text" name="name" class="form-control" placeholder="Nome completo" v-model.trim="form.name"
+            required :class="{ 'is-invalid': errors.name }" :rules="validateName" v-focus />
           <div class="invalid-feedback">{{ errors.name }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Genero <span>*</span></label>
-          <Veefield
-            as="select"
-            name="gender"
-            class="form-select"
-            placeholder="Genero"
-            v-model="form.gender"
-            :class="{ 'is-invalid': errors.gender }"
-            :rules="required"
-            required
-          >
+          <Veefield as="select" name="gender" class="form-select" placeholder="Genero" v-model="form.gender"
+            :class="{ 'is-invalid': errors.gender }" :rules="required" required>
             <option value="" disabled selectd>Escolha o gênero</option>
             <option value="Masculino">Masculino</option>
             <option value="Feminino">Feminino</option>
@@ -46,58 +24,27 @@
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Data de nascimento <span>*</span></label>
-          <Veefield
-            type="date"
-            name="birthDay"
-            class="form-control"
-            placeholder="Data de nascimento"
-            v-model="form.birthDay"
-            required
-            :class="{ 'is-invalid': errors.birthDay }"
-            :rules="validateDate"
-          />
+          <Veefield type="date" name="birthDay" class="form-control" placeholder="Data de nascimento"
+            v-model="form.birthDay" required :class="{ 'is-invalid': errors.birthDay }" :rules="validateDate" />
           <div class="invalid-feedback">{{ errors.birthDay }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Telefone <span>*</span></label>
-          <Veefield
-            type="text"
-            name="phone"
-            class="form-control"
-            placeholder="Fixo ou celular"
-            v-model="form.phone"
-            v-mask="['(##) ####-####', '(##) #####-####']"
-            :class="{ 'is-invalid': errors.phone }"
-            :rules="validatePhone"
-          />
+          <Veefield type="text" name="phone" class="form-control" placeholder="Fixo ou celular" v-model="form.phone"
+            v-mask="['(##) ####-####', '(##) #####-####']" :class="{ 'is-invalid': errors.phone }"
+            :rules="validatePhone" />
           <div class="invalid-feedback">{{ errors.phone }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">E-mail <span>*</span></label>
-          <Veefield
-            type="email"
-            name="email"
-            class="form-control"
-            placeholder="Ex: José@gmail.com"
-            v-model="form.email"
-            required
-            :class="{ 'is-invalid': errors.email }"
-            :rules="validateEmail"
-          />
+          <Veefield type="email" name="email" class="form-control" placeholder="Ex: José@gmail.com" v-model="form.email"
+            required :class="{ 'is-invalid': errors.email }" :rules="validateEmail" />
           <div class="invalid-feedback">{{ errors.email }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Cargo <span>*</span></label>
-          <Veefield
-            as="select"
-            name="position"
-            class="form-select"
-            placeholder="Ex: desenvolvedor"
-            v-model="form.position"
-            required
-            :class="{ 'is-invalid': errors.position }"
-            :rules="required"
-          >
+          <Veefield as="select" name="position" class="form-select" placeholder="Ex: desenvolvedor"
+            v-model="form.position" required :class="{ 'is-invalid': errors.position }" :rules="required">
             <option value="" disabled>Escolha o cargo</option>
             <option value="Desenvolvedor Backend">Desenvolvedor Backend</option>
             <option value="Desenvolvedor Frontend">
@@ -116,130 +63,64 @@
         <hr />
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">CEP <span>*</span></label>
-          <Veefield
-            type="text"
-            name="zipcode"
-            class="form-control"
-            placeholder="CEP"
-            v-model="form.zipcode"
-            @focusout="searchZipCode"
-            required
-            v-mask="'#####-###'"
-            ref="cep"
-            :class="{ 'is-invalid': errors.zipcode }"
-            :rules="validateCEP"
-          />
+          <Veefield type="text" name="zipcode" class="form-control" placeholder="CEP" v-model="form.zipcode"
+            @focusout="searchZipCode" required v-mask="'#####-###'" ref="cep" :class="{ 'is-invalid': errors.zipcode }"
+            :rules="validateCEP" />
           <div class="invalid-feedback">{{ errors.zipcode }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Cidade <span>*</span></label>
-          <Veefield
-            type="text"
-            name="city"
-            class="form-control"
-            placeholder="Cidade"
-            v-model="form.city"
-            required
-            :class="{ 'is-invalid': errors.city }"
-            disabled
-            :rules="required"
-          />
+          <Veefield type="text" name="city" class="form-control" placeholder="Cidade" v-model="form.city" required
+            :class="{ 'is-invalid': errors.city }" disabled :rules="required" />
           <div class="invalid-feedback">{{ errors.city }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Estado <span>*</span></label>
-          <Veefield
-            type="text"
-            name="state"
-            class="form-control"
-            placeholder="Estado"
-            v-model="form.state"
-            required
-            :class="{ 'is-invalid': errors.state }"
-            disabled
-            :rules="required"
-          />
+          <Veefield type="text" name="state" class="form-control" placeholder="Estado" v-model="form.state" required
+            :class="{ 'is-invalid': errors.state }" disabled :rules="required" />
           <div class="invalid-feedback">{{ errors.state }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Bairro <span>*</span></label>
-          <Veefield
-            type="text"
-            name="neighborhood"
-            class="form-control"
-            placeholder="Bairro"
-            v-model="form.neighborhood"
-            required
-            :class="{ 'is-invalid': errors.neighborhood }"
-            :rules="required"
-          />
+          <Veefield type="text" name="neighborhood" class="form-control" placeholder="Bairro"
+            v-model="form.neighborhood" required :class="{ 'is-invalid': errors.neighborhood }" :rules="required" />
           <div class="invalid-feedback">{{ errors.neighborhood }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Logradouro <span>*</span></label>
-          <Veefield
-            type="text"
-            name="street"
-            class="form-control"
-            placeholder="Rua/Avenida"
-            v-model="form.street"
-            required
-            :class="{ 'is-invalid': errors.street }"
-            :rules="required"
-          />
+          <Veefield type="text" name="street" class="form-control" placeholder="Rua/Avenida" v-model="form.street"
+            required :class="{ 'is-invalid': errors.street }" :rules="required" />
           <div class="invalid-feedback">{{ errors.street }}</div>
         </div>
 
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Número <span>*</span></label>
-          <Veefield
-            type="number"
-            name="houseNumber"
-            class="form-control"
-            placeholder="Número da residência"
-            :rules="validateNumber"
-            v-model.number="form.houseNumber"
-            ref="skipCep"
-            required
-            :class="{ 'is-invalid': errors.houseNumber }"
-          />
+          <Veefield type="number" name="houseNumber" class="form-control" placeholder="Número da residência"
+            :rules="validateNumber" v-model.number="form.houseNumber" ref="skipCep" required
+            :class="{ 'is-invalid': errors.houseNumber }" />
           <div class="invalid-feedback">{{ errors.houseNumber }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Complemento <span>*</span></label>
-          <Veefield
-            type="text"
-            name="complement"
-            class="form-control"
-            placeholder="Complemento"
-            :rules="required"
-            v-model="form.complement"
-            required
-            :class="{ 'is-invalid': errors.complement }"
-          />
+          <Veefield type="text" name="complement" class="form-control" placeholder="Complemento" :rules="required"
+            v-model="form.complement" required :class="{ 'is-invalid': errors.complement }" />
           <div class="invalid-feedback">{{ errors.complement }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Referência <span>*</span></label>
-          <Veefield
-            type="text"
-            name="reference"
-            class="form-control"
-            placeholder="Ponto de referência"
-            :rules="required"
-            v-model="form.reference"
-            required
-            :class="{ 'is-invalid': errors.reference }"
-          />
+          <Veefield type="text" name="reference" class="form-control" placeholder="Ponto de referência"
+            :rules="required" v-model="form.reference" required :class="{ 'is-invalid': errors.reference }" />
           <div class="invalid-feedback">{{ errors.reference }}</div>
         </div>
       </div>
-      <button
-        type="submit"
-        class="mt-2"
-        :class="infoById ? 'btn btn-primary' : 'btn btn-success'"
-        v-text="btnForm"
-      ></button>
+      <div class="text-end">
+        <button :type="infoById ? 'button' : 'reset' " @click="infoById ? cancelEdit() : '' " class="btn btn-danger me-2 mt-2" v-text="infoById ? 'Cancelar' : 'Limpar'"></button>
+        <button type="submit" class="mt-2" :class="infoById ? 'btn btn-primary' : 'btn btn-success'"
+          v-text="btnForm"></button>
+
+      </div>
+
+
     </VeeForm>
   </div>
 </template>
@@ -382,6 +263,12 @@ function editCollaborator(actions) {
     toast.success("Colaborador editado com sucesso!");
     router.push({ name: "ListCollaborators" });
   }, 2000);
+}
+
+// Função para cancelar a edição do colaborador
+function cancelEdit() {
+  toast.warning("Edição cancelada!", { timeout: 1000 });
+  router.push({ name: "ListCollaborators" });
 }
 
 /* 
