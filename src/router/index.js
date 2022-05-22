@@ -52,6 +52,30 @@ const router = createRouter({
         return (to = "/login");
       },
     },
+    {
+      path: "/itens",
+      name: "items",
+      component: () => import("../views/items/ItemsView.vue"),
+      beforeEnter: (to) => {
+        const auth = localStorage.getItem("token");
+        if (auth) {
+          return true;
+        }
+        return (to = "/login");
+      },
+    },
+    {
+      path: "/lista-itens",
+      name: "listItems",
+      component: () => import("../views/items/ListItems.vue"),
+      beforeEnter: (to) => {
+        const auth = localStorage.getItem("token");
+        if (auth) {
+          return true;
+        }
+        return (to = "/login");
+      },
+    },
   ],
 });
 
