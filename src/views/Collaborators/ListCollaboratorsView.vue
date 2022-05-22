@@ -85,7 +85,10 @@
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import Paginate from "vuejs-paginate-next";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
+
+
+const router = useRouter();
 
 const store = useStore();
 const inputSearch = ref("");
@@ -132,7 +135,8 @@ const collaborators = computed(() => {
 });
 
 function editCollab(id) {
-  console.log(id);
+  console.log(id)
+  router.push({ name: 'colaboradores', params:{userId: id} });
 }
 </script>
 

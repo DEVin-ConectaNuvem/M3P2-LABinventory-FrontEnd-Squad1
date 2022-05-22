@@ -29,7 +29,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/colaboradores",
+      path: "/colaboradores/:userId?",
       name: "colaboradores",
       component: () => import("../views/Collaborators/CollaboratorsView.vue"),
       beforeEnter: (to) => {

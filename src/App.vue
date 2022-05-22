@@ -15,6 +15,8 @@ const statusLogin = computed(() => {
   return store.state.authModule.isLogged
 })
 
+
+
 </script>
 
 <template>

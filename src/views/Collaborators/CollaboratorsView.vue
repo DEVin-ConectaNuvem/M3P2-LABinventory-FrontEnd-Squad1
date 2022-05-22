@@ -47,7 +47,7 @@
                     <label class="form-label">Cargo <span>*</span></label>
                     <Veefield as="select" name="position" class="form-select" placeholder="Ex: desenvolvedor"
                         v-model="form.position" required :class="{ 'is-invalid': errors.position }" :rules="required">
-                        <option value="" disabled selectd>Escolha o cargo</option>
+                        <option value="" disabled>Escolha o cargo</option>
                         <option value="Desenvolvedor Backend">Desenvolvedor Backend</option>
                         <option value="Desenvolvedor Frontend">Desenvolvedor Frontend</option>
                         <option value="Desenvolvedor Fullstack">Desenvolvedor Fullstack</option>
@@ -63,7 +63,7 @@
                     <label class="form-label">CEP <span>*</span></label>
                     <Veefield type="text" name="zipcode" class="form-control" placeholder="CEP" v-model="form.zipcode"
                         @focusout="searchZipCode" required v-mask="'#####-###'" ref="cep"
-                        :class="{ 'is-invalid': errors.zipcode }" :rules="required" />
+                        :class="{ 'is-invalid': errors.zipcode }" :rules="validateCEP" />
                     <div class="invalid-feedback">{{ errors.zipcode }}</div>
                 </div>
                 <div class="col-sm-12 col-md-6 col-lg-4">
@@ -95,7 +95,7 @@
                 <div class="col-sm-12 col-md-6 col-lg-4">
                     <label class="form-label">Número <span>*</span></label>
                     <Veefield type="number" name="houseNumber" class="form-control" placeholder="Número da residência"
-                        :rules="validateNumber" v-model="form.houseNumber" ref="skipCep" required
+                        :rules="validateNumber" v-model.number="form.houseNumber" ref="skipCep" required
                         :class="{ 'is-invalid': errors.houseNumber }" />
                     <div class="invalid-feedback">{{ errors.houseNumber }}</div>
                 </div>
@@ -108,18 +108,19 @@
                     <div class="invalid-feedback">{{ errors.complement }}</div>
                 </div>
             </div>
-            <button type="submit" class="btn btn-primary mt-2">Salvar</button>
+            <button type="submit" class="mt-2" :class="infoById ? 'btn btn-primary' : 'btn btn-success'"
+                v-text="btnForm"></button>
         </VeeForm>
     </div>
 </template>
 
 <script setup>
 import { uid } from "uid";
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 import ToastNotification from "./components/ToastNotification.vue";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
 import { Form as VeeForm, Field as Veefield } from "vee-validate";
 import {
@@ -129,6 +130,7 @@ import {
     validateDate,
     validatePhone,
     validateNumber,
+    validateCEP
 } from "../../validators/validators";
 import axios from "axios";
 
@@ -136,6 +138,7 @@ import axios from "axios";
 const $loading = useLoading();
 const toast = useToast();
 const store = useStore();
+const route = useRoute();
 const router = useRouter();
 const content = {
     component: ToastNotification,
@@ -147,25 +150,54 @@ const content = {
     },
 };
 
+
+
+
+const id = route.params.userId;
+store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
+
+const infoById = computed(() => {
+    if (id) {
+        return store.state.collaboratorModule.collaborators.find(
+            (collaborator) => collaborator.id === id
+        );
+    }
+    return false
+})
+
+
+const btnForm = ref(infoById.value ? "Editar" : "Cadastrar");
+
 const form = ref({
-    id: "",
-    name: "",
-    email: "",
-    phone: "",
-    position: "",
-    zipcode: "",
-    city: "",
-    state: "",
-    neighborhood: "",
-    street: "",
-    numberHouse: "",
-    complement: "",
+    id: infoById.value ? infoById.value.id : "",
+    name: infoById.value ? infoById.value.name : "",
+    email: infoById.value ? infoById.value.email : "",
+    phone: infoById.value ? infoById.value.phone : "",
+    position: infoById.value ? infoById.value.position : "",
+    gender: infoById.value ? infoById.value.gender : "",
+    zipcode: infoById.value ? infoById.value.zipcode : "",
+    birthDay: infoById.value ? infoById.value.birthDay : "",
+    city: infoById.value ? infoById.value.city : "",
+    state: infoById.value ? infoById.value.state : "",
+    neighborhood: infoById.value ? infoById.value.neighborhood : "",
+    street: infoById.value ? infoById.value.street : "",
+    houseNumber: infoById.value ? infoById.value.houseNumber : "",
+    complement: infoById.value ? infoById.value.complement : "",
 });
 
 function onValidSubmit(values, actions) {
+    if (infoById.value) {
+        editCollaborator(actions)
+    } else {
+        newCollaborator(actions)
+    }
+}
+
+
+function newCollaborator(actions) {
     const loader = $loading.show();
     setTimeout(() => {
-        form.value.id = "c" + uid();
+        infoById.value ? infoById.value.id : form.value.id = "c" + uid();
         store.dispatch("collaboratorModule/registerCollaborator", form.value);
         actions.resetForm();
         loader.hide();
@@ -182,6 +214,18 @@ function onValidSubmit(values, actions) {
             rtl: false,
         });
     }, 1000);
+}
+
+function editCollaborator(actions) {
+    const loader = $loading.show();
+    setTimeout(() => {
+        console.log(form.value.name)
+        store.dispatch("collaboratorModule/editCollaborator", form.value);
+        actions.resetForm();
+        loader.hide();
+        toast.success("Colaborador editado com sucesso!");
+        router.push({ name: "ListCollaborators" });
+    }, 2000);
 }
 
 function onInvalidSubmit({ errors }) {
