@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <h4 class="mb-3">Preencha os campos para cadastrar um novo colaborador</h4>
+    <h4 class="mb-3">Preencha os campos para cadastrar um novo item</h4>
     <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit" class="formCadastro">
       <div class="row mb-1">
         <h3>Dados do item</h3>
