@@ -1,17 +1,16 @@
 <template>
   <div class="container">
-          <div class="content input-group">
-          <input type="text" class="w-75 form-control form-control animate__animated animate__flipInX" placeholder="✍️ Buscar..." v-model="inputSearch">
-  
-          <select class="form-control bg-primary text-white " id="" v-model="findBy">
-          <option value="codPatrimonio" selected disabled>Buscar item por:</option>
-          <option value="codPatrimonio">Pelo Código de Patrimonio</option>
-          <option value="title">Pelo título</option>
-          <option value="category">Pela Categoria</option>
-        </select>
-        </div>
-        <p class="err text-danger text-center hidden animate__animated animate__shakeX" hidden><i
-            class="fa fa-warning"></i>👎 Oops! Você deve informar o nome do item!</p>
+    <div class="content input-group">
+      <input type="text" class="w-75 form-control form-control animate__animated animate__flipInX"
+        placeholder="✍️ Buscar..." v-model="inputSearch">
+      <select class="form-control bg-primary text-white " id="" v-model="findBy">
+        <option value="codPatrimonio" selected disabled>Buscar item por:</option>
+        <option value="codPatrimonio">Pelo Código de Patrimonio</option>
+        <option value="title">Pelo título</option>
+        <option value="category">Pela Categoria</option>
+      </select>
+    </div>
+
     <hr />
     <h4>Lista de Items</h4>
 
@@ -27,7 +26,8 @@
             aria-expanded="true" :aria-controls="'collapseOne' + item.codPatrimonio">
             <img class="img-fluid imgAccordion" :src="item.url" />
             <p v-text="item.codPatrimonio" class="ms-2 nameCollab fs-5 me-2"></p>
-            <p class="fs-5" v-text="' - ' + item.title"></p>
+            <p class="fs-5" v-text="' - ' + item.title + ' - '"></p>
+            <p class="fs-5 ms-1" :class="item.collaborator ? '' : 'text-success'" v-text="item.collaborator ? item.collaborator : 'Item disponível'"></p>
           </button>
         </h2>
 
@@ -39,22 +39,27 @@
                 <strong>Descrição:</strong> {{ item.description }}
                 <br />
               </div>
-              <div class="col-sm-12 col-md-6">
+              <div class="col-sm-12 col-md-6 ">
                 <strong>Criado em:</strong> {{ item.createdAt }}
                 <br />
                 <strong>última modificação:</strong> {{ item.updatedAt }}
                 <br />
-                <strong>Empréstimo: </strong>
-                <select class="label-form">
-                  <optgroup label="Colaboradores">
-                    <option v-for="collab in collaborators" v-text="collab.name"></option>
-                  </optgroup>
-                </select>
+                <hr>
+              <strong class="fs-5">Empréstimo: <span :class="item.collaborator ? '' : 'text-success'"> {{ item.collaborator ? item.collaborator : "Disponível" }}</span></strong>
+                <br />
+                  <!-- <optgroup label="Colaboradores">
+                    <option v-for="collab in collaborators" v-text="collab.name" ></option>
+                  </optgroup> -->
+              </div>
+              <div class="text-end ">
+              <button class="btn btn-success m-2" @click="loanItem(item.codPatrimonio)">
+                <i class="fa-solid fa-arrow-right-arrow-left"></i> Emprestar item
+              </button>
+              <button class="btn btn-danger" @click="editItem(item.codPatrimonio)">
+                <i class="fa-solid fa-edit"></i> Editar item
+              </button>
               </div>
             </div>
-            <button class="btn btn-warning mt-2" @click="editItem(item.codPatrimonio)">
-              <i class="fa-solid fa-user-pen"></i> Editar
-            </button>
           </div>
         </div>
       </div>
@@ -77,17 +82,15 @@ import { useStore } from "vuex";
 
 
 const router = useRouter();
-
 const store = useStore();
 const inputSearch = ref(null);
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
 const page = ref(1);
 const perPage = ref(5);
-const sortBy = ref("");
-const findBy = ref("");
+const findBy = ref("codPatrimonio");
 
-findBy.value = 'codPatrimonio';
+
 
 const totalPages = computed(() => {
   if (inputSearch.value) {
@@ -142,7 +145,6 @@ function editItem(id) {
 
 
 <style lang="scss" scoped>
-
 .content {
   flex: 1 1 0%;
   background-color: var(--color-light);
@@ -152,6 +154,7 @@ function editItem(id) {
   color: var(--color-dark);
   font-size: 1.25rem;
 }
+
 .card {
   margin-bottom: 10px;
   padding: 20px;
@@ -174,5 +177,4 @@ function editItem(id) {
 .nameCollab {
   color: var(--color-secondary);
 }
-
 </style>
