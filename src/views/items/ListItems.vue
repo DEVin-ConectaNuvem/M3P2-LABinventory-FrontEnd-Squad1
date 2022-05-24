@@ -1,13 +1,17 @@
 <template>
   <div class="container">
-    <div class="row height d-flex justify-content-center align-items-center">
-      <div class="form">
-        <i class="fa fa-search"></i>
-        <input v-model="inputSearch" type="text" class="form-control form-input"
-          placeholder="Digite o código de patrimonio do item" />
-        <span class="left-pan d-none d-md-block">Buscar item</span>
-      </div>
-    </div>
+          <div class="content input-group">
+          <input type="text" class="w-75 form-control form-control animate__animated animate__flipInX" placeholder="✍️ Buscar..." v-model="inputSearch">
+  
+          <select class="form-control bg-primary text-white " id="" v-model="findBy">
+          <option value="codPatrimonio" selected disabled>Buscar item por:</option>
+          <option value="codPatrimonio">Pelo Código de Patrimonio</option>
+          <option value="title">Pelo título</option>
+          <option value="category">Pela Categoria</option>
+        </select>
+        </div>
+        <p class="err text-danger text-center hidden animate__animated animate__shakeX" hidden><i
+            class="fa fa-warning"></i>👎 Oops! Você deve informar o nome do item!</p>
     <hr />
     <h4>Lista de Items</h4>
 
@@ -56,10 +60,11 @@
       </div>
     </div>
     <p class="text-danger" v-show="items.length === 0 && inputSearch">
-      Não há colaboradores cadastrados com este <strong>nome</strong> - <router-link :to="{name: 'items'}">Realizar novo cadastro</router-link> 
+      Não há itens cadastrados com este <strong>código de patrimônio</strong> - <router-link :to="{ name: 'items' }">
+        Realizar novo cadastro</router-link>
     </p>
     <p class="text-danger" v-show="items.length === 0 && !inputSearch">
-      Não há colaboradores cadastrados - <router-link :to="{name: 'items'}">Realizar novo cadastro</router-link> 
+      Não há itens cadastrados - <router-link :to="{ name: 'items' }">Realizar novo cadastro</router-link>
     </p>
   </div>
 </template>
@@ -71,24 +76,27 @@ import { ref, computed } from "vue";
 import { useStore } from "vuex";
 
 
-
-
 const router = useRouter();
 
 const store = useStore();
-const inputSearch = ref("");
+const inputSearch = ref(null);
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
 const page = ref(1);
 const perPage = ref(5);
+const sortBy = ref("");
+const findBy = ref("");
+
+findBy.value = 'codPatrimonio';
 
 const totalPages = computed(() => {
   if (inputSearch.value) {
     return Math.ceil(
-      store.state.itemsModule.items.filter((collaborator) =>
-        collaborator.name
-          .toLowerCase()
-          .includes(inputSearch.value.toLowerCase())
+      store.state.itemsModule.items.filter((item) =>
+        findBy.value === 'codPatrimonio'
+          ? item[findBy.value] === Number(inputSearch.value)
+          : item[findBy.value].toLowerCase().includes(inputSearch.value.toLowerCase())
+
       ).length / perPage.value
     );
   } else {
@@ -100,17 +108,18 @@ const totalPages = computed(() => {
 
 const items = computed(() => {
   if (inputSearch.value) {
+
     let total = store.state.itemsModule.items.filter(
       (item) =>
-        item.name
-          .toLowerCase()
-          .includes(inputSearch.value.toLowerCase())
-    );
+        findBy.value === 'codPatrimonio'
+          ? item[findBy.value] === Number(inputSearch.value)
+          : item[findBy.value].toLowerCase().includes(inputSearch.value.toLowerCase())
+    )
     total = total.slice(
       (page.value - 1) * perPage.value,
       page.value * perPage.value
     );
-    console.log(total);
+
     return total;
   } else {
     return store.state.itemsModule.items.slice(
@@ -127,13 +136,22 @@ const collaborators = computed(() => {
 
 
 function editItem(id) {
-  console.log(id)
   router.push({ name: 'itens', params: { itemId: id } });
 } 
 </script>
 
 
 <style lang="scss" scoped>
+
+.content {
+  flex: 1 1 0%;
+  background-color: var(--color-light);
+  padding: 0.3rem;
+  border-radius: 1rem;
+  margin-right: 1rem;
+  color: var(--color-dark);
+  font-size: 1.25rem;
+}
 .card {
   margin-bottom: 10px;
   padding: 20px;
@@ -157,40 +175,4 @@ function editItem(id) {
   color: var(--color-secondary);
 }
 
-.form {
-  position: relative;
-}
-
-.form .fa-search {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  color: #9ca3af;
-}
-
-.form span {
-  position: absolute;
-  right: 17px;
-  top: 13px;
-  padding: 2px;
-  border-left: 1px solid #d1d5db;
-}
-
-.left-pan {
-  padding-left: 7px;
-}
-
-.left-pan {
-  color: var(--color-secondary);
-}
-
-.form-input {
-  height: 55px;
-  text-indent: 33px;
-  border-radius: 10px;
-}
-
-.form-input:focus {
-  border: 1px solid var(--color-secondary);
-}
 </style>
