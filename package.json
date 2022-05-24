@@ -15,6 +15,7 @@
     "vue": "^3.2.33",
     "vue-input-facade": "^2.0.1",
     "vue-loading-overlay": "5.0",
+    "vue-m-dialog": "^3.0.0",
     "vue-router": "^4.0.14",
     "vue-the-mask": "^0.11.1",
     "vue-toast-notification": "3.0",

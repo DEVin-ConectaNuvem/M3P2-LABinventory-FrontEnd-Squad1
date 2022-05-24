@@ -27,7 +27,8 @@
             <img class="img-fluid imgAccordion" :src="item.url" />
             <p v-text="item.codPatrimonio" class="ms-2 nameCollab fs-5 me-2"></p>
             <p class="fs-5" v-text="' - ' + item.title + ' - '"></p>
-            <p class="fs-5 ms-1" :class="item.collaborator ? '' : 'text-success'" v-text="item.collaborator ? item.collaborator : 'Item disponível'"></p>
+            <p class="fs-5 ms-1" :class="item.collaborator ? '' : 'text-success'"
+              v-text="item.collaborator ? item.collaborator : 'Item disponível'"></p>
           </button>
         </h2>
 
@@ -45,19 +46,19 @@
                 <strong>última modificação:</strong> {{ item.updatedAt }}
                 <br />
                 <hr>
-              <strong class="fs-5">Empréstimo: <span :class="item.collaborator ? '' : 'text-success'"> {{ item.collaborator ? item.collaborator : "Disponível" }}</span></strong>
+                <strong class="fs-5">Empréstimo: <span :class="item.collaborator ? '' : 'text-success'"> {{
+                    item.collaborator ? item.collaborator : "Disponível"
+                }}</span></strong>
                 <br />
-                  <!-- <optgroup label="Colaboradores">
-                    <option v-for="collab in collaborators" v-text="collab.name" ></option>
-                  </optgroup> -->
+                
               </div>
               <div class="text-end ">
-              <button class="btn btn-success m-2" @click="loanItem(item.codPatrimonio)">
-                <i class="fa-solid fa-arrow-right-arrow-left"></i> Emprestar item
-              </button>
-              <button class="btn btn-danger" @click="editItem(item.codPatrimonio)">
-                <i class="fa-solid fa-edit"></i> Editar item
-              </button>
+                <button class="btn btn-success m-2" @click="loanCollaborator(item.codPatrimonio)">
+                  <i class="fa-solid fa-arrow-right-arrow-left"></i> Emprestar item
+                </button>
+                <button class="btn btn-danger" @click="editItem(item.codPatrimonio)">
+                  <i class="fa-solid fa-edit"></i> Editar item
+                </button>
               </div>
             </div>
           </div>
@@ -71,6 +72,23 @@
     <p class="text-danger" v-show="items.length === 0 && !inputSearch">
       Não há itens cadastrados - <router-link :to="{ name: 'items' }">Realizar novo cadastro</router-link>
     </p>
+
+    <m-dialog v-model="show" title="Empréstimo de itens">
+      <hr>
+      <p v-text="item.title"></p>
+      <img :src="item.url" class="img-fluid imagemLoan"  alt="imagem do item">
+      <hr>
+      <p>Colaborador:</p>
+      <select class="form-select" v-model="item.collaborator">
+      <optgroup label="Colaboradores">
+      <option v-for="collab in collaborators" v-text="collab.name" ></option>
+      </optgroup>
+      </select>
+      <template v-slot:footer>
+        <button class="btn btn-danger me-2" @click="show = false">Cancelar</button>
+        <button class="btn btn-success" @click="show = false">Salvar</button>
+      </template>
+    </m-dialog>
   </div>
 </template>
 
@@ -90,7 +108,8 @@ const page = ref(1);
 const perPage = ref(5);
 const findBy = ref("codPatrimonio");
 
-
+const show = ref(false)
+const item = ref({})
 
 const totalPages = computed(() => {
   if (inputSearch.value) {
@@ -136,7 +155,10 @@ const collaborators = computed(() => {
   return store.state.collaboratorModule.collaborators
 });
 
-
+function loanCollaborator(codPatrimonio) {
+  item.value = store.state.itemsModule.items.find((item) => item.codPatrimonio === codPatrimonio)
+  show.value = true
+}
 
 function editItem(id) {
   router.push({ name: 'itens', params: { itemId: id } });
@@ -145,6 +167,9 @@ function editItem(id) {
 
 
 <style lang="scss" scoped>
+.imagemLoan{
+  max-height: 300px;
+}
 .content {
   flex: 1 1 0%;
   background-color: var(--color-light);
