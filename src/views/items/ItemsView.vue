@@ -5,12 +5,12 @@
       <div class="row mb-1">
         <h3>Dados do item</h3>
         <hr />
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Código de Patrimônio <span>*</span></label>
-          <Veefield type="text" name="codPatrimonio" class="form-control" placeholder="Nome completo"
-            v-model.trim="form.codPatrimonio" required :class="{ 'is-invalid': errors.codPatrimonio }"
-            :rules="required" />
-          <div class="invalid-feedback">{{ errors.codPatrimonio }}</div>
+        <div class="col-sm-12 col-md-6 col-lg-3">
+          <label class="form-label">Cód. de Patrimônio <span>*</span></label>
+          <input type="text" name="codPatrimonio" class="form-control" placeholder="Cód. automatico"
+            v-model="form.codPatrimonio"
+            disabled
+            />
         </div>
 
         <div class="col-sm-12 col-md-6 col-lg-4">
@@ -36,7 +36,7 @@
       <h4 class="mt-3">Dados Complementares</h4>
       <hr>
       <div class="row mb-1">
-        <div class="col-sm-6 col-md-4 col-lg-3">
+        <div class=" col-sm-6 col-md-4 col-lg-3 ">
           <label class="form-label">Valor <span>*</span></label>
           <Veefield type="text" name="value" class="form-control" placeholder="Valor do item" v-model.trim="form.value"
             required :class="{ 'is-invalid': errors.value }" :rules="validateNumber" />
@@ -118,12 +118,24 @@ const content = {
   },
 };
 
+
+store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
+
+const getCountItems = computed(() => {
+      if (store.state.itemsModule.items.length > 0) {
+        return  store.state.itemsModule.items.length + 1 ;
+      } else {
+        return  1 ;
+      }
+});
+
+
 // botão de submit do formulário
 const btnForm = ref("Cadastrar");
 
 // variaveis do formulários - reativas (data)
 const form = ref({
-  codPatrimonio: "",
+  codPatrimonio: null,
   title: "",
   description: "",
   category: "",
@@ -142,6 +154,7 @@ Funções para submit do formulário
 //função executada quando o formulário for submetido com sucesso
 function onValidSubmit(values, actions) {
   newItem(actions);
+  actions.resetForm();
   /* if (infoById.value) {
     editItem(actions);
   } else {
@@ -160,10 +173,11 @@ function onInvalidSubmit({ errors }) {
 function newItem(actions) {
   const loader = $loading.show();
   setTimeout(() => {
-    form.value.codPatrimonio = "i" + uid(4);
+    form.value.codPatrimonio = getCountItems.value;
     form.value.updatedAt = moment().format("llll");
     store.dispatch("itemsModule/registerItem", form.value);
     actions.resetForm();
+    clearForm()
     loader.hide();
     toast(content, {
       position: "top-right",
@@ -178,6 +192,14 @@ function newItem(actions) {
       rtl: false,
     });
   }, 1000);
+
+function clearForm(){
+  form.value.codPatrimonio = '';
+  form.value.description = '';
+  form.value.url = '';
+}
+
+
 }
 
 // Função para editar o item
