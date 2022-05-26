@@ -7,7 +7,7 @@ const router = createRouter({
   routes: [
     {
       path: "/", 
-      redirect: "/dashboard",
+      alias: "/dashboard",
       name: "dashboard",
       component: DashboardView,
       beforeEnter: (to) => {
