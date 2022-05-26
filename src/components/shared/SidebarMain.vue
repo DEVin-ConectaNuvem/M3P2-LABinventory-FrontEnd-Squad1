@@ -29,11 +29,11 @@
         <hr>
         <span>Produtos</span>
         <li>
-          <RouterLink to="/produtos/cadastro" class="nav-link">
+          <RouterLink to="/itens" class="nav-link">
             <i class="fa-solid fa-circle-plus"></i>
             <span> Cadastrar</span>
           </RouterLink>
-          <RouterLink to="/produtos/emprestimo" class="nav-link">
+          <RouterLink to="/lista-itens" class="nav-link">
             <i class="fa-solid fa-address-book"></i>
             <span> Empréstimo</span>
           </RouterLink>

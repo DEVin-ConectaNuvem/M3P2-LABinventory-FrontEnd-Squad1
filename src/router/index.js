@@ -1,13 +1,15 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import LoginView from "../views/Auth/LoginView.vue";
+import DashboardView from "../views/Dashboard/DashboardView.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      name: "home",
-      component: () => import("../views/Collaborators/CollaboratorsView.vue"),
+      path: "/", 
+      redirect: "/dashboard",
+      name: "dashboard",
+      component: DashboardView,
       beforeEnter: (to) => {
         const auth = localStorage.getItem("token");
         if (auth) {
@@ -44,6 +46,30 @@ const router = createRouter({
       path: "/lista-colaboradores",
       name: "ListCollaborators",
       component: () => import("../views/Collaborators/ListCollaboratorsView.vue"),
+      beforeEnter: (to) => {
+        const auth = localStorage.getItem("token");
+        if (auth) {
+          return true;
+        }
+        return (to = "/login");
+      },
+    },
+    {
+      path: "/itens",
+      name: "items",
+      component: () => import("../views/items/ItemsView.vue"),
+      beforeEnter: (to) => {
+        const auth = localStorage.getItem("token");
+        if (auth) {
+          return true;
+        }
+        return (to = "/login");
+      },
+    },
+    {
+      path: "/lista-itens",
+      name: "listItems",
+      component: () => import("../views/items/ListItems.vue"),
       beforeEnter: (to) => {
         const auth = localStorage.getItem("token");
         if (auth) {

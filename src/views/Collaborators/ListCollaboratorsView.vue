@@ -3,90 +3,61 @@
     <div class="row height d-flex justify-content-center align-items-center">
       <div class="form">
         <i class="fa fa-search"></i>
-        <input
-          v-model="inputSearch"
-          type="text"
-          class="form-control form-input"
-          placeholder="Ex: João..."
-        />
+        <input v-model="inputSearch" type="text" class="form-control form-input" placeholder="Ex: João..." />
         <span class="left-pan d-none d-md-block">Buscar colaborador</span>
       </div>
     </div>
     <hr />
     <h4>Lista de colaboradores</h4>
 
-    <paginate
-      v-model="page"
-      :page-count="totalPages"
-      :page-range="3"
-      :margin-pages="2"
-      :prev-text="'Voltar'"
-      :next-text="'Avançar'"
-      :container-class="'pagination'"
-      :page-class="'page-item'"
-    >
+    <paginate v-model="page" :page-count="totalPages" :page-range="3" :margin-pages="2" :prev-text="'Voltar'"
+      :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">
     </paginate>
 
-    <div
-      class="accordion"
-      v-for="collaborator in collaborators"
-      :key="collaborator.id"
-    >
+    <div class="accordion" v-for="collaborator in collaborators" :key="collaborator.id">
       <div class="accordion-item">
         <h2 class="accordion-header" :id="collaborator.id">
-          <button
-            class="accordion-button collapsed text-capitalize"
-            type="button"
-            data-bs-toggle="collapse"
-            :data-bs-target="'#collapse' + collaborator.id"
-            aria-expanded="true"
-            :aria-controls="'collapseOne' + collaborator.id"
-          >
-            <vue-gravatar
-              class="img-fluid imgAccordion"
-              :email="collaborator.email"
-            />
+          <button class="accordion-button collapsed text-capitalize" type="button" data-bs-toggle="collapse"
+            :data-bs-target="'#collapse' + collaborator.id" aria-expanded="true"
+            :aria-controls="'collapseOne' + collaborator.id">
+            <vue-gravatar class="img-fluid imgAccordion" :email="collaborator.email" />
             <p v-text="collaborator.name" class="ms-2 nameCollab"></p>
             <p v-text="' - ' + collaborator.position"></p>
           </button>
         </h2>
-        <div
-          :id="'collapse' + collaborator.id"
-          class="accordion-collapse collapse"
-          :aria-labelledby="collaborator.id"
-        >
+        <div :id="'collapse' + collaborator.id" class="accordion-collapse collapse" :aria-labelledby="collaborator.id">
           <div class="accordion-body">
             <div class="row">
-            <div class="col-sm-12 col-md-6">
-            <strong>Email:</strong> {{ collaborator.email }}
-            <br />
-            <strong>Telefone:</strong> {{ collaborator.phone }}
-            <br />
-            <strong>Cargo:</strong> {{ collaborator.position }}
-            <br />
+              <div class="col-sm-12 col-md-6">
+                <strong>Email:</strong> {{ collaborator.email }}
+                <br />
+                <strong>Telefone:</strong> {{ collaborator.phone }}
+                <br />
+                <strong>Cargo:</strong> {{ collaborator.position }}
+                <br />
+              </div>
+              <div class="col-sm-12 col-md-6">
+                <strong>Criado em:</strong> {{ collaborator.createdAt }}
+                <br />
+                <strong>última modificação:</strong> {{ collaborator.updatedAt }}
+                <br />
+              </div>
             </div>
-            <div class="col-sm-12 col-md-6">
-            <strong>Criado em:</strong> {{ collaborator.createdAt }}
-            <br />
-            <strong>última modificação:</strong> {{ collaborator.updatedAt }}
-            <br />
+            <div class="text-end">
+              <button class="btn btn-danger mt-2" @click="editCollab(collaborator.id)">
+                <i class="fa-solid fa-user-pen"></i> Editar Colaborador
+              </button>
             </div>
-            </div>
-            <button
-              class="btn btn-warning mt-2"
-              @click="editCollab(collaborator.id)"
-            >
-              <i class="fa-solid fa-user-pen"></i> Editar
-            </button>
           </div>
         </div>
       </div>
     </div>
     <p class="text-danger" v-show="collaborators.length === 0 && inputSearch">
-      Não há colaboradores cadastrados com este <strong>nome</strong> - <router-link :to="{name: 'colaboradores'}">Realizar novo cadastro</router-link> 
+      Não há colaboradores cadastrados com este <strong>nome</strong> - <router-link :to="{ name: 'colaboradores' }">
+        Realizar novo cadastro</router-link>
     </p>
     <p class="text-danger" v-show="collaborators.length === 0 && !inputSearch">
-      Não há colaboradores cadastrados - <router-link :to="{name: 'colaboradores'}">Realizar novo cadastro</router-link> 
+      Não há colaboradores cadastrados - <router-link :to="{ name: 'colaboradores' }">Realizar novo cadastro</router-link>
     </p>
   </div>
 </template>
@@ -99,7 +70,6 @@ import { RouterLink, useRouter } from "vue-router";
 
 
 const router = useRouter();
-
 const store = useStore();
 const inputSearch = ref("");
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
@@ -134,7 +104,6 @@ const collaborators = computed(() => {
       (page.value - 1) * perPage.value,
       page.value * perPage.value
     );
-    console.log(total);
     return total;
   } else {
     return store.state.collaboratorModule.collaborators.slice(
@@ -144,9 +113,15 @@ const collaborators = computed(() => {
   }
 });
 
+const itemsLoaned = computed(() => {
+  return store.state.itemsModule.items.filter(
+    (item) => item.collaborator
+  );
+});
+
+
 function editCollab(id) {
-  console.log(id)
-  router.push({ name: 'colaboradores', params:{userId: id} });
+  router.push({ name: 'colaboradores', params: { userId: id } });
 }
 </script>
 
