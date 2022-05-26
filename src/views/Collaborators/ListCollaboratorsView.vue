@@ -48,8 +48,6 @@
                 <i class="fa-solid fa-user-pen"></i> Editar Colaborador
               </button>
             </div>
-
-
           </div>
         </div>
       </div>
@@ -72,7 +70,6 @@ import { RouterLink, useRouter } from "vue-router";
 
 
 const router = useRouter();
-
 const store = useStore();
 const inputSearch = ref("");
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
@@ -124,7 +121,6 @@ const itemsLoaned = computed(() => {
 
 
 function editCollab(id) {
-  console.log(id)
   router.push({ name: 'colaboradores', params: { userId: id } });
 }
 </script>

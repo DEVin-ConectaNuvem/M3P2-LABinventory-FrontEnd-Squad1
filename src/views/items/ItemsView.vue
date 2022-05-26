@@ -64,14 +64,12 @@
             placeholder="Digite as especificações do item" class="form-control"></textarea>
         </div>
         <div class="col-sm-12 col-md-6">
-
           <label class="form-label">Url (imagem do produto) <span>*</span></label>
           <Veefield type="text" name="url" class="form-control" placeholder="url imagem do item" v-model.trim="form.url"
             required :class="{ 'is-invalid': errors.url }" :rules="required" />
           <div class="invalid-feedback">{{ errors.url }}</div>
           <img :src="form.url" alt="" class="img-fluid text-center" width="120">
         </div>
-
       </div>
 
       <div class="text-end">
@@ -146,6 +144,7 @@ const form = ref({
   collaborator: "",
   createdAt: moment().format("llll"),
   updatedAt: "",
+  loanAt: "",
 });
 
 /* 

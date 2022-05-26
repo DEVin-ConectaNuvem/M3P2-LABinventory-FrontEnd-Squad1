@@ -1,13 +1,15 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import LoginView from "../views/Auth/LoginView.vue";
+import DashboardView from "../views/Dashboard/DashboardView.vue";
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/",
-      name: "home",
-      component: () => import("../views/Collaborators/CollaboratorsView.vue"),
+      path: "/", 
+      redirect: "/dashboard",
+      name: "dashboard",
+      component: DashboardView,
       beforeEnter: (to) => {
         const auth = localStorage.getItem("token");
         if (auth) {
