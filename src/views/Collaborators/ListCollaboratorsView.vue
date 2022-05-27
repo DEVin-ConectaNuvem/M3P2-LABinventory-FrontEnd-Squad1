@@ -178,4 +178,5 @@ function editCollab(id) {
 .form-input:focus {
   border: 1px solid var(--color-secondary);
 }
+
 </style>
