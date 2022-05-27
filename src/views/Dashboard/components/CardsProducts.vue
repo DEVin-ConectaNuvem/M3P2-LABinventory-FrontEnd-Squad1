@@ -1,135 +1,84 @@
 <template>
+  <div class="wrap">
 
-   <!--  <div class="card text-center">
-        <div class="card-header"><slot name="img"></slot> </div>
-        <div class="card-body">
-            <h5 class="card-title"><slot name="title"></slot></h5>
-            <p class="card-text"><slot name="categoria"></slot></p>
-            <span></span>
-        </div>
-        <div class="card-footer text-muted"><slot name="status"></slot></div>
-    </div> -->
-
-    <ul class="cards">
-  <li>
-    <a href="" class="card">
-        <slot name="img" class="card__image"></slot>
+    <div class="box one">
+      <h1>
+        <slot name="title"></slot>
+      </h1>
+      <slot name="img" class="imageBg"></slot>
       
-      <div class="card__overlay">
-        <div class="card__header">
-          <slot name="collaborator" ></slot>                
-          
-          <div class="card__header-text">
-            <h3 class="card__title"><slot name='title'></slot></h3>            
-            <span class="card__status"><slot name='status'></slot></span>
-          </div>
-        </div>
-        <p class="card__description"><slot name="category"></slot>></p>
+      <div class="date">
+        <h4>
+          <slot name="codPatrimonio"> </slot>
+        </h4>
       </div>
-    </a>      
-  </li>  
-</ul>
-
+      <div class="poster">
+        <slot name="collab"></slot>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup>
 
 </script>
-
 <style lang="scss" scoped>
-
-
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin: 4rem 5vw;
-  padding: 0;
-  list-style-type: none;
-  max-width: 250px;
-}
-
-.card {
-  position: relative;
-  display: block;
-  height: 100%;  
-  border-radius: calc(var(--curve) * 1px);
-  overflow: hidden;
-  text-decoration: none;
-}
-
-.card__image {      
-  width: 100%;
-  height: auto;
-}
-
-.card__overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 1;      
-  border-radius: calc(var(--curve) * 1px);    
-  background-color: var(--surface-color);      
-  transform: translateY(100%);
-  transition: .2s ease-in-out;
-}
-
-.card:hover .card__overlay {
-  transform: translateY(0);
-}
-
-.card__header {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 2em;
-  padding: 2em;
-  border-radius: calc(var(--curve) * 1px) 0 0 0;    
-  background-color: var(--surface-color);
-  transform: translateY(-100%);
-  transition: .2s ease-in-out;
-}
-
-
-.card__arc path {
-  fill: var(--surface-color);
-  d: path("M 40 80 c 22 0 40 -22 40 -40 v 40 Z");
-}       
-
-.card:hover .card__header {
-  transform: translateY(0);
-}
-
-
-.card__title {
-  font-size: 1em;
-  margin: 0 0 .3em;
-  color: #6A515E;
-}
-
-.card__tagline {
-  display: block;
-  margin: 1em 0;
-  font-family: "MockFlowFont";  
-  font-size: .8em; 
-  color: #D7BDCA;  
-}
-
-.card__status {
-  font-size: .8em;
-  color: #D7BDCA;
-}
-
-.card__description {
-  padding: 0 2em 2em;
-  margin: 0;
-
+.wrap {
+  
   display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  word-wrap: break-word;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.box {
+  display: inline-block;
   overflow: hidden;
-  text-overflow: clip ellipsis
-}    
+  position: relative;
+  width: 100%;
+  height: 250px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  border-radius: 20px!important;
+  
+  text-align: center;
+  border-radius: 3px;
+  -webkit-transition: 200ms ease-in-out;
+  -o-transition: 200ms ease-in-out;
+  transition: 200ms ease-in-out;
+  -webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+}
+
+.box:hover {
+  margin-bottom: -10px;
+  -webkit-box-shadow: 0 0 5px rgba(0, 245, 82, 0.7);
+  box-shadow: 0 0 5px rgba(0, 255, 85, 0.7);
+}
+
+.box h1 {
+  color: #fff;
+ /*  padding: 2px 15px; */
+  font-size: 1.2rem;
+  font-weight: 550;
+  background: rgba(0, 0, 0, 0.8);
+  -webkit-box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+}
+
+.poster {
+  width: 100%;
+  padding-bottom: 8px; 
+  margin: 0;
+  position: absolute;               /* 2 */
+  top: 100%;                         /* 3 */
+  transform: translate(0, -50%);
+  color: #fff;
+  font-weight: 500;
+  border-radius: 50px;
+}
+
 </style>

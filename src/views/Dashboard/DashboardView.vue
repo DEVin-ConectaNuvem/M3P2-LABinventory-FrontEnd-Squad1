@@ -1,6 +1,7 @@
 <template>
     <div class="container">
-        <div class="row">
+        <!-- Inicio da seção cards do dashboard  -->
+        <section class="row">
             <cards-dashboard class="col-sm-12 col-md-6 col-lg-3">
                 <template v-slot:icon></template>
                 <template v-slot:count>50</template>
@@ -25,10 +26,11 @@
                 <template v-slot:title>Empréstimos</template>
                 <template v-slot:infos>Número de empréstimos</template>
             </cards-dashboard>
-        </div>
+        </section>
+        <!-- Fim da seção de cards do dashboard  -->
 
-        <hr>
-        <h5>Busca de itens</h5>
+        <!-- Inicio Formulário de busca  -->
+        <h3>Busca de itens</h3>
         <div class="content input-group">
             <input type="text" class="w-75 form-control form-control animate__animated animate__flipInX"
                 placeholder="✍️ Buscar item..." v-model="inputSearch">
@@ -40,43 +42,53 @@
                 <option value="collaborator">Pelo Colaborador</option>
             </select>
         </div>
+        <!-- Fim formulário de busca  -->
 
-        <div class="mt-2 gap-2 row">
-            <cards-products class="col-sm-12 col-md-6 col-lg-3 col-xxl-3" v-for="item in items"
-                :key="item.codPatrimonio">
-                <template v-slot:img><img :src="item.url" class="img-fluid" alt=""></template>
-                <template v-slot:title>{{ item.title }}</template>
-                <template v-slot:collaborator>
-                    <vue-gravatar class="img-fluid card__thumb" :email="emailColab(item.collaborator)" />
+        <!-- Inicio seção de cards dos produtos  -->
+        <section class="row">
+            <cards-products class="col-sm-12 col-md-6 col-lg-3 col-xxl-3 " v-for="item in items"
+                :key="item.codPatrimonio"
+                >
+                <template v-slot="card"></template>
+                <template v-slot:title>
+                    <p class="text-center" :class="item.collaborator ? 'loaned' : 'avaliable'">
+                        {{ item.codPatrimonio + ' - ' + item.title }}
+                    </p>
                 </template>
-                <template v-slot:codigo>Código: {{ item.codPatrimonio }}</template>
-                <template v-slot:category>Categoria: {{ item.category }}</template>
-                <template v-slot:status>Emprestado para: <p class="text-center fs-6"
-                        :class="item.collaborator ? 'loaned' : 'avaliable'"
-                        v-text="item.collaborator ? item.collaborator : 'Disponível'"></p> </template>
+                <template v-slot:img><img :src="item.url" class="imageBg "></template>
+                <template v-slot:collab>
+                    <p 
+                        
+                        :class="item.collaborator ? 'card-status-loaned' : 'card-status-avaliable'"
+                        v-text="item.collaborator ? item.collaborator : 'Disponível'"></p>
+                </template>
+    
+                <template v-slot:category><button class="btn btn-primary w-100 btndetails bg-dark">Mais detalhes</button></template>
             </cards-products>
+        </section>
+        <!-- Fim da seção de cards dos produtos  -->
 
-        </div>
-
+        <!-- Inicio seção para tratamento de informações vazia  -->
         <div>
             <p class="text-danger">
                 Ainda não há itens cadastrados com este <strong>código</strong> - <router-link
-                    :to="{ name: 'colaboradores' }">
+                    :to="{ name: 'items' }">
                     Realizar novo cadastro</router-link>
             </p>
             <p class="text-danger">
-                Ainda não há items cadastrados no sistema - <router-link :to="{ name: 'colaboradores' }">Realizar novo
+                Ainda não há items cadastrados no sistema - <router-link :to="{ name: 'items' }">Realizar novo
                     cadastro
                 </router-link>
             </p>
         </div>
+        <!-- Fim da seção para tratamento de informações vazia  -->
     </div>
 </template>
 
 <script setup>
 import CardsDashboard from './components/CardsDashboard.vue';
 import CardsProducts from './components/CardsProducts.vue';
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import { useStore } from "vuex";
 
 const store = useStore();
@@ -92,48 +104,43 @@ const items = computed(() => {
     return store.state.itemsModule.items;
 })
 
-onMounted(() => {
-  
-
-
-})
-
-
-function emailColab(collaborator) {
-    if (collaborator) {
-        store.state.collaboratorModule.collaborators.forEach(collab => {
-            if (collab.name == collaborator) {
-                console.log(collab.email);
-                return collab.email;
-            }
-        })
-    } else {
-        return "";
-    }
-}
-
 
 </script>
 
 <style lang="scss" scoped>
-.loaned {
-    background-color: #06458d;
-    color: #fff;
-    border-radius: 10px;
-    padding: 0 10px;
+
+
+.imageBg{
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+    left: 0;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  z-index: -1;
 }
 
-.avaliable {
-    background-color: rgb(34, 185, 46);
-    color: #fff;
-    border-radius: 50px;
-    padding: 0 10px;
+.card-status-loaned {
+  background: #00fa21;
+  background: -webkit-linear-gradient(to right, var(--color-secondary), var(--color-primary));
+  background: -webkit-gradient(linear, left top, right top, from(var(--color-secondary)), to(var(--color-primary)));
+  background: -webkit-linear-gradient(left, var(--color-secondary), var(--color-primary));
+  background: -o-linear-gradient(left, var(--color-secondary), var(--color-primary));
+  background: linear-gradient(to right, var(--color-secondary), var(--color-primary));
+  -webkit-box-shadow: 0 0 10px var(--color-secondary);
+  box-shadow: 0 0 10px var(--color-secondary);
 }
 
-.card__thumb {
-    flex-shrink: 0;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+.card-status-avaliable{
+  background: #00fa21;
+  background: -webkit-linear-gradient(to right, #5adf91, #00fa21);
+  background: -webkit-gradient(linear, left top, right top, from(#5adf91), to(#00fa21));
+  background: -webkit-linear-gradient(left, #5adf91, #00fa21);
+  background: -o-linear-gradient(left, #5adf91, #00fa21);
+  background: linear-gradient(to right, #5adf91, #00fa21);
+  -webkit-box-shadow: 0 0 20px greenyellow;
+  box-shadow: 0 0 20px greenyellow;  
 }
+
 </style>
