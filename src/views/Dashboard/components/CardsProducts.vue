@@ -24,7 +24,6 @@
 </script>
 <style lang="scss" scoped>
 .wrap {
-  
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -54,9 +53,7 @@
 }
 
 .box:hover {
-  margin-bottom: -10px;
-  -webkit-box-shadow: 0 0 5px rgba(0, 245, 82, 0.7);
-  box-shadow: 0 0 5px rgba(0, 255, 85, 0.7);
+  margin-bottom: -5px;
 }
 
 .box h1 {
@@ -64,9 +61,9 @@
  /*  padding: 2px 15px; */
   font-size: 1.2rem;
   font-weight: 550;
-  background: rgba(0, 0, 0, 0.8);
+  background: var(--color-dark);
   -webkit-box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
-  box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
 }
 
 .poster {
