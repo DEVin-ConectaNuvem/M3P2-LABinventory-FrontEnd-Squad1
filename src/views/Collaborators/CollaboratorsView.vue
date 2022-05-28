@@ -9,8 +9,8 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Nome completo <span>*</span></label>
           <Veefield type="text" name="name" class="form-control" placeholder="Nome completo" v-model.trim="form.name"
-            required :class="{ 'is-invalid': errors.name }" :rules="validateName" v-focus />
-          <div class="invalid-feedback">{{ errors.name }}</div>
+            required :class="{ 'is-invalid': errors.name }" :rules="validateName" v-focus maxlength="25"/>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.name }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Genero <span>*</span></label>
@@ -21,26 +21,26 @@
             <option value="Feminino">Feminino</option>
             <option value="Outro">Outro</option>
           </Veefield>
-          <div class="invalid-feedback">{{ errors.gender }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.gender }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Data de nascimento <span>*</span></label>
           <Veefield type="date" name="birthDay" class="form-control" placeholder="Data de nascimento"
             v-model="form.birthDay" required :class="{ 'is-invalid': errors.birthDay }" :rules="validateDate" />
-          <div class="invalid-feedback">{{ errors.birthDay }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.birthDay }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Telefone <span>*</span></label>
           <Veefield type="text" name="phone" class="form-control" placeholder="Fixo ou celular" v-model="form.phone"
             v-mask="['(##) ####-####', '(##) #####-####']" :class="{ 'is-invalid': errors.phone }"
             :rules="validatePhone" />
-          <div class="invalid-feedback">{{ errors.phone }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.phone }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">E-mail <span>*</span></label>
           <Veefield type="email" name="email" class="form-control" placeholder="Ex: José@gmail.com" v-model="form.email"
             required :class="{ 'is-invalid': errors.email }" :rules="validateEmail" />
-          <div class="invalid-feedback">{{ errors.email }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.email }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Cargo <span>*</span></label>
@@ -55,7 +55,7 @@
               Desenvolvedor Fullstack
             </option>
           </Veefield>
-          <div class="invalid-feedback">{{ errors.position }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.position }}</div>
         </div>
       </div>
 
@@ -67,31 +67,31 @@
           <Veefield type="text" name="zipcode" class="form-control" placeholder="CEP" v-model="form.zipcode"
             @focusout="searchZipCode" required v-mask="'#####-###'" ref="zipcode"
             :class="{ 'is-invalid': errors.zipcode }" :rules="validateCEP" />
-          <div class="invalid-feedback">{{ errors.zipcode }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.zipcode }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Cidade <span>*</span></label>
           <Veefield type="text" name="city" class="form-control" placeholder="Cidade" v-model="form.city" required
             :class="{ 'is-invalid': errors.city }" disabled :rules="required" />
-          <div class="invalid-feedback">{{ errors.city }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.city }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Estado <span>*</span></label>
           <Veefield type="text" name="state" class="form-control" placeholder="Estado" v-model="form.state" required
             :class="{ 'is-invalid': errors.state }" disabled :rules="required" />
-          <div class="invalid-feedback">{{ errors.state }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.state }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Bairro <span>*</span></label>
           <Veefield type="text" name="neighborhood" class="form-control" placeholder="Bairro"
             v-model="form.neighborhood" required :class="{ 'is-invalid': errors.neighborhood }" :rules="required" />
-          <div class="invalid-feedback">{{ errors.neighborhood }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.neighborhood }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Logradouro <span>*</span></label>
           <Veefield type="text" name="street" class="form-control" placeholder="Rua/Avenida" v-model="form.street"
             required :class="{ 'is-invalid': errors.street }" :rules="required" />
-          <div class="invalid-feedback">{{ errors.street }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.street }}</div>
         </div>
 
         <div class="col-sm-12 col-md-6 col-lg-4">
@@ -99,19 +99,19 @@
           <Veefield type="number" name="houseNumber" class="form-control" placeholder="Número da residência"
             :rules="validateNumber" v-model.number="form.houseNumber" required
             :class="{ 'is-invalid': errors.houseNumber }" />
-          <div class="invalid-feedback">{{ errors.houseNumber }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.houseNumber }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Complemento <span>*</span></label>
           <Veefield type="text" name="complement" class="form-control" placeholder="Complemento" :rules="required"
             v-model="form.complement" required :class="{ 'is-invalid': errors.complement }" />
-          <div class="invalid-feedback">{{ errors.complement }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.complement }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Referência <span>*</span></label>
           <Veefield type="text" name="reference" class="form-control" placeholder="Ponto de referência"
             :rules="required" v-model="form.reference" required :class="{ 'is-invalid': errors.reference }" />
-          <div class="invalid-feedback">{{ errors.reference }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.reference }}</div>
         </div>
       </div>
       <div class="text-end">

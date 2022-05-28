@@ -90,7 +90,7 @@
         </optgroup>
       </select>
       <template v-slot:footer>
-        <button class="btn btn-danger me-2" @click="cancelEditItem()">Cancelar</button>
+        <button class="btn btn-secondary me-2" @click="cancelEditItem()">Cancelar</button>
         <button class="btn btn-success"
           @click="setLoan({ codPatrimonio: item.codPatrimonio, collaborator: item.collaborator })">Salvar</button>
       </template>
