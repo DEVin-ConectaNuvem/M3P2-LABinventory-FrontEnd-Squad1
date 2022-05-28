@@ -167,9 +167,6 @@ function onValidSubmit(values, actions) {
   }
 }
 
-
-
-
 //função executada quando houver erros no formulário submetido
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {

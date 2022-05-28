@@ -104,7 +104,7 @@ import { RouterLink, useRouter } from "vue-router";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import moment from "moment";
-
+import { createMessageBox } from 'vue-m-dialog'
 
 const router = useRouter();
 const store = useStore();
@@ -164,12 +164,31 @@ const collaborators = computed(() => {
 });
 
 function loanCollaborator(codPatrimonio, collaborator) {
+
   if (collaborator) {
-    setLoan({ codPatrimonio, collaborator: null })
+     createMessageBox({
+        title: 'Confirmação de devolução',
+        message: `Gostaria de confirmar a devolução do item código ${codPatrimonio} de ${collaborator} ?`,
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar',
+        hasMask: true,
+        draggable: true,
+        isPointerEventsNone: true,
+        isMiddle: true,
+    }).then(res => {
+        if (res.ok) {
+        setLoan({ codPatrimonio, collaborator: null })
+        }
+    })
   } else {
     item.value = store.state.itemsModule.items.find((item) => item.codPatrimonio === codPatrimonio)
     show.value = true
   }
+}
+
+
+function confirmDevolution(item) {
+   
 }
 
 function setLoan(item) {
