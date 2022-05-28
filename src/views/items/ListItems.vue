@@ -1,11 +1,10 @@
 <template>
   <div class="container">
     <div class="content input-group">
-      <input type="text" class="w-75 form-control form-control animate__animated animate__flipInX"
-        placeholder="✍️ Buscar..." v-model="inputSearch">
-      <select class="form-control bg-primary text-white " id="" v-model="findBy">
-        <option value="codPatrimonio" selected disabled>Buscar item por:</option>
-        <option value="codPatrimonio">Pelo Código de Patrimonio</option>
+      <input type="text" class="w-75 form-control animate__animated animate__flipInX" placeholder="'✍️ Buscar item... '"
+        v-model="inputSearch">
+      <select class="badge bg-dark text-white text-center" id="" v-model="findBy">
+        <option value="codPatrimonio" selected>Código de Patrimonio</option>
         <option value="title">Pelo título</option>
         <option value="category">Pela Categoria</option>
         <option value="collaborator">Pelo Colaborador</option>
@@ -19,12 +18,12 @@
       :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">
     </paginate>
 
-    <div class="accordion" v-for="item in items" :key="item.codPatrimonio" >
+    <div class="accordion" v-for="item in items" :key="item.codPatrimonio">
       <div class="accordion-item ">
-        <h2 class="accordion-header " :id="item.codPatrimonio" >
-          <button class="accordion-button collapsed text-capitalize"
-            type="button" data-bs-toggle="collapse" :data-bs-target="'#collapse' + item.codPatrimonio"
-            aria-expanded="true" :aria-controls="'collapseOne' + item.codPatrimonio">
+        <h2 class="accordion-header " :id="item.codPatrimonio">
+          <button class="accordion-button collapsed text-capitalize" type="button" data-bs-toggle="collapse"
+            :data-bs-target="'#collapse' + item.codPatrimonio" aria-expanded="true"
+            :aria-controls="'collapseOne' + item.codPatrimonio">
             <img class="img-fluid imgAccordion" :src="item.url" />
             <p v-text="item.codPatrimonio" class="ms-2 nameCollab fs-5 me-2"></p>
             <p class="fs-5" v-text="' - ' + item.title + ' - '"></p>
@@ -48,14 +47,16 @@
                 <br />
                 <strong>Emprestado desde:</strong> {{ item.loanAt }}
                 <hr>
-                <strong class="fs-5 fw-bold">Empréstimo: <span :class="item.collaborator ? 'text-primary' : 'text-success'"> {{
-                    item.collaborator ? item.collaborator : "Disponível"
-                }}</span></strong>
+                <strong class="fs-5 fw-bold">Empréstimo: <span
+                    :class="item.collaborator ? 'text-primary' : 'text-success'"> {{
+                        item.collaborator ? item.collaborator : "Disponível"
+                    }}</span></strong>
                 <br />
 
               </div>
               <div class="text-end ">
-                <button class="btn m-2" :class="item.collaborator ? 'btn-primary' : 'btn-success'" @click="loanCollaborator(item.codPatrimonio, item.collaborator)">
+                <button class="btn m-2" :class="item.collaborator ? 'btn-primary' : 'btn-success'"
+                  @click="loanCollaborator(item.codPatrimonio, item.collaborator)">
                   <i class="fa-solid" :class="item.collaborator ? 'fa-arrow-down' : 'fa-arrow-right-arrow-left'"></i>
                   <span v-text="item.collaborator ? ' Devolver Item' : ' Emprestar item '"> </span>
                 </button>
@@ -175,7 +176,7 @@ function setLoan(item) {
   const data = {
     codPatrimonio: item.codPatrimonio,
     collaborator: item.collaborator ? item.collaborator : null,
-    loanAt: item.collaborator ? moment().format("DD/MM/YYYY hh:mm") : null 
+    loanAt: item.collaborator ? moment().format("DD/MM/YYYY hh:mm") : null
   }
   const setLoan = store.dispatch("itemsModule/setLoanItem", data);
   show.value = false

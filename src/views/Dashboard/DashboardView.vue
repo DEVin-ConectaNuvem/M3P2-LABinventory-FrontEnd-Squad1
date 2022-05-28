@@ -2,27 +2,30 @@
     <div class="container">
         <!-- Inicio da seção cards do dashboard  -->
         <section class="row cards">
-            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-info ">
+            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-info "
+                @click="infoDashRoute('colaboradores', 'ListCollaborators')">
                 <template v-slot:icon><i class="widgets-icons-2 bg-gradient-scooter fa-solid fa-users"></i></template>
                 <template v-slot:count>{{ tweenedCollabs.number.toFixed(0) }}</template>
                 <template v-slot:title>Colaboradores</template>
                 <template v-slot:infos>Total colaboradores</template>
             </cards-dashboard>
-            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-danger">
+            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-danger" @click="infoDashRoute('itens', 'items')">
                 <template v-slot:icon><i
                         class="widgets-icons-2 bg-gradient-bloody fa-solid fa-boxes-stacked"></i></template>
                 <template v-slot:count>{{ tweendItems.number.toFixed(0) }}</template>
                 <template v-slot:title>Itens</template>
                 <template v-slot:infos>Números de itens</template>
             </cards-dashboard>
-            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-success">
+            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-success"
+                @click="infoDashRoute('itens', 'items')">
                 <template v-slot:icon><i
                         class="widgets-icons-2 bg-gradient-ohhappiness  fa-solid fa-sack-dollar"></i></template>
                 <template v-slot:count>R$ {{ tweenedValueTotal.number.toFixed(2) }}</template>
                 <template v-slot:title>Valores</template>
                 <template v-slot:infos>Valor total de items</template>
             </cards-dashboard>
-            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-warning">
+            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-warning"
+                @click="infoDashRoute('empréstimos', 'items')">
                 <template v-slot:icon>
                     <i class="widgets-icons-2 bg-gradient-blooker fa-solid fa-arrow-right-arrow-left "></i>
                 </template>
@@ -36,14 +39,13 @@
         <!-- Inicio Formulário de busca  -->
         <h4>Busca de itens</h4>
         <div class="content input-group">
-            <input type="text" class="w-75 form-control form-control animate__animated animate__flipInX"
+            <input type="text" class="w-75 form-control animate__animated animate__flipInX"
                 placeholder="✍️ Buscar item..." v-model="inputSearch">
-            <select class="form-control bg-primary text-white text-center">
-                <option value="codPatrimonio" selected disabled>Buscar item por:</option>
-                <option value="codPatrimonio">Pelo Código</option>
-                <option value="title">Pelo título</option>
-                <option value="category">Pela Categoria</option>
-                <option value="collaborator">Pelo Colaborador</option>
+            <select class="badge bg-dark text-white text-center" v-model="findBy">
+                <option value="codPatrimonio" selected>Código</option>
+                <option value="title">Nome</option>
+                <option value="category">Categoria</option>
+                <option value="collaborator">Colaborador</option>
             </select>
         </div>
         <!-- Fim formulário de busca  -->
@@ -72,10 +74,11 @@
 
         <!-- Inicio seção para tratamento de informações vazia  -->
         <div class="mt-3">
-            <!-- <p class="text-danger" v-if="">
-                Ainda não há itens cadastrados com este <strong>código</strong> - <router-link :to="{ name: 'items' }">
+            <p class="text-danger" v-if="items.length === 0 && inputSearch">
+                Ainda não há itens cadastrados com este <strong>termo de pesquisa</strong> - <router-link
+                    :to="{ name: 'items' }">
                     Realizar novo cadastro</router-link>
-            </p> -->
+            </p>
             <p class="text-danger" v-if="!items">
                 Ainda não há items cadastrados no sistema - <router-link :to="{ name: 'items' }">Realizar novo
                     cadastro
@@ -95,6 +98,7 @@
                     <p><strong>Categoria:</strong> {{ item.category }}</p>
                     <p><strong>Marca:</strong> {{ item.brand }}</p>
                     <p><strong>Modelo:</strong> {{ item.model }}</p>
+                    <p><strong>Valor:</strong> R${{ item.value }}</p>
                     <p><strong>Status:</strong> <span
                             :class="item.collaborator ? 'badge bg-primary' : 'badge bg-success'"> {{ item.collaborator ?
                                     item.collaborator : 'Disponível'
@@ -113,19 +117,12 @@
             </div>
             <template v-slot:footer>
                 <button class="btn btn-secondary me-2" @click="toggleModal">Cancelar</button>
-                <div class="dropdown">
-                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Ações
-                    </button>
-                    <ul class="dropdown-menu text-start" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" @click="editItem(item.codPatrimonio)"><i class="fa-solid fa-pen-to-square"></i> Editar Item</a></li>
-                        <li><a class="dropdown-item" @click="loanItem(item.codPatrimonio)"><i class="fa-solid fa-arrow-right-arrow-left"></i> Emprestar Item</a></li>
-                    </ul>
-                </div>
+                <button class="btn btn-primary" @click="editItem(item.codPatrimonio)"><i
+                        class="fa-solid fa-pen-to-square"></i> Editar Item</button>
             </template>
         </m-dialog>
         <!-- Fim da seção do Modal para exibição das informações do produto -->
+
     </div>
 </template>
 
@@ -136,23 +133,43 @@ import { ref, computed, reactive, watch } from 'vue'
 import { useStore } from "vuex";
 import { gsap } from "gsap";
 import { RouterLink, useRouter } from "vue-router";
+import { createMessageBox } from 'vue-m-dialog'
+
+
 
 const router = useRouter();
+
 const store = useStore();
 const show = ref(false);
+const showDashboard = ref(true);
 const item = ref({});
+
+const findBy = ref("codPatrimonio");
+const inputSearch = ref(null);
 
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
 
+
+const items = computed(() => {
+    if (inputSearch.value) {
+        let total = store.state.itemsModule.items.filter(
+            (item) =>
+                findBy.value === 'codPatrimonio'
+                    ? item[findBy.value] === Number(inputSearch.value)
+                    : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
+        );
+        return total;
+    } else {
+        return store.state.itemsModule.items;
+    }
+});
+
 const itemsCount = computed(() => {
-    return Number(store.state.itemsModule.items.length);
+    return store.state.itemsModule.items;
 })
 const collabsCount = computed(() => {
-    return Number(store.state.collaboratorModule.collaborators.length);
-})
-const items = computed(() => {
-    return store.state.itemsModule.items;
+    return store.state.collaboratorModule.collaborators;
 })
 const valueTotalItems = computed(() => {
     return store.state.itemsModule.items.reduce((acc, item) => {
@@ -161,9 +178,8 @@ const valueTotalItems = computed(() => {
     }, 0);
 })
 const itemsLoaned = computed(() => {
-    return store.state.itemsModule.items.filter(item => item.collaborator !== null).length;
+    return store.state.itemsModule.items.filter(item => item.collaborator !== null);
 })
-
 
 const tweenedCollabs = reactive({
     number: 0
@@ -183,15 +199,20 @@ function itemInfos(codPatrimonio) {
     show.value = true
 }
 
-gsap.to(tweenedCollabs, { duration: 1, number: Number(collabsCount.value) || 0 })
-gsap.to(tweendItems, { duration: 1, number: Number(itemsCount.value) || 0 })
+gsap.to(tweenedCollabs, { duration: 1, number: Number(collabsCount.value.length) || 0 })
+gsap.to(tweendItems, { duration: 1, number: Number(itemsCount.value.length) || 0 })
 gsap.to(tweenedValueTotal, { duration: 1, number: Number(valueTotalItems.value) || 0 })
-gsap.to(tweenedItemsLoaned, { duration: 1, number: Number(itemsLoaned.value) || 0 })
+gsap.to(tweenedItemsLoaned, { duration: 1, number: Number(itemsLoaned.value.length) || 0 })
 
 
 function toggleModal() {
     show.value = !show.value;
 }
+
+function toggleModalDash() {
+    showDashboard.value = !showDashboard.value;
+}
+
 
 function editItem(id) {
     show.value = false;
@@ -199,14 +220,34 @@ function editItem(id) {
     router.push({ name: 'items', params: { itemId: id } });
 }
 
+function infoDashRoute(destiny, route) {
+    createMessageBox({
+        title: 'Você tem certeza ?',
+        message: `Gostaria de ver mais informações sobre ${destiny} ?`,
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Verificar!',
+        hasMask: true,
+        draggable: true,
+        isPointerEventsNone: true,
+        isMiddle: true,
+    }).then(res => {
+        if (res.ok) {
+            console.log(route)
+            router.push({ name: route })
+        }
+    })
+}
+
+
 </script>
 
 <style lang="scss" scoped>
-a:hover{
+a:hover {
     cursor: pointer;
     color: var(--color-primary);
     background-color: var(--color-dark);
 }
+
 i {
     text-align: center;
 }

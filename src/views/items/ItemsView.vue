@@ -8,9 +8,7 @@
         <div class="col-sm-12 col-md-6 col-lg-3">
           <label class="form-label">Cód. de Patrimônio <span>*</span></label>
           <input type="text" name="codPatrimonio" class="form-control" placeholder="Cód. automatico"
-            v-model="form.codPatrimonio"
-            disabled
-            />
+            v-model="form.codPatrimonio" disabled />
         </div>
 
         <div class="col-sm-12 col-md-6 col-lg-4">
@@ -73,8 +71,10 @@
       </div>
 
       <div class="text-end">
-        <button :type="infoById ? 'button' : 'reset'" @click="cancelEdit()" class="btn btn-danger me-2 mt-2">Cancelar</button>
-        <button type="submit" class="mt-2 btn" :class="infoById ? 'btn-primary' : 'btn-success'" v-text="btnForm"></button>
+        <button :type="infoById ? 'button' : 'reset'" @click="cancelEdit()"
+          class="btn btn-danger me-2 mt-2">Cancelar</button>
+        <button type="submit" class="mt-2 btn" :class="infoById ? 'btn-primary' : 'btn-success'"
+          v-text="btnForm"></button>
 
       </div>
     </VeeForm>
@@ -100,8 +100,6 @@ const store = useStore();
 const route = useRoute();
 const $loading = useLoading();
 const toast = useToast();
-const id = Number(route.params.itemId.split('-')[0]);
-const origin = route.params.itemId.split('-')[1];
 const router = useRouter();
 const content = {
   component: ToastNotification,
@@ -112,6 +110,8 @@ const content = {
     },
   },
 };
+const id = route.params.itemId ? Number(route.params.itemId.split('-')[0]) : null;
+const origin = id ? route.params.itemId.split('-')[1] : null;
 
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
 
@@ -128,11 +128,11 @@ const infoById = computed(() => {
 
 
 const getCountItems = computed(() => {
-      if (store.state.itemsModule.items.length > 0) {
-        return  store.state.itemsModule.items.length + 1 ;
-      } else {
-        return  1 ;
-      }
+  if (store.state.itemsModule.items.length > 0) {
+    return store.state.itemsModule.items.length + 1;
+  } else {
+    return 1;
+  }
 });
 
 // botão de submit do formulário
@@ -162,7 +162,7 @@ function onValidSubmit(values, actions) {
   if (infoById.value) {
     editItem(actions);
   } else {
-     newItem(actions);
+    newItem(actions);
     actions.resetForm();
   }
 }
@@ -210,15 +210,15 @@ function editItem(actions) {
     actions.resetForm();
     loader.hide();
     toast.success("Item editado com sucesso!");
-    if(origin === 'list'){
-    router.push({ name: "listItems" });
-  } else if (origin === 'dashboard'){
-    router.push({ name: "dashboard" });
-  } 
+    if (origin === 'list') {
+      router.push({ name: "listItems" });
+    } else if (origin === 'dashboard') {
+      router.push({ name: "dashboard" });
+    }
   }, 2000);
 }
 
-function clearForm(){
+function clearForm() {
   form.value.codPatrimonio = '';
   form.value.description = '';
   form.value.url = '';
@@ -227,11 +227,11 @@ function clearForm(){
 // Função para cancelar a edição
 function cancelEdit() {
   toast.warning("Edição cancelada!", { timeout: 1000 });
-  if(origin === 'list'){
+  if (origin === 'list') {
     router.push({ name: "listItems" });
-  } else if (origin === 'dashboard'){
+  } else if (origin === 'dashboard') {
     router.push({ name: "dashboard" });
-  } 
+  }
 }
 
 

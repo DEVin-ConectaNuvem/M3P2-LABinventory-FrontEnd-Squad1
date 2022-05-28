@@ -1,12 +1,14 @@
 <template>
   <div class="container">
-    <div class="row height d-flex justify-content-center align-items-center">
-      <div class="form">
-        <i class="fa fa-search"></i>
-        <input v-model="inputSearch" type="text" class="form-control form-input" placeholder="Ex: João..." />
-        <span class="left-pan d-none d-md-block">Buscar colaborador</span>
-      </div>
-    </div>
+      <div class="content input-group">
+            <input type="text" class="w-75 form-control animate__animated animate__flipInX"
+                placeholder="✍️ Buscar item..." v-model="inputSearch">
+            <select class="badge bg-dark text-white text-center" v-model="findBy">
+                <option value="name" selected>Nome</option>
+                <option value="position">Cargo</option>
+                <option value="email">E-mail</option>
+            </select>
+        </div>
     <hr />
     <h4>Lista de colaboradores</h4>
 
@@ -57,7 +59,8 @@
         Realizar novo cadastro</router-link>
     </p>
     <p class="text-danger" v-show="collaborators.length === 0 && !inputSearch">
-      Não há colaboradores cadastrados - <router-link :to="{ name: 'colaboradores' }">Realizar novo cadastro</router-link>
+      Não há colaboradores cadastrados - <router-link :to="{ name: 'colaboradores' }">Realizar novo cadastro
+      </router-link>
     </p>
   </div>
 </template>
@@ -75,14 +78,13 @@ const inputSearch = ref("");
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 const page = ref(1);
 const perPage = ref(5);
+const findBy = ref("name");
 
 const totalPages = computed(() => {
   if (inputSearch.value) {
     return Math.ceil(
       store.state.collaboratorModule.collaborators.filter((collaborator) =>
-        collaborator.name
-          .toLowerCase()
-          .includes(inputSearch.value.toLowerCase())
+        collaborator[findBy.value].toLowerCase().includes(inputSearch.value.toLowerCase())
       ).length / perPage.value
     );
   } else {
@@ -96,7 +98,7 @@ const collaborators = computed(() => {
   if (inputSearch.value) {
     let total = store.state.collaboratorModule.collaborators.filter(
       (collaborator) =>
-        collaborator.name
+        collaborator[findBy.value]
           .toLowerCase()
           .includes(inputSearch.value.toLowerCase())
     );
@@ -178,5 +180,4 @@ function editCollab(id) {
 .form-input:focus {
   border: 1px solid var(--color-secondary);
 }
-
 </style>
