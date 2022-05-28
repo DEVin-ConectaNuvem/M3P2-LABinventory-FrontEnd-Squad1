@@ -9,7 +9,7 @@
                 <template v-slot:title>Colaboradores</template>
                 <template v-slot:infos>Total colaboradores</template>
             </cards-dashboard>
-            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-danger" @click="infoDashRoute('itens', 'items')">
+            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-danger" @click="infoDashRoute('itens', 'listItems')">
                 <template v-slot:icon><i
                         class="widgets-icons-2 bg-gradient-bloody fa-solid fa-boxes-stacked"></i></template>
                 <template v-slot:count>{{ tweendItems.number.toFixed(0) }}</template>
@@ -17,7 +17,7 @@
                 <template v-slot:infos>Números de itens</template>
             </cards-dashboard>
             <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-success"
-                @click="infoDashRoute('itens', 'items')">
+                @click="infoDashRoute('itens', 'listItems')">
                 <template v-slot:icon><i
                         class="widgets-icons-2 bg-gradient-ohhappiness  fa-solid fa-sack-dollar"></i></template>
                 <template v-slot:count>R$ {{ tweenedValueTotal.number.toFixed(2) }}</template>
@@ -25,7 +25,7 @@
                 <template v-slot:infos>Valor total de items</template>
             </cards-dashboard>
             <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-warning"
-                @click="infoDashRoute('empréstimos', 'items')">
+                @click="infoDashRoute('empréstimos', 'listItems')">
                 <template v-slot:icon>
                     <i class="widgets-icons-2 bg-gradient-blooker fa-solid fa-arrow-right-arrow-left "></i>
                 </template>

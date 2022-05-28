@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <h4 class="mb-3">Preencha os campos para cadastrar um novo colaborador</h4>
-    <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit" class="formCadastro">
+    <VeeForm @submit="onValidSubmit" v-slot="{ errors, actions }" @invalid-submit="onInvalidSubmit"
+      class="formCadastro">
       <div class="row mb-1">
         <h3>Dados de endereço</h3>
         <hr />
@@ -64,8 +65,8 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">CEP <span>*</span></label>
           <Veefield type="text" name="zipcode" class="form-control" placeholder="CEP" v-model="form.zipcode"
-            @focusout="searchZipCode" required v-mask="'#####-###'" ref="cep" :class="{ 'is-invalid': errors.zipcode }"
-            :rules="validateCEP" />
+            @focusout="searchZipCode" required v-mask="'#####-###'" ref="zipcode"
+            :class="{ 'is-invalid': errors.zipcode }" :rules="validateCEP" />
           <div class="invalid-feedback">{{ errors.zipcode }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
@@ -96,7 +97,7 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Número <span>*</span></label>
           <Veefield type="number" name="houseNumber" class="form-control" placeholder="Número da residência"
-            :rules="validateNumber" v-model.number="form.houseNumber" ref="skipCep" required
+            :rules="validateNumber" v-model.number="form.houseNumber" required
             :class="{ 'is-invalid': errors.houseNumber }" />
           <div class="invalid-feedback">{{ errors.houseNumber }}</div>
         </div>
@@ -114,12 +115,11 @@
         </div>
       </div>
       <div class="text-end">
-        <button :type="infoById ? 'button' : 'reset' " @click="infoById ? cancelEdit() : '' " class="btn btn-danger me-2 mt-2" v-text="infoById ? 'Cancelar' : 'Limpar'"></button>
+        <button :type="infoById ? 'button' : 'reset'" @click="infoById ? cancelEdit() : ''"
+          class="btn btn-secondary me-2 mt-2" v-text="infoById ? 'Cancelar' : 'Limpar'"></button>
         <button type="submit" class="mt-2" :class="infoById ? 'btn btn-primary' : 'btn btn-success'"
           v-text="btnForm"></button>
       </div>
-
-
     </VeeForm>
   </div>
 </template>
@@ -132,7 +132,7 @@ import { useToast } from "vue-toastification";
 import ToastNotification from "./components/ToastNotification.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
-import { Form as VeeForm, Field as Veefield } from "vee-validate";
+import { Form as VeeForm, Field as Veefield, defineRule } from "vee-validate";
 import {
   validateEmail,
   validateName,
@@ -184,33 +184,46 @@ const btnForm = ref(infoById.value ? "Editar" : "Cadastrar");
 
 // variaveis do formulários - reativas (data)
 const form = ref({
-  id: infoById.value ? infoById.value.id : "",
-  name: infoById.value ? infoById.value.name : "",
-  email: infoById.value ? infoById.value.email : "",
-  phone: infoById.value ? infoById.value.phone : "",
-  position: infoById.value ? infoById.value.position : "",
-  gender: infoById.value ? infoById.value.gender : "",
-  zipcode: infoById.value ? infoById.value.zipcode : "",
-  birthDay: infoById.value ? infoById.value.birthDay : "",
-  city: infoById.value ? infoById.value.city : "",
-  state: infoById.value ? infoById.value.state : "",
-  neighborhood: infoById.value ? infoById.value.neighborhood : "",
-  street: infoById.value ? infoById.value.street : "",
+  id: infoById.value ? infoById.value.id : null,
+  name: infoById.value ? infoById.value.name : null,
+  email: infoById.value ? infoById.value.email : null,
+  phone: infoById.value ? infoById.value.phone : null,
+  position: infoById.value ? infoById.value.position : null,
+  gender: infoById.value ? infoById.value.gender : null,
+  zipcode: infoById.value ? infoById.value.zipcode : null,
+  birthDay: infoById.value ? infoById.value.birthDay : null,
+  city: infoById.value ? infoById.value.city : null,
+  state: infoById.value ? infoById.value.state : null,
+  neighborhood: infoById.value ? infoById.value.neighborhood : null,
+  street: infoById.value ? infoById.value.street : null,
   houseNumber: infoById.value ? infoById.value.houseNumber : null,
-  complement: infoById.value ? infoById.value.complement : "",
-  reference: infoById.value ? infoById.value.reference : "",
+  complement: infoById.value ? infoById.value.complement : null,
+  reference: infoById.value ? infoById.value.reference : null,
   createdAt: infoById.value
     ? infoById.value.createdAt
     : moment().format("llll"),
-  updatedAt: infoById.value ? moment().format("llll") : "",
+  updatedAt: infoById.value ? moment().format("llll") : null,
 });
+const newForm = ref({})
+
 
 /* 
 Funções para submit do formulário
 */
-
 //função executada quando o formulário for submetido com sucesso
 function onValidSubmit(values, actions) {
+  newForm.value = { ...form.value }
+  const checkEmail = store.state.collaboratorModule.collaborators.find(
+    (collaborator) => collaborator.email === values.email
+  );
+  const checkEmailEdit = infoById.value.email === values.email;
+
+  if (checkEmail && !checkEmailEdit) {
+    toast.error("Email já cadastrado", content);
+    actions.setErrors({ email: "Email já cadastrado" });
+    return
+  }
+
   if (infoById.value) {
     editCollaborator(actions);
   } else {
@@ -229,9 +242,12 @@ function onInvalidSubmit({ errors }) {
 function newCollaborator(actions) {
   const loader = $loading.show();
   setTimeout(() => {
-    infoById.value ? infoById.value.id : (form.value.id = "c" + uid());
-    form.value.updatedAt = moment().format("llll");
-    store.dispatch("collaboratorModule/registerCollaborator", form.value);
+    infoById.value ? infoById.value.id : (newForm.value.id = "c" + uid());
+    infoById.value
+      ? infoById.value.createdAt
+      : (newForm.value.createdAt = moment().format("llll"));
+    newForm.value.updatedAt = moment().format("llll");
+    store.dispatch("collaboratorModule/registerCollaborator", newForm.value);
     actions.resetForm();
     loader.hide();
     toast(content, {
@@ -253,7 +269,6 @@ function newCollaborator(actions) {
 function editCollaborator(actions) {
   const loader = $loading.show();
   setTimeout(() => {
-
     store.dispatch("collaboratorModule/editCollaborator", form.value);
     actions.resetForm();
     loader.hide();
@@ -271,13 +286,6 @@ function cancelEdit() {
 /* 
 Funções para validação de CEP - uso da api (VIACEP)
 */
-function clearAddress() {
-  form.value.city = "";
-  form.value.state = "";
-  form.value.neighborhood = "";
-  form.value.street = "";
-}
-
 function searchZipCode() {
   clearAddress();
 
@@ -303,10 +311,18 @@ function searchZipCode() {
       form.value.state = response.data.uf;
       form.value.neighborhood = response.data.bairro;
       form.value.street = response.data.logradouro;
+
     })
     .catch((error) => {
       toast.error(error, { timeout: 1500 });
     });
+}
+
+function clearAddress() {
+  form.value.city = "";
+  form.value.state = "";
+  form.value.neighborhood = "";
+  form.value.street = "";
 }
 </script>
 
