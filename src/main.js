@@ -11,6 +11,8 @@ import 'vue-m-dialog/dist/style.css'
 import "vue-loading-overlay/dist/vue-loading.css";
 import "vue-toastification/dist/index.css";
 import "./validators/validators";
+import 'animate.css';
+
 
 const app = createApp(App);
 

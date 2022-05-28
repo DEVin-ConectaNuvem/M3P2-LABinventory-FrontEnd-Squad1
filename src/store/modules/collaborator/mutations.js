@@ -16,10 +16,7 @@ const REGISTER_COLLABORATOR = (state, payload) => {
 const EDIT_COLLABORATOR = (state, payload) => {
   state.collaborators.forEach((collaborator, index) => {
     if (collaborator.id === payload.id) {
-      
-      console.log(state.collaborators[index],'stateANTES')
       state.collaborators[index] = payload;
-      console.log(state.collaborators[index],'stateAPOS')
     }
   });
 };

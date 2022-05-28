@@ -8,9 +8,7 @@
         <div class="col-sm-12 col-md-6 col-lg-3">
           <label class="form-label">Cód. de Patrimônio <span>*</span></label>
           <input type="text" name="codPatrimonio" class="form-control" placeholder="Cód. automatico"
-            v-model="form.codPatrimonio"
-            disabled
-            />
+            v-model="form.codPatrimonio" disabled />
         </div>
 
         <div class="col-sm-12 col-md-6 col-lg-4">
@@ -73,12 +71,12 @@
       </div>
 
       <div class="text-end">
-        <button type="reset" @click="cancelEdit()" class="btn btn-danger me-2 mt-2">Cancelar</button>
-        <button type="submit" class="mt-2 btn btn-success" v-text="btnForm"></button>
+        <button :type="infoById ? 'button' : 'reset'" @click="cancelEdit()"
+          class="btn btn-danger me-2 mt-2">Cancelar</button>
+        <button type="submit" class="mt-2 btn" :class="infoById ? 'btn-primary' : 'btn-success'"
+          v-text="btnForm"></button>
 
       </div>
-
-
     </VeeForm>
   </div>
 </template>
@@ -98,14 +96,11 @@ import moment from "moment";
 /* 
 variaveis funcionais gerais 
 */
-
 const store = useStore();
 const route = useRoute();
 const $loading = useLoading();
 const toast = useToast();
-
 const router = useRouter();
-
 const content = {
   component: ToastNotification,
   listeners: {
@@ -115,36 +110,48 @@ const content = {
     },
   },
 };
-
+const id = route.params.itemId ? Number(route.params.itemId.split('-')[0]) : null;
+const origin = id ? route.params.itemId.split('-')[1] : null;
 
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
 
-const getCountItems = computed(() => {
-      if (store.state.itemsModule.items.length > 0) {
-        return  store.state.itemsModule.items.length + 1 ;
-      } else {
-        return  1 ;
-      }
+// variavel para verificar se o usuario esta editando ou criando um novo colaborador
+const infoById = computed(() => {
+  if (id) {
+    return store.state.itemsModule.items.find(
+      (item) => item.codPatrimonio === id
+    );
+  }
+  return false;
 });
 
 
+
+const getCountItems = computed(() => {
+  if (store.state.itemsModule.items.length > 0) {
+    return store.state.itemsModule.items.length + 1;
+  } else {
+    return 1;
+  }
+});
+
 // botão de submit do formulário
-const btnForm = ref("Cadastrar");
+const btnForm = ref(infoById.value ? "Editar" : "Cadastrar");
 
 // variaveis do formulários - reativas (data)
 const form = ref({
-  codPatrimonio: null,
-  title: "",
-  description: "",
-  category: "",
-  value: "",
-  url: "",
-  brand: "",
-  model: "",
-  collaborator: "",
-  createdAt: moment().format("llll"),
-  updatedAt: "",
-  loanAt: "",
+  codPatrimonio: infoById.value ? infoById.value.codPatrimonio : null,
+  title: infoById.value ? infoById.value.title : null,
+  description: infoById.value ? infoById.value.description : null,
+  category: infoById.value ? infoById.value.category : null,
+  value: infoById.value ? infoById.value.value : null,
+  url: infoById.value ? infoById.value.url : null,
+  brand: infoById.value ? infoById.value.brand : null,
+  model: infoById.value ? infoById.value.model : null,
+  collaborator: infoById.value ? infoById.value.collaborator : null,
+  createdAt: infoById.value ? infoById.value.createdAt : moment().format("llll"),
+  updatedAt: infoById.value ? moment().format("llll") : "",
+  loanAt: infoById.value ? infoById.value.loanAt : null,
 });
 
 /* 
@@ -152,14 +159,16 @@ Funções para submit do formulário
 */
 //função executada quando o formulário for submetido com sucesso
 function onValidSubmit(values, actions) {
-  newItem(actions);
-  actions.resetForm();
-  /* if (infoById.value) {
+  if (infoById.value) {
     editItem(actions);
   } else {
     newItem(actions);
-  } */
+    actions.resetForm();
+  }
 }
+
+
+
 
 //função executada quando houver erros no formulário submetido
 function onInvalidSubmit({ errors }) {
@@ -175,7 +184,6 @@ function newItem(actions) {
     form.value.codPatrimonio = getCountItems.value;
     form.value.updatedAt = moment().format("llll");
     store.dispatch("itemsModule/registerItem", form.value);
-    actions.resetForm();
     clearForm()
     loader.hide();
     toast(content, {
@@ -191,34 +199,40 @@ function newItem(actions) {
       rtl: false,
     });
   }, 1000);
+}
 
-function clearForm(){
+// Função para editar item
+function editItem(actions) {
+  const loader = $loading.show();
+  setTimeout(() => {
+    form.value.updatedAt = moment().format("llll");
+    store.dispatch("itemsModule/editItem", form.value);
+    actions.resetForm();
+    loader.hide();
+    toast.success("Item editado com sucesso!");
+    if (origin === 'list') {
+      router.push({ name: "listItems" });
+    } else if (origin === 'dashboard') {
+      router.push({ name: "dashboard" });
+    }
+  }, 2000);
+}
+
+function clearForm() {
   form.value.codPatrimonio = '';
   form.value.description = '';
   form.value.url = '';
 }
 
-
-}
-
-// Função para editar o item
-function editItem(actions) {
-  /*  const loader = $loading.show();
-   setTimeout(() => {
-     console.log(form.value.name);
-     store.dispatch("collaboratorModule/editCollaborator", form.value);
-     actions.resetForm();
-     loader.hide();
-     toast.success("Colaborador editado com sucesso!");
-     router.push({ name: "ListCollaborators" });
-   }, 2000); */
-}
-/* 
-// Função para cancelar a edição do colaborador
+// Função para cancelar a edição
 function cancelEdit() {
   toast.warning("Edição cancelada!", { timeout: 1000 });
-  router.push({ name: "ListCollaborators" });
-} */
+  if (origin === 'list') {
+    router.push({ name: "listItems" });
+  } else if (origin === 'dashboard') {
+    router.push({ name: "dashboard" });
+  }
+}
 
 
 </script>

@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "@vee-validate/rules": "^4.5.11",
+    "animate.css": "^4.1.1",
     "axios": "^0.27.2",
+    "gsap": "^3.10.4",
     "moment": "^2.29.3",
     "uid": "^2.0.0",
     "vee-validate": "^4.5.11",

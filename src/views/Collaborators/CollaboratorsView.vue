@@ -117,7 +117,6 @@
         <button :type="infoById ? 'button' : 'reset' " @click="infoById ? cancelEdit() : '' " class="btn btn-danger me-2 mt-2" v-text="infoById ? 'Cancelar' : 'Limpar'"></button>
         <button type="submit" class="mt-2" :class="infoById ? 'btn btn-primary' : 'btn btn-success'"
           v-text="btnForm"></button>
-
       </div>
 
 
@@ -147,9 +146,7 @@ import axios from "axios";
 import moment from "moment";
 
 /* 
-
 variaveis funcionais gerais 
-
 */
 const $loading = useLoading();
 const toast = useToast();
@@ -256,7 +253,7 @@ function newCollaborator(actions) {
 function editCollaborator(actions) {
   const loader = $loading.show();
   setTimeout(() => {
-    console.log(form.value.name);
+
     store.dispatch("collaboratorModule/editCollaborator", form.value);
     actions.resetForm();
     loader.hide();

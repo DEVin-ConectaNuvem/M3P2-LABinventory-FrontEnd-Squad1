@@ -7,7 +7,7 @@ const router = createRouter({
   routes: [
     {
       path: "/", 
-      redirect: "/dashboard",
+      alias: "/dashboard",
       name: "dashboard",
       component: DashboardView,
       beforeEnter: (to) => {
@@ -25,7 +25,7 @@ const router = createRouter({
       beforeEnter: (to) => {
         const auth = localStorage.getItem("token");
         if (auth) {
-          return (to = "/");
+          return (to = {name: 'dashboard'});
         }
         return true;
       },
@@ -55,7 +55,7 @@ const router = createRouter({
       },
     },
     {
-      path: "/itens",
+      path: "/itens/:itemId?",
       name: "items",
       component: () => import("../views/items/ItemsView.vue"),
       beforeEnter: (to) => {
