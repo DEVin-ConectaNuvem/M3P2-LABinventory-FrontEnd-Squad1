@@ -119,9 +119,8 @@
                         Ações
                     </button>
                     <ul class="dropdown-menu text-start" aria-labelledby="dropdownMenuButton1">
-                        <li><a class="dropdown-item" @click="editItem"><i class="fa-solid fa-pen-to-square"></i> Editar Item</a></li>
-                        <li><a class="dropdown-item" @click="loanItem"><i class="fa-solid fa-arrow-right-arrow-left"></i> Emprestar Item</a></li>
-                        <li><a class="dropdown-item" href="#"></a></li>
+                        <li><a class="dropdown-item" @click="editItem(item.codPatrimonio)"><i class="fa-solid fa-pen-to-square"></i> Editar Item</a></li>
+                        <li><a class="dropdown-item" @click="loanItem(item.codPatrimonio)"><i class="fa-solid fa-arrow-right-arrow-left"></i> Emprestar Item</a></li>
                     </ul>
                 </div>
             </template>
@@ -136,7 +135,9 @@ import CardsProducts from './components/CardsProducts.vue';
 import { ref, computed, reactive, watch } from 'vue'
 import { useStore } from "vuex";
 import { gsap } from "gsap";
+import { RouterLink, useRouter } from "vue-router";
 
+const router = useRouter();
 const store = useStore();
 const show = ref(false);
 const item = ref({});
@@ -190,6 +191,12 @@ gsap.to(tweenedItemsLoaned, { duration: 1, number: Number(itemsLoaned.value) || 
 
 function toggleModal() {
     show.value = !show.value;
+}
+
+function editItem(id) {
+    show.value = false;
+    id = id + '-dashboard'
+    router.push({ name: 'items', params: { itemId: id } });
 }
 
 </script>

@@ -177,19 +177,13 @@ function setLoan(item) {
     collaborator: item.collaborator ? item.collaborator : null,
     loanAt: item.collaborator ? moment().format("DD/MM/YYYY hh:mm") : null 
   }
-
-  const setLoan = store.dispatch("itemsModule/setLoanItem", data)
-
-  if (setLoan) {
-    console.log('ok')
-  } else {
-    console.log('erro')
-  }
+  const setLoan = store.dispatch("itemsModule/setLoanItem", data);
   show.value = false
 }
 
 function editItem(id) {
-  router.push({ name: 'itens', params: { itemId: id } });
+  id = id + '-list'
+  router.push({ name: 'items', params: { itemId: id } });
 }
 
 function cancelEditItem() {

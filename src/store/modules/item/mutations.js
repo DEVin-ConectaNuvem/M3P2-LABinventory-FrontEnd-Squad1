@@ -16,9 +16,7 @@ const REGISTER_ITEM = (state, payload) => {
 const EDIT_ITEM = (state, payload) => {
   state.items.forEach((item, index) => {
     if (item.id === payload.id) {
-      console.log(state.items[index], "stateANTES");
       state.items[index] = payload;
-      console.log(state.items[index], "stateAPOS");
     }
   });
 };
