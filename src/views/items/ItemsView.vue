@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container ">
     <h4 class="mb-3">Preencha os campos para cadastrar um novo item</h4>
-    <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit" class="formCadastro">
+    <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit" class="formCadastro animate__animated animate__fadeIn">
       <div class="row mb-1">
         <h3>Dados do item</h3>
         <hr />
@@ -57,17 +57,18 @@
 
       <div class="row mt-3">
         <div class="col-sm-12 col-md-6">
+          <label class="form-label">Url (imagem do produto) <span>*</span></label>
+          <Veefield type="url" name="url" class="form-control" placeholder="caminho url da imagem" v-model="form.url"
+            required :class="{ 'is-invalid': errors.url }" :rules="required" />
+          <div class="invalid-feedback">{{ errors.url }}</div>
+          <img :src="form.url" name="imgUrl" alt="" class="img-fluid text-center" width="120">
+        </div>
+        <div class="col-sm-12 col-md-6">
           <label class="form-label">Descrição do item<span>*</span></label>
           <textarea name="description" rows="3" v-model="form.description" required
             placeholder="Digite as especificações do item" class="form-control"></textarea>
         </div>
-        <div class="col-sm-12 col-md-6">
-          <label class="form-label">Url (imagem do produto) <span>*</span></label>
-          <Veefield type="text" name="url" class="form-control" placeholder="url imagem do item" v-model.trim="form.url"
-            required :class="{ 'is-invalid': errors.url }" :rules="required" />
-          <div class="invalid-feedback">{{ errors.url }}</div>
-          <img :src="form.url" alt="" class="img-fluid text-center" width="120">
-        </div>
+        
       </div>
 
       <div class="text-end">
@@ -82,7 +83,6 @@
 </template>
 
 <script setup>
-import { uid } from "uid";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
@@ -90,7 +90,7 @@ import ToastNotification from "./components/ToastNotification.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
 import { Form as VeeForm, Field as Veefield } from "vee-validate";
-import { required, validateNumber } from "../../validators/validators";
+import { required, validateNumber, validateUrl} from "../../validators/validators";
 import moment from "moment";
 
 /* 
@@ -124,7 +124,6 @@ const infoById = computed(() => {
   }
   return false;
 });
-
 
 
 const getCountItems = computed(() => {
@@ -161,6 +160,7 @@ Funções para submit do formulário
 function onValidSubmit(values, actions) {
   if (infoById.value) {
     editItem(actions);
+    actions.resetForm();
   } else {
     newItem(actions);
     actions.resetForm();
@@ -204,7 +204,6 @@ function editItem(actions) {
   setTimeout(() => {
     form.value.updatedAt = moment().format("llll");
     store.dispatch("itemsModule/editItem", form.value);
-    actions.resetForm();
     loader.hide();
     toast.success("Item editado com sucesso!");
     if (origin === 'list') {

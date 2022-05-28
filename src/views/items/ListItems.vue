@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container "> 
     <div class="content input-group">
-      <input type="text" class="w-75 form-control animate__animated animate__flipInX" placeholder="'✍️ Buscar item... '"
+      <input type="text" class="w-75 form-control animate__animated animate__flipInX" placeholder="✍️ Buscar item... "
         v-model="inputSearch">
       <select class="badge bg-dark text-white text-center" id="" v-model="findBy">
         <option value="codPatrimonio" selected>Código de Patrimonio</option>
@@ -18,7 +18,7 @@
       :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">
     </paginate>
 
-    <div class="accordion" v-for="item in items" :key="item.codPatrimonio">
+    <div class="accordion animate__animated animate__fadeIn" v-for="item in items" :key="item.codPatrimonio">
       <div class="accordion-item ">
         <h2 class="accordion-header " :id="item.codPatrimonio">
           <button class="accordion-button collapsed text-capitalize" type="button" data-bs-toggle="collapse"
@@ -27,7 +27,7 @@
             <img class="img-fluid imgAccordion" :src="item.url" />
             <p v-text="item.codPatrimonio" class="ms-2 nameCollab fs-5 me-2"></p>
             <p class="fs-5" v-text="' - ' + item.title + ' - '"></p>
-            <p class="fs-5 ms-1 fw-bold" :class="item.collaborator ? 'text-primary' : 'text-success'"
+            <p class="fs-6 ms-1 fw-bold" :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"
               v-text="item.collaborator ? item.collaborator : 'Item disponível'"></p>
           </button>
         </h2>
@@ -48,7 +48,7 @@
                 <strong>Emprestado desde:</strong> {{ item.loanAt }}
                 <hr>
                 <strong class="fs-5 fw-bold">Empréstimo: <span
-                    :class="item.collaborator ? 'text-primary' : 'text-success'"> {{
+                    :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"> {{
                         item.collaborator ? item.collaborator : "Disponível"
                     }}</span></strong>
                 <br />
@@ -61,7 +61,7 @@
                   <span v-text="item.collaborator ? ' Devolver Item' : ' Emprestar item '"> </span>
                 </button>
 
-                <button class="btn btn-danger" @click="editItem(item.codPatrimonio)">
+                <button class="btn btn-warning" @click="editItem(item.codPatrimonio)">
                   <i class="fa-solid fa-edit"></i> Editar item
                 </button>
               </div>
@@ -115,7 +115,6 @@ const findBy = ref("codPatrimonio");
 const show = ref(false)
 const item = ref({})
 
-
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
 
@@ -125,7 +124,7 @@ const totalPages = computed(() => {
       store.state.itemsModule.items.filter((item) =>
         findBy.value === 'codPatrimonio'
           ? item[findBy.value] === Number(inputSearch.value)
-          : item[findBy.value].toLowerCase().includes(inputSearch.value.toLowerCase())
+          : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
 
       ).length / perPage.value
     );
@@ -143,7 +142,7 @@ const items = computed(() => {
       (item) =>
         findBy.value === 'codPatrimonio'
           ? item[findBy.value] === Number(inputSearch.value)
-          : item[findBy.value].toLowerCase().includes(inputSearch.value.toLowerCase())
+          : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
     )
     total = total.slice(
       (page.value - 1) * perPage.value,
@@ -166,19 +165,19 @@ const collaborators = computed(() => {
 function loanCollaborator(codPatrimonio, collaborator) {
 
   if (collaborator) {
-     createMessageBox({
-        title: 'Confirmação de devolução',
-        message: `Gostaria de confirmar a devolução do item código ${codPatrimonio} de ${collaborator} ?`,
-        cancelButtonText: 'Cancelar',
-        confirmButtonText: 'Confirmar',
-        hasMask: true,
-        draggable: true,
-        isPointerEventsNone: true,
-        isMiddle: true,
+    createMessageBox({
+      title: 'Confirmação de devolução',
+      message: `Gostaria de confirmar a devolução do item código ${codPatrimonio} de ${collaborator} ?`,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Confirmar',
+      hasMask: true,
+      draggable: true,
+      isPointerEventsNone: true,
+      isMiddle: true,
     }).then(res => {
-        if (res.ok) {
+      if (res.ok) {
         setLoan({ codPatrimonio, collaborator: null })
-        }
+      }
     })
   } else {
     item.value = store.state.itemsModule.items.find((item) => item.codPatrimonio === codPatrimonio)
@@ -188,7 +187,7 @@ function loanCollaborator(codPatrimonio, collaborator) {
 
 
 function confirmDevolution(item) {
-   
+
 }
 
 function setLoan(item) {

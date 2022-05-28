@@ -1,8 +1,8 @@
 <template>
-  <div class="container">
+  <div class="container ">
     <h4 class="mb-3">Preencha os campos para cadastrar um novo colaborador</h4>
     <VeeForm @submit="onValidSubmit" v-slot="{ errors, actions }" @invalid-submit="onInvalidSubmit"
-      class="formCadastro">
+      class="formCadastro animate__animated animate__fadeIn">
       <div class="row mb-1">
         <h3>Dados de endereço</h3>
         <hr />
