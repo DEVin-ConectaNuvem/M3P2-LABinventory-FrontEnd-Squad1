@@ -147,9 +147,7 @@ import axios from "axios";
 import moment from "moment";
 
 /* 
-
 variaveis funcionais gerais 
-
 */
 const $loading = useLoading();
 const toast = useToast();
