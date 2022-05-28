@@ -46,7 +46,7 @@
               </div>
             </div>
             <div class="text-end">
-              <button class="btn btn-danger mt-2" @click="editCollab(collaborator.id)">
+              <button class="btn btn-primary mt-2" @click="editCollab(collaborator.id)">
                 <i class="fa-solid fa-user-pen"></i> Editar Colaborador
               </button>
             </div>

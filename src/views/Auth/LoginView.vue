@@ -164,7 +164,7 @@ function loginUser(actions) {
     if (logar) {
       loader.hide()
       toast.success('Login realizado com sucesso!', { timeout: 1500 });
-      router.push({ name: 'home' })
+      router.push({ name: 'dashboard' })
     } else {
       loader.hide()
       toast.error('Usuário ou senha inválidos!', { timeout: 1500 });
