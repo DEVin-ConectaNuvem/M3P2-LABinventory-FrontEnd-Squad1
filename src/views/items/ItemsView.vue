@@ -1,5 +1,5 @@
 <template>
-  <div class="container ">
+  <div class="container mt-3">
     <h4 class="mb-3">Preencha os campos para cadastrar um novo item</h4>
     <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit" class="formCadastro animate__animated animate__fadeIn">
       <div class="row mb-1">
@@ -114,6 +114,7 @@ const id = route.params.itemId ? Number(route.params.itemId.split('-')[0]) : nul
 const origin = id ? route.params.itemId.split('-')[1] : null;
 
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
+store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de itens');
 
 // variavel para verificar se o usuario esta editando ou criando um novo colaborador
 const infoById = computed(() => {

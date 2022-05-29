@@ -1,5 +1,5 @@
 <template>
-  <div class="container ">
+  <div class="container mt-3 ">
       <div class="content input-group">
             <input type="text" class="w-75 form-control animate__animated animate__flipInX"
                 placeholder="✍️ Buscar item..." v-model="inputSearch">
@@ -75,10 +75,12 @@ import { RouterLink, useRouter } from "vue-router";
 const router = useRouter();
 const store = useStore();
 const inputSearch = ref("");
-store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 const page = ref(1);
 const perPage = ref(5);
 const findBy = ref("name");
+
+store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
+store.commit('configModule/SET_PAGE_NAME', 'Listagem de colaboradores');
 
 const totalPages = computed(() => {
   if (inputSearch.value) {

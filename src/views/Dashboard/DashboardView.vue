@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container mt-3">
         <!-- Inicio da seção cards do dashboard  -->
         <section class="row cards">
             <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-info "
@@ -148,7 +148,7 @@ const inputSearch = ref(null);
 
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
-
+store.commit('configModule/SET_PAGE_NAME', 'Dashboard')
 
 const items = computed(() => {
     if (inputSearch.value) {

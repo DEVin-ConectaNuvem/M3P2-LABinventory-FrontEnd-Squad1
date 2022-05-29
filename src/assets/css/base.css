@@ -4,21 +4,21 @@
 --color-primary: #4BC0C8;
 --color-secondary: #02819B;
 --color-primary-light: #ade5e9;
+--color-medium: #3d4b5f;
 --color-dark: #222831;
 --color-darkest: #1b222b;
 --color-white: #fff;
 --color-black: #000;
 --color-grey: #DDDDDD;
---color-grey-medium: #D3DEDC
+--color-grey-medium: #d3d3d3;
 --color-danger: #FF0000;
---surface-color: #fff;
---curve: 40
 }
-body {
-  box-sizing: border-box;
-  font-family: 'Noto Sans JP', sans-serif;
-  background-color: var(--color-grey-medium);
+
+html {
+  height: 100%;
 }
+
+body { min-height: 100vh; }
 
 * {
     margin: 0;

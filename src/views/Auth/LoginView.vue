@@ -1,74 +1,99 @@
 <template>
-  <section class="h-100 gradient-form" style="background-color: #eee;">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-xl-10">
-          <div class="card rounded-3 text-black">
-            <div class="row g-0">
-              <div class="col-lg-6">
-                <div class="card-body p-md-5 mx-md-4">
-                  <div class="text-center">
-                    <img src="../../assets/icons/logoInventary.svg" class="img-fluid logo" alt="logo">
-                    <h4 class="mt-1 mb-5 pb-1">Nós somos o DEVInventary</h4>
-                  </div>
-
-                  <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit">
-                    <p v-text="register.textMain"></p>
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">@</span>
-                      </div>
-                      <Veefield type="text" class="form-control" name="email" placeholder="Digite o e-mail"
-                        aria-label="Email" v-model="form.email" required :class="{ 'is-invalid': errors.email }"
-                        :rules="validateEmail" />
-                      <div class="invalid-feedback">{{ errors.email }}</div>
-                    </div>
-                    
-                    <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                        <span class="input-group-text">&#128273</span>
-                      </div>
-                      <Veefield type="password" class="form-control" placeholder="Digite sua senha" aria-label="senha"
-                        v-model="form.password" required name="password" :class="{ 'is-invalid': errors.password }"
-                        :rules="validatePassword" />
-                      <div class="invalid-feedback">{{ errors.password }}</div>
+  <section class="header">
+    <!--Content before waves-->
+    <div class="inner-header flex">
+      <div class="container mt-5">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+          <div class="col-xl-10">
+            <div class=" rounded-3 text-white">
+              <div class="row g-0">
+                <div class="col-lg-6">
+                  <div class="card-body p-md-5 mx-md-4">
+                    <div class="text-center animate__animated animate__backInLeft">
+                      <img src="../../assets/icons/logoInventary.svg" class="img-fluid logo " alt="logo">
+                      <h4 class="mt-1 mb-5 pb-1">Nós somos o <strong>DEVInventary</strong></h4>
                     </div>
 
-                    <transition>
-                      <div class="input-group mb-3" v-if="register.register">
+                    <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit"
+                      class="animate__animated animate__backInLeft">
+                      <p v-text="register.textMain" class="text-white fs-4"></p>
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text">@</span>
+                        </div>
+                        <Veefield type="text" class="form-control" name="email" placeholder="Digite o e-mail"
+                          aria-label="Email" v-model="form.email" required :class="{ 'is-invalid': errors.email }"
+                          :rules="validateEmail" />
+                        <div class="invalid-feedback">{{ errors.email }}</div>
+                      </div>
+
+                      <div class="input-group mb-3">
                         <div class="input-group-prepend">
                           <span class="input-group-text">&#128273</span>
                         </div>
-                        <Veefield type="password" class="form-control" placeholder="Digite novamente a sua senha"
-                          aria-label="senha" v-model="form.confirmPassword" name="confirmPassword"
-                          :rules="validateConfirmPassword" :class="{ 'is-invalid': errors.confirmPassword }" />
-                        <div class="invalid-feedback">{{ errors.confirmPassword }}</div>
+                        <Veefield type="password" class="form-control" placeholder="Digite sua senha" aria-label="senha"
+                          v-model="form.password" required name="password" :class="{ 'is-invalid': errors.password }"
+                          :rules="validatePassword" />
+                        <div class="invalid-feedback">{{ errors.password }}</div>
                       </div>
-                    </transition>
 
-                    <div class="text-center ">
-                      <button :class="register.register ? 'btn btnRegister mb-3' : 'btn btnLogin mb-3'" type="submit"
-                        v-text="register.button">
-                      </button>
-                      <!--  <a class="text-muted ms-2" href="#!">Esqueceu a senha?</a> -->
-                    </div>
+                      <transition>
+                        <div class="input-group mb-3" v-if="register.register">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">&#128273</span>
+                          </div>
+                          <Veefield type="password" class="form-control" placeholder="Digite novamente a sua senha"
+                            aria-label="senha" v-model="form.confirmPassword" name="confirmPassword"
+                            :rules="validateConfirmPassword" :class="{ 'is-invalid': errors.confirmPassword }" />
+                          <div class="invalid-feedback">{{ errors.confirmPassword }}</div>
+                        </div>
+                      </transition>
 
-                    <div class="d-flex align-items-center justify-content-center pb-4">
-                      <p class="mb-0 me-2" v-text="register.haveAccount"></p>
-                      <a class="" @click.stop="toggleRegister" v-text="register.createAccount"></a>
-                    </div>
-                  </VeeForm>
+                      <div class="text-center ">
+                        <button :class="register.register ? 'btn btn-success me-3' : 'btn btn-info text-dark me-3'"
+                          type="submit" v-text="register.button">
+                        </button>
+                        <button class="btn btn-light" type="button" @click="alertUser"><i class="fa-brands fa-google"></i></button>
+                        <hr>
+                        <a class="ms-2 text-white" v-show="!register.register" @click="alertUser">Esqueceu a senha?</a>
+                      </div>
+                      <div class="d-flex align-items-end justify-content-center ">
+                        <p class="mb-0 me-2 text-light " v-text="register.haveAccount"></p>
+                        <a class="text-white" @click.stop="toggleRegister" v-text="register.createAccount"></a>
+                      </div>
+                      <hr>
+                    </VeeForm>
+                  </div>
                 </div>
-              </div>
-              <div class="col-lg-6 d-flex align-items-center">
-                <img src="../../assets/icons/Workspace_2_SVG.svg" class="imgback img-fluid" alt="">
+                <div class="col-lg-6 d-flex align-items-center">
+                  <img src="../../assets/icons/Workspace_2_SVG.svg"
+                    class="imgback img-fluid animate__animated animate__backInRight" alt="">
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!--Waves start-->
+    <div>
+      <svg class="waves mt-5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(255,255,255,0.7" />
+          <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(255,255,255,0.5)" />
+          <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(255,255,255,0.3)" />
+          <use xlink:href="#gentle-wave" x="48" y="7" fill="#fff" />
+        </g>
+      </svg>
+    </div>
+    <!--Waves end-->
   </section>
+
 </template>
 
 <script setup>
@@ -97,10 +122,10 @@ const form = ref({
 // Objeto para dados exibidos em tela conforme Login/Registro
 const register = ref({
   register: false,
-  textMain: 'Por favor, faça o login na sua conta',
+  textMain: 'Faça o login ou cadastre-se',
   button: 'Acessar',
   haveAccount: 'Não possui conta?',
-  createAccount: 'Criar conta',
+  createAccount: 'Cadastre-se',
 });
 
 // Objeto para validação do campo de confirmação de senha
@@ -179,17 +204,26 @@ function onInvalidSubmit({ errors }) {
   }
 }
 
+function alertUser() {
+  toast.warning('Função em desenvolvimento!', { timeout: 1500 });
+}
 
 </script>
 
 <style lang="scss" scoped>
+.container {
+  overflow: hidden;
+}
+
+
+
 .btnRegister {
   background-color: var(--color-primary);
-  color: var(--color-dark);
+  color: #fff;
 
   &:hover {
     background-color: var(--color-dark);
-    color: var(--color-white);
+    color: #fff;
   }
 }
 
@@ -200,7 +234,7 @@ function onInvalidSubmit({ errors }) {
 
 .btnLogin {
   background-color: var(--color-secondary);
-  color: var(--color-white);
+  color: #fff;
 
   &:hover {
     background-color: var(--color-dark);
@@ -217,12 +251,129 @@ function onInvalidSubmit({ errors }) {
   opacity: 0;
 }
 
-.imgback {
-  display: none;
-}
 
 .logo {
   width: 4rem;
+
+}
+
+h1 {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  letter-spacing: 2px;
+  font-size: 48px;
+}
+
+p {
+  font-family: 'Lato', sans-serif;
+  letter-spacing: 1px;
+  font-size: 14px;
+  color: #333333;
+}
+
+.header {
+  position: relative;
+  text-align: center;
+  background: #0F2027;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #2C5364, #203A43, #0F2027);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  color: white;
+}
+
+.logo {
+  width: 50px;
+  fill: white;
+  padding-right: 15px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.inner-header {
+  height: 65vh;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.flex {
+  /*Flexbox for containers*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.waves {
+  position: relative;
+  width: 100%;
+  height: 15vh;
+  margin-bottom: -7px;
+  /*Fix for safari gap*/
+  min-height: 100px;
+  max-height: 150px;
+}
+
+.content {
+  position: relative;
+  height: 20vh;
+  text-align: center;
+  background-color: white;
+}
+
+/* Animation */
+
+.parallax>use {
+  animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
+}
+
+.parallax>use:nth-child(1) {
+  animation-delay: -2s;
+  animation-duration: 7s;
+}
+
+.parallax>use:nth-child(2) {
+  animation-delay: -3s;
+  animation-duration: 10s;
+}
+
+.parallax>use:nth-child(3) {
+  animation-delay: -4s;
+  animation-duration: 13s;
+}
+
+.parallax>use:nth-child(4) {
+  animation-delay: -5s;
+  animation-duration: 20s;
+}
+
+@keyframes move-forever {
+  0% {
+    transform: translate3d(-90px, 0, 0);
+  }
+
+  100% {
+    transform: translate3d(85px, 0, 0);
+  }
+}
+
+/*Shrinking for mobile*/
+@media (max-width: 768px) {
+  .waves {
+    height: 40px;
+    min-height: 40px;
+  }
+
+  .content {
+    height: 30vh;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
 }
 
 @media (min-width: 900px) {
@@ -236,8 +387,11 @@ function onInvalidSubmit({ errors }) {
     margin-top: 10px;
   }
 
-  .gradient-form {
-    height: 100vh !important;
+}
+
+@media (max-width: 1000px) {
+  .imgback {
+    display: none;
   }
 }
 </style>

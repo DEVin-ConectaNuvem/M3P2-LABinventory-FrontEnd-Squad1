@@ -1,5 +1,5 @@
 <template>
-  <div class="container ">
+  <div class="container mt-3 ">
     <div class="content input-group">
       <input type="text" class="w-75 form-control animate__animated animate__flipInX" placeholder="✍️ Buscar item... "
         v-model="inputSearch">
@@ -120,6 +120,7 @@ const item = ref({})
 
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
+store.commit('configModule/SET_PAGE_NAME', 'Listagem de itens');
 
 const totalPages = computed(() => {
   if (inputSearch.value) {
