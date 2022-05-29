@@ -15,7 +15,8 @@ const router = createRouter({
         if (auth) {
           return true;
         }
-        return (to = "/login");
+        to = "/login"
+        return to;
       },
     },
     {
@@ -25,7 +26,8 @@ const router = createRouter({
       beforeEnter: (to) => {
         const auth = localStorage.getItem("token");
         if (auth) {
-          return (to = {name: 'dashboard'});
+          to = {name: 'dashboard'}
+          return to;
         }
         return true;
       },
@@ -39,7 +41,8 @@ const router = createRouter({
         if (auth) {
           return true;
         }
-        return (to = "/login");
+        to = "/login"
+        return to;
       },
     },
     {
@@ -51,7 +54,8 @@ const router = createRouter({
         if (auth) {
           return true;
         }
-        return (to = "/login");
+        to = "/login"
+        return to;
       },
     },
     {
@@ -63,7 +67,8 @@ const router = createRouter({
         if (auth) {
           return true;
         }
-        return (to = "/login");
+        to = "/login"
+        return to;
       },
     },
     {
@@ -75,7 +80,8 @@ const router = createRouter({
         if (auth) {
           return true;
         }
-        return (to = "/login");
+        to = "/login"
+        return to;
       },
     },
   ],
