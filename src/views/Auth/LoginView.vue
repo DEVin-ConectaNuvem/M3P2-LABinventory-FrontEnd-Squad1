@@ -365,6 +365,11 @@ p {
     min-height: 30px;
   }
 
+  .logo{
+    width: 7rem;
+  }
+  
+
   .content {
     height: 30vh;
   }
@@ -372,6 +377,14 @@ p {
   h1 {
     font-size: 24px;
   }
+}
+
+@media (min-width: 768px) {
+
+  .logo{
+    width: 7rem;
+  }
+  
 }
 
 @media (min-width: 900px) {
