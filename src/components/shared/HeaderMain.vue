@@ -5,7 +5,7 @@
                 <i class="fa-solid fa-bars fs-2 text-white" @click="toggleVisibility"></i>
             </div>
             <div>
-                 <img src="../../assets/icons/logoInventary.svg" class="ms-2 d-none h-50" alt="DEVInventary">
+                 <img src="../../assets/icons/logoInventary.svg" class="ms-3 imgLogo animate__animated animate__bounceIn" alt="DEVInventary" :class="isVisible ? 'd-none' : 'd-block' ">
             </div>
 
             <div class="text-white fs-3 mx-auto text-center">
@@ -83,6 +83,11 @@ i{
 .toggleVisible{
     z-index: 9999;
 }
+
+.imgLogo{
+    width: 50px;
+}
+
 .avatar {
     border-radius: 10px;
     margin-right: 0.2rem;

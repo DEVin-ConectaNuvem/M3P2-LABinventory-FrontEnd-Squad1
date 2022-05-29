@@ -75,10 +75,6 @@ aside {
     font-size: 1.2rem;
     cursor: pointer;
   }
-
- 
- 
-
 }
 
 .form-check {
@@ -99,4 +95,13 @@ a:hover,
   color: var(--color-white);
   border-right: 2px solid var(--color-primary);
 }
+
+// Medium devices (tablets, 768px and up)
+@media (max-width: 768px) { 
+  aside {
+    width: 100vw;
+    position: fixed;
+  }
+
+ }
 </style>
