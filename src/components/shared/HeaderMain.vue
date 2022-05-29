@@ -1,17 +1,17 @@
 <template>
     <header class="p-3">
         <div class="d-flex">
-            <div class="toggleVisible ">
+            <div class="toggleVisible align-items-center d-flex">
                 <i class="fa-solid fa-bars fs-2 text-white" @click="toggleVisibility"></i>
             </div>
             <div>
                 <img src="../../assets/icons/logoInventary.svg" class="ms-3 imgLogo animate__animated animate__bounceIn"
                     alt="DEVInventary" :class="isVisible ? 'd-none' : 'd-block'">
             </div>
-            <div class="text-white fs-3 mx-auto text-center">
+            <div class="text-white fs-4 d-flex align-items-center text-center namePage">
                <strong> {{ namePage }} </strong>
             </div>
-            <div class="dropdown text-end ">
+            <div class="dropdown text-end">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
                     id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                     <strong v-text="logged.username" class="username"></strong>
@@ -60,14 +60,16 @@ function logOut() {
 }
 
 
-
 </script>
 
 <style lang="scss" scoped>
 header {
     width: 100%;
-
     background-color: var(--color-dark);
+}
+
+.namePage{
+    margin: 0 auto;
 }
 
 i {
@@ -83,8 +85,7 @@ i {
 }
 
 .avatar {
-    border-radius: 10px;
-    margin-right: 0.2rem;
+    border-radius: 20px;
 }
 
 i {
@@ -115,5 +116,8 @@ i {
     .username {
         display: none;
     }
+    .namePage{
+    margin-left: 20px;
+}
 }
 </style>

@@ -24,7 +24,7 @@
             :aria-controls="'collapseOne' + collaborator.id">
             <vue-gravatar class="img-fluid imgAccordion" :email="collaborator.email" />
             <p v-text="collaborator.name" class="ms-2 nameCollab"></p>
-            <p v-text="' - ' + collaborator.position"></p>
+            <p class="ms-2 text-center" v-text="'#' + collaborator.position"></p>
           </button>
         </h2>
         <div :id="'collapse' + collaborator.id" class="accordion-collapse collapse" :aria-labelledby="collaborator.id">
@@ -146,40 +146,5 @@ function editCollab(id) {
   color: var(--color-secondary);
 }
 
-.form {
-  position: relative;
-}
 
-.form .fa-search {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  color: #9ca3af;
-}
-
-.form span {
-  position: absolute;
-  right: 17px;
-  top: 13px;
-  padding: 2px;
-  border-left: 1px solid #d1d5db;
-}
-
-.left-pan {
-  padding-left: 7px;
-}
-
-.left-pan {
-  color: var(--color-secondary);
-}
-
-.form-input {
-  height: 55px;
-  text-indent: 33px;
-  border-radius: 10px;
-}
-
-.form-input:focus {
-  border: 1px solid var(--color-secondary);
-}
 </style>

@@ -74,7 +74,7 @@ aside {
   height: 100vh;
   color: var(--color-white);
   overflow-y: none;
-  z-index: 1;
+  z-index: 500;
   width: 200px;
   background-color: var(--color-dark);
   
