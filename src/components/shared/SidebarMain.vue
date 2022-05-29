@@ -1,6 +1,6 @@
 <template>
   <aside>
-    <div class="d-flex flex-column flex-shrink-0 text-white">
+    <div class="d-flex flex-column flex-shrink-0 text-white ">
       <div class="brand mx-auto mb-1">
         <img src="../../assets/icons/logoInventary.svg" class="mx-auto " alt="DEVInventary">
       </div>
@@ -9,7 +9,7 @@
       <ul class="nav nav-pills flex-column mb-auto">
         <span>Geral</span>
         <li class="nav-item">
-          <RouterLink to="/" class="nav-link">
+          <RouterLink to="/" @click="toggleVisibility" class="nav-link">
             <i class="fa-solid fa-house-chimney"></i>
             <span> Inventário</span>
           </RouterLink>
@@ -17,11 +17,11 @@
         <hr>
         <span>Colaboradores</span>
         <li>
-          <RouterLink to="/colaboradores" class="nav-link">
+          <RouterLink to="/colaboradores" @click="toggleVisibility" class="nav-link">
             <i class="fa-solid fa-user-tie"></i>
             <span> Cadastrar</span>
           </RouterLink>
-          <RouterLink to="/lista-colaboradores" class="nav-link">
+          <RouterLink to="/lista-colaboradores" @click="toggleVisibility" class="nav-link">
             <i class="fa-solid fa-address-book"></i>
             <span> Listar</span>
           </RouterLink>
@@ -29,11 +29,11 @@
         <hr>
         <span>Produtos</span>
         <li>
-          <RouterLink to="/itens" class="nav-link">
+          <RouterLink to="/itens" @click="toggleVisibility" class="nav-link">
             <i class="fa-solid fa-circle-plus"></i>
             <span> Cadastrar</span>
           </RouterLink>
-          <RouterLink to="/lista-itens" class="nav-link">
+          <RouterLink to="/lista-itens" @click="toggleVisibility" class="nav-link">
             <i class="fa-solid fa-address-book"></i>
             <span> Empréstimo</span>
           </RouterLink>
@@ -56,6 +56,13 @@ store.commit('configModule/UPDATE_CONFIGS_LOCAL_STORAGE')
 const isVisible = computed(() => {
   return store.state.configModule.configs.sidebarVisible;
 })
+
+function toggleVisibility() {
+    if (window.screen.width < 768) {
+      store.dispatch('configModule/toggleSidebar')
+    }
+    
+}
 
 </script>
 
@@ -88,8 +95,6 @@ aside {
 a {
   text-decoration: none;
   color: var(--color-grey);
-  
-  
 }
 
 a:hover,
