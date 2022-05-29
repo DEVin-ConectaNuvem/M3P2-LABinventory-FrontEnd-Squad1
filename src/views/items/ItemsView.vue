@@ -71,8 +71,8 @@
       </div>
 
       <div class="text-end">
-        <button :type="infoById ? 'button' : 'reset'" @click="cancelEdit()"
-          class="btn btn-secondary me-2 mt-2">Cancelar</button>
+        <button :type="infoById ? 'button' : 'reset'" @click="infoById ? cancelEdit() : ''"
+          class="btn btn-secondary me-2 mt-2" v-text="infoById ? 'Cancelar' : 'Limpar'"></button>
         <button type="submit" class="mt-2 btn" :class="infoById ? 'btn-primary' : 'btn-success'"
           v-text="btnForm"></button>
       </div>
