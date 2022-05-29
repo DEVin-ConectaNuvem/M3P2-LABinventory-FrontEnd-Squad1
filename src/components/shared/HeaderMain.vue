@@ -43,7 +43,6 @@ const store = useStore()
 const router = useRouter()
 
 
-
 const namePage = computed(() => {
     return store.state.configModule.configs.pageName
 })
@@ -56,13 +55,12 @@ const logged = computed(() => {
 })
 
 
-
 function toggleVisibility() {
     store.dispatch('configModule/toggleSidebar')
-
 }
 
 function logOut() {
+    isVisible.value ? store.dispatch('configModule/toggleSidebar') : ''
     store.dispatch('authModule/logOut')
     router.push({ name: 'login' })
 }
