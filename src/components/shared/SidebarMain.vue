@@ -1,5 +1,5 @@
 <template>
-  <aside v-if="isVisible" class="animate__animated animate__fadeInLeft">
+  <aside>
     <div class="d-flex flex-column flex-shrink-0 p-3 text-white">
       <div class="brand mx-auto mb-1">
         <img src="../../assets/icons/logoInventary.svg" class="mx-auto " alt="DEVInventary">
@@ -42,7 +42,6 @@
       <hr>
     </div>
   </aside>
-
 </template>
 
 <script setup>
@@ -64,27 +63,22 @@ const isVisible = computed(() => {
 aside {
   top: 0;
   left: 0;
+  bottom: 0;
   height: 100vh;
   color: var(--color-white);
-  overflow-y: auto;
+  overflow-y: none;
   z-index: 1;
   width: 200px;
   background-color: var(--color-dark);
-  transition: all 1s ease-in-out;
-
-
 
   i {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    cursor: pointer;
   }
 
-  .toggleIcon {
-    text-align: end;
+ 
+ 
 
-    i {
-      cursor: pointer;
-    }
-  }
 }
 
 .form-check {

@@ -1,7 +1,7 @@
 <template>
     <header class="p-3">
         <div class="d-flex">
-            <div class=" ">
+            <div class="toggleVisible ">
                 <i class="fa-solid fa-bars fs-2 text-white" @click="toggleVisibility"></i>
             </div>
             <div>
@@ -23,8 +23,7 @@
                         class="rounded-circle me-2"> -->
                 </a>
                 <ul class="dropdown-menu text-white text-small shadow">
-                    <!--  <li><a class="dropdown-item" href="#">Configurações</a></li>
-                    <li><a class="dropdown-item" href="#">Perfil</a></li> -->
+                    <li><a class="dropdown-item text-white">Configurações</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -76,15 +75,9 @@ i{
     cursor: pointer;
 }
 
-.brand {
-    
-    i {
-        position: relative;
-        left: 60px;
-        font-size: 1.5rem;
-    }
+.toggleVisible{
+    z-index: 9999;
 }
-
 .avatar {
     border-radius: 10px;
     margin-right: 0.2rem;

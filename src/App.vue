@@ -6,11 +6,11 @@ import { useStore } from 'vuex';
 import { computed } from 'vue'
 import { ref } from 'vue'
 
-const isVisible = ref(localStorage.getItem('isVisible') === 'true');
-
-
-
 const store = useStore();
+
+const isVisible = computed(() => {
+  return store.state.configModule.configs.sidebarVisible;
+})
 
 // define estado inicial de login via tokenconfirmPassword
 store.dispatch('authModule/updateToken');
@@ -25,15 +25,17 @@ const statusLogin = computed(() => {
 
 <template>
   <div class="box">
-    <transition>
-      <div v-if="statusLogin">
-        <HeaderMain></HeaderMain>
-      </div>
-    </transition>
+
+    <div v-if="statusLogin">
+      <HeaderMain></HeaderMain>
+    </div>
+
     <main>
-      <div id="left" class="bottom" :class="isVisible ? 'isVisible' : ''">
-        <SidebarMain></SidebarMain>
-      </div>
+      <transition>
+        <div id="left" class="bottom" v-if="isVisible">
+          <SidebarMain></SidebarMain>
+        </div>
+      </transition>
       <div class="bottom">
         <RouterView />
       </div>
@@ -45,33 +47,14 @@ const statusLogin = computed(() => {
 <style lang="scss">
 @import url('./assets/css/base.css');
 
-.isVisible {
-  width: 5rem;
-  margin: 0;
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
 
-  a {
-    padding: 0.6rem;
-    text-align: center;
-    margin-bottom: 0.2rem;
-
-    i {
-      text-align: center;
-    }
-  }
-
-  span {
-    display: none;
-  }
-
-  .toggleIcon {
-    transform: rotate(180deg);
-    text-align: center;
-  }
-
-  img {
-    width: 2rem;
-  }
-
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
 }
 
 #left {

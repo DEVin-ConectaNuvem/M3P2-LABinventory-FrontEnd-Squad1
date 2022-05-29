@@ -13,11 +13,11 @@
 --color-danger: #FF0000;
 }
 
-body {
-  box-sizing: border-box;
-  font-family: 'Noto Sans JP', sans-serif;
- 
+html {
+  height: 100%;
 }
+
+body { min-height: 100vh; }
 
 * {
     margin: 0;
