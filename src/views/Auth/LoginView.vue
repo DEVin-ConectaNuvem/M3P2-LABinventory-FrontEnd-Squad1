@@ -1,22 +1,27 @@
 <template>
   <section class="header">
     <!--Content before waves-->
-    <div class="inner-header flex">
-      <div class="container mt-5">
+    <div class="inner-header  flex  ">
+      <div class="container ">
         <div class="row d-flex justify-content-center align-items-center h-100">
           <div class="col-xl-10">
             <div class=" rounded-3 text-white">
               <div class="row g-0">
                 <div class="col-lg-6">
-                  <div class="card-body p-md-5 mx-md-4">
+                  <div class="card-body mx-md-4 mt-5">
                     <div class="text-center animate__animated animate__backInLeft">
                       <img src="../../assets/icons/logoInventary.svg" class="img-fluid logo " alt="logo">
-                      <h4 class="mt-1 mb-5 pb-1">Nós somos o <strong>DEVInventary</strong></h4>
+                      <h4 class="mt-1 ">Nós somos o <strong>DEVInventary</strong></h4>
                     </div>
 
                     <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit"
                       class="animate__animated animate__backInLeft">
-                      <p v-text="register.textMain" class="text-white fs-4"></p>
+
+                      <div class="d-flex align-items-end justify-content-center mb-2 ">
+                        <p class="mb-0 me-2 text-light " v-text="register.haveAccount"></p>
+                        <a class="text-white" @click.stop="toggleRegister" v-text="register.createAccount"></a>
+                      </div>
+
                       <div class="input-group mb-3">
                         <div class="input-group-prepend">
                           <span class="input-group-text">@</span>
@@ -53,15 +58,12 @@
                         <button :class="register.register ? 'btn btn-success me-3' : 'btn btn-info text-dark me-3'"
                           type="submit" v-text="register.button">
                         </button>
-                        <button class="btn btn-light" type="button" @click="alertUser"><i class="fa-brands fa-google"></i></button>
+                        <button class="btn btn-light" type="button" @click="alertUser"><i
+                            class="fa-brands fa-google"></i></button>
                         <hr>
                         <a class="ms-2 text-white" v-show="!register.register" @click="alertUser">Esqueceu a senha?</a>
                       </div>
-                      <div class="d-flex align-items-end justify-content-center ">
-                        <p class="mb-0 me-2 text-light " v-text="register.haveAccount"></p>
-                        <a class="text-white" @click.stop="toggleRegister" v-text="register.createAccount"></a>
-                      </div>
-                      <hr>
+
                     </VeeForm>
                   </div>
                 </div>
@@ -216,8 +218,6 @@ function alertUser() {
   overflow: hidden;
 }
 
-
-
 .btnRegister {
   background-color: var(--color-primary);
   color: #fff;
@@ -231,7 +231,6 @@ function alertUser() {
 .form-control {
   border: 1px solid var(--color-secondary);
 }
-
 
 .btnLogin {
   background-color: var(--color-secondary);
@@ -269,7 +268,6 @@ p {
   font-family: 'Lato', sans-serif;
   letter-spacing: 1px;
   font-size: 14px;
-  color: #333333;
 }
 
 .header {
@@ -294,7 +292,6 @@ p {
 }
 
 .inner-header {
-  height: 65vh;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -364,8 +361,8 @@ p {
 /*Shrinking for mobile*/
 @media (max-width: 768px) {
   .waves {
-    height: 40px;
-    min-height: 40px;
+    height: 25%;
+    min-height: 30px;
   }
 
   .content {
