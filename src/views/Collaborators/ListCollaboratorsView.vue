@@ -75,10 +75,12 @@ import { RouterLink, useRouter } from "vue-router";
 const router = useRouter();
 const store = useStore();
 const inputSearch = ref("");
-store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 const page = ref(1);
 const perPage = ref(5);
 const findBy = ref("name");
+
+store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
+store.commit('configModule/SET_PAGE_NAME', 'Listagem de colaboradores');
 
 const totalPages = computed(() => {
   if (inputSearch.value) {

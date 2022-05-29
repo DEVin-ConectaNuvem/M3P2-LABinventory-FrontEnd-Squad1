@@ -1,7 +1,5 @@
 <template>
   <section class="header">
-    
-    
 <!--Content before waves-->
 <div class="inner-header flex">
 <div class="container mt-5">
@@ -55,7 +53,7 @@
                         v-text="register.button">
                       </button>
                       <br>
-                       <a class="ms-2 text-muted" v-show="!register.register" >Esqueceu a senha?</a>
+                       <a class="ms-2 text-white" v-show="!register.register" >Esqueceu a senha?</a>
                     </div>
                     <hr>
                     <div class="d-flex align-items-end justify-content-center ">
@@ -78,7 +76,7 @@
 
 <!--Waves start-->
 <div>
-<svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+<svg class="waves mt-5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
 viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
 <defs>
 <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
@@ -273,7 +271,10 @@ p {
 .header {
   position:relative;
   text-align:center;
-  background: linear-gradient(60deg, rgba(84,58,183,1) 0%, rgba(0,172,193,1) 100%);
+  background: #0F2027;  /* fallback for old browsers */
+background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);  /* Chrome 10-25, Safari 5.1-6 */
+background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
   color:white;
 }
 .logo {

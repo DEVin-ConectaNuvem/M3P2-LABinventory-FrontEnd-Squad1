@@ -148,7 +148,7 @@ const inputSearch = ref(null);
 
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
-
+store.commit('configModule/SET_PAGE_NAME', 'Dashboard')
 
 const items = computed(() => {
     if (inputSearch.value) {

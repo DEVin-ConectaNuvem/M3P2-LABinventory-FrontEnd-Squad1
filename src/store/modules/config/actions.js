@@ -3,4 +3,5 @@ const toggleSidebar = ({ commit }, payload) => {
     commit("SET_CONFIGS_LOCAL_STORAGE", payload);
 };
 
+
 export { toggleSidebar }

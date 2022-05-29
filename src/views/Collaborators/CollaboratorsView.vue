@@ -168,6 +168,8 @@ const id = route.params.userId;
 
 // commit para atualizar dados do localstorage ao montar tela
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
+store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de colaboradores');
+
 
 // variavel para verificar se o usuario esta editando ou criando um novo colaborador
 const infoById = computed(() => {

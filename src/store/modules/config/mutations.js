@@ -13,7 +13,8 @@ const UPDATE_CONFIGS_LOCAL_STORAGE = (state) => {
     localStorage.setItem("configs", JSON.stringify(state.configs.sidebarVisible));
   };
 
+  const SET_PAGE_NAME = (state, payload) => {
+    state.configs.pageName = payload;
+  };
 
-
-
-export {UPDATE_CONFIGS_LOCAL_STORAGE, TOGGLE_SIDEBAR, SET_CONFIGS_LOCAL_STORAGE }
+export {UPDATE_CONFIGS_LOCAL_STORAGE, TOGGLE_SIDEBAR, SET_CONFIGS_LOCAL_STORAGE, SET_PAGE_NAME }

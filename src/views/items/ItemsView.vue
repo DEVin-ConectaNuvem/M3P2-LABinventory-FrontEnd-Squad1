@@ -114,6 +114,7 @@ const id = route.params.itemId ? Number(route.params.itemId.split('-')[0]) : nul
 const origin = id ? route.params.itemId.split('-')[1] : null;
 
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
+store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de itens');
 
 // variavel para verificar se o usuario esta editando ou criando um novo colaborador
 const infoById = computed(() => {

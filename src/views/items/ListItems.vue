@@ -120,6 +120,7 @@ const item = ref({})
 
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
+store.commit('configModule/SET_PAGE_NAME', 'Listagem de itens');
 
 const totalPages = computed(() => {
   if (inputSearch.value) {

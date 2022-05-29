@@ -8,9 +8,8 @@
                  <img src="../../assets/icons/logoInventary.svg" class="ms-2 d-none h-50" alt="DEVInventary">
             </div>
 
-            <div class="text-white fs-5 mx-auto text-center">
-                <i class="fa-solid fa-boxes-stacked"></i>
-                Inventário
+            <div class="text-white fs-3 mx-auto text-center">
+                {{namePage}}
             </div>
             <div class="dropdown text-end ">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
@@ -43,12 +42,20 @@ import { computed } from 'vue';
 const store = useStore()
 const router = useRouter()
 
+
+
+const namePage = computed(() => {
+    return store.state.configModule.configs.pageName
+})
+
 const isVisible = computed(() => {
   return store.state.configModule.configs.sidebarVisible;
 })
 const logged = computed(() => {
     return store.state.authModule.userLogged
 })
+
+
 
 function toggleVisibility() {
     store.dispatch('configModule/toggleSidebar')
