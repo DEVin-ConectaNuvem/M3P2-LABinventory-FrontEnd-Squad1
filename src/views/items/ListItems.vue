@@ -141,7 +141,7 @@ const totalPages = computed(() => {
 
 const items = computed(() => {
   if (inputSearch.value) {
-
+    page.value = 1;
     let total = store.state.itemsModule.items.filter(
       (item) =>
         findBy.value === 'codPatrimonio'

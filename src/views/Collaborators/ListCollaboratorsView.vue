@@ -98,6 +98,7 @@ const totalPages = computed(() => {
 
 const collaborators = computed(() => {
   if (inputSearch.value) {
+    page.value = 1;
     let total = store.state.collaboratorModule.collaborators.filter(
       (collaborator) =>
         collaborator[findBy.value]

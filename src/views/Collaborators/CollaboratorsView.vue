@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-3">
-    <h4 class="mb-3">Preencha os campos para cadastrar um novo colaborador</h4>
+    <h4 class="mb-3">Preencha os campos para cadastrar/editar um colaborador</h4>
     <VeeForm @submit="onValidSubmit" v-slot="{ errors, actions }" @invalid-submit="onInvalidSubmit"
       class="formCadastro animate__animated animate__fadeIn">
       <div class="row mb-1">
@@ -9,7 +9,7 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Nome completo <span>*</span></label>
           <Veefield type="text" name="name" class="form-control" placeholder="Nome completo" v-model.trim="form.name"
-            required :class="{ 'is-invalid': errors.name }" :rules="validateName" v-focus maxlength="25"/>
+            required :class="{ 'is-invalid': errors.name }" :rules="validateName" v-focus maxlength="25" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.name }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
@@ -145,7 +145,7 @@ import {
 import axios from "axios";
 import moment from "moment";
 
- 
+
 // variaveis globais
 
 const $loading = useLoading();

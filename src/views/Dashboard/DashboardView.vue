@@ -9,7 +9,8 @@
                 <template v-slot:title>Colaboradores</template>
                 <template v-slot:infos>Total colaboradores</template>
             </cards-dashboard>
-            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-danger" @click="infoDashRoute('itens', 'listItems')">
+            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-danger"
+                @click="infoDashRoute('itens', 'listItems')">
                 <template v-slot:icon><i
                         class="widgets-icons-2 bg-gradient-bloody fa-solid fa-boxes-stacked"></i></template>
                 <template v-slot:count>{{ tweendItems.number.toFixed(0) }}</template>
@@ -139,7 +140,6 @@ import { createMessageBox } from 'vue-m-dialog'
 const router = useRouter();
 const store = useStore();
 const show = ref(false);
-const showDashboard = ref(true);
 const item = ref({});
 const findBy = ref("codPatrimonio");
 const inputSearch = ref(null);
@@ -252,8 +252,6 @@ img {
     height: 100%;
     max-width: 150px;
 }
-
-
 
 .cards {
     display: flex;

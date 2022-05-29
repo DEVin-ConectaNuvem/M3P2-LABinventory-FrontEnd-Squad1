@@ -1,7 +1,8 @@
 <template>
   <div class="container mt-3">
-    <h4 class="mb-3">Preencha os campos para cadastrar um novo item</h4>
-    <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit" class="formCadastro animate__animated animate__fadeIn">
+    <h4 class="mb-3">Preencha os campos para cadastrar/editar um item</h4>
+    <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit"
+      class="formCadastro animate__animated animate__fadeIn">
       <div class="row mb-1">
         <h3>Dados do item</h3>
         <hr />
@@ -10,14 +11,12 @@
           <input type="text" name="codPatrimonio" class="form-control" placeholder="Cód. automatico"
             v-model="form.codPatrimonio" disabled />
         </div>
-
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Título do item <span>*</span></label>
           <Veefield type="text" name="title" class="form-control" placeholder="Titulo do item" v-model.trim="form.title"
             required v-focus :class="{ 'is-invalid': errors.title }" :rules="required" maxlength="30" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.title }}</div>
         </div>
-
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Categoria <span>*</span></label>
           <Veefield as="select" name="category" class="form-select" v-model="form.category" required
@@ -31,13 +30,14 @@
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.category }}</div>
         </div>
       </div>
+
       <h4 class="mt-3">Dados Complementares</h4>
       <hr>
       <div class="row mb-1">
         <div class=" col-sm-6 col-md-4 col-lg-3 ">
           <label class="form-label">Valor <span>*</span></label>
-          <Veefield type="number" name="value" class="form-control" placeholder="Valor do item" v-model.trim="form.value"
-            required :class="{ 'is-invalid': errors.value }" :rules="validateNumber" />
+          <Veefield type="number" name="value" class="form-control" placeholder="Valor do item"
+            v-model.trim="form.value" required :class="{ 'is-invalid': errors.value }" :rules="validateNumber" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.value }}</div>
         </div>
 
@@ -59,16 +59,15 @@
         <div class="col-sm-12 col-md-6">
           <label class="form-label">Url (imagem do produto) <span>*</span></label>
           <Veefield type="url" name="url" class="form-control" placeholder="caminho url da imagem" v-model="form.url"
-            required :class="{ 'is-invalid': errors.url }" :rules="required" />
+            required :class="{ 'is-invalid': errors.url }" @focusout="imageFromUrl" :rules="required" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.url }}</div>
-          <img :src="form.url" name="imgUrl" alt="" class="img-fluid text-center" width="120">
+          <img :src="url" name="imgUrl" class="img-fluid text-center" width="120">
         </div>
         <div class="col-sm-12 col-md-6">
           <label class="form-label">Descrição do item<span>*</span></label>
           <textarea name="description" rows="3" v-model="form.description" required
-            placeholder="Digite as especificações do item" class="form-control" maxlength="180" ></textarea>
+            placeholder="Digite as especificações do item" class="form-control" maxlength="180"></textarea>
         </div>
-        
       </div>
 
       <div class="text-end">
@@ -76,7 +75,6 @@
           class="btn btn-secondary me-2 mt-2">Cancelar</button>
         <button type="submit" class="mt-2 btn" :class="infoById ? 'btn-primary' : 'btn-success'"
           v-text="btnForm"></button>
-
       </div>
     </VeeForm>
   </div>
@@ -90,7 +88,7 @@ import ToastNotification from "./components/ToastNotification.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
 import { Form as VeeForm, Field as Veefield } from "vee-validate";
-import { required, validateNumber, validateUrl} from "../../validators/validators";
+import { required, validateNumber } from "../../validators/validators";
 import moment from "moment";
 
 /* 
@@ -155,12 +153,24 @@ const form = ref({
   updatedAt: infoById.value ? moment().format("llll") : "",
   loanAt: infoById.value ? infoById.value.loanAt : null,
 });
+const newForm = ref({})
+const url = ref(null);
+
+function imageFromUrl() {
+  if (form.value.url) {
+    url.value = form.value.url;
+  }
+}
+
+//função de exibição da imagem ao montar tela
+imageFromUrl();
 
 /* 
 Funções para submit do formulário
 */
 //função executada quando o formulário for submetido com sucesso
 function onValidSubmit(values, actions) {
+  newForm.value = { ...form.value }
   if (infoById.value) {
     editItem(actions);
     actions.resetForm();
@@ -181,9 +191,9 @@ function onInvalidSubmit({ errors }) {
 function newItem(actions) {
   const loader = $loading.show();
   setTimeout(() => {
-    form.value.codPatrimonio = getCountItems.value;
-    form.value.updatedAt = moment().format("llll");
-    store.dispatch("itemsModule/registerItem", form.value);
+    newForm.value.codPatrimonio = getCountItems.value;
+    newForm.value.updatedAt = moment().format("llll");
+    store.dispatch("itemsModule/registerItem", newForm.value);
     clearForm()
     loader.hide();
     toast(content, {
@@ -205,8 +215,8 @@ function newItem(actions) {
 function editItem(actions) {
   const loader = $loading.show();
   setTimeout(() => {
-    form.value.updatedAt = moment().format("llll");
-    store.dispatch("itemsModule/editItem", form.value);
+    newForm.value.updatedAt = moment().format("llll");
+    store.dispatch("itemsModule/editItem", newForm.value);
     loader.hide();
     toast.success("Item editado com sucesso!");
     if (origin === 'list') {
@@ -221,6 +231,7 @@ function editItem(actions) {
 function clearForm() {
   form.value.codPatrimonio = '';
   form.value.description = '';
+  url.value = null;
 }
 
 // Função para cancelar a edição
