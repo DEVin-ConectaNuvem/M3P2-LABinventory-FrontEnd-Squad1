@@ -5,7 +5,7 @@ import {
 } from 'yup';
 
 const validateEmail = string().email('Um e-mail válido deve ser informado').required('O e-mail é obrigatório').nullable();
-const validatePassword = string().min(6, 'A senha deve ter no mínimo 6 caracteres').required('A senha é obrigatória').nullable();
+const validatePassword = string().min(8, 'A senha deve ter no mínimo 6 caracteres').required('A senha é obrigatória').nullable();
 const validateName = string().min(3, 'O nome deve ter no mínimo 3 caracteres').required('O nome é obrigatório').nullable();
 const required = string().required('O campo é obrigatório').nullable();
 const validateDate = date().required('A data é obrigatória').max(new Date(), 'A data não pode ser superior a data atual').nullable();
