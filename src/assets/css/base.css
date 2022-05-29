@@ -9,15 +9,14 @@
 --color-white: #fff;
 --color-black: #000;
 --color-grey: #DDDDDD;
---color-grey-medium: #D3DEDC
+--color-grey-medium: #d3d3d3;
 --color-danger: #FF0000;
---surface-color: #fff;
---curve: 40
 }
+
 body {
   box-sizing: border-box;
   font-family: 'Noto Sans JP', sans-serif;
-  background-color: var(--color-grey-medium);
+ 
 }
 
 * {

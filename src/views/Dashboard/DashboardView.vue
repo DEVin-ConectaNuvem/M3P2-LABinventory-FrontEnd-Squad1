@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container mt-3">
         <!-- Inicio da seção cards do dashboard  -->
         <section class="row cards">
             <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-info "

@@ -1,5 +1,5 @@
 <template>
-  <div class="container ">
+  <div class="container mt-3 ">
     <div class="content input-group">
       <input type="text" class="w-75 form-control animate__animated animate__flipInX" placeholder="✍️ Buscar item... "
         v-model="inputSearch">

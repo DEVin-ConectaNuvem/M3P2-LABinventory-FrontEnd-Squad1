@@ -4,6 +4,11 @@ import SidebarMain from './components/shared/SidebarMain.vue';
 import HeaderMain from './components/shared/HeaderMain.vue';
 import { useStore } from 'vuex';
 import { computed } from 'vue'
+import { ref } from 'vue'
+
+const isVisible = ref(localStorage.getItem('isVisible') === 'true');
+
+
 
 const store = useStore();
 
@@ -19,39 +24,78 @@ const statusLogin = computed(() => {
 </script>
 
 <template>
-  <div>
+  <div class="box">
     <transition>
       <div v-if="statusLogin">
-        <SidebarMain class="leftSide"></SidebarMain>
         <HeaderMain></HeaderMain>
       </div>
     </transition>
     <main>
-      <RouterView />
+      <div id="left" class="bottom" :class="isVisible ? 'isVisible' : ''">
+        <SidebarMain></SidebarMain>
+      </div>
+      <div class="bottom">
+        <RouterView />
+      </div>
     </main>
   </div>
 
 </template>
 
-<style>
+<style lang="scss">
 @import url('./assets/css/base.css');
 
-.v-enter-active,
-.v-leave-active {
-  transition: opacity 0.5s ease;
+.isVisible {
+  width: 5rem;
+  margin: 0;
+
+  a {
+    padding: 0.6rem;
+    text-align: center;
+    margin-bottom: 0.2rem;
+
+    i {
+      text-align: center;
+    }
+  }
+
+  span {
+    display: none;
+  }
+
+  .toggleIcon {
+    transform: rotate(180deg);
+    text-align: center;
+  }
+
+  img {
+    width: 2rem;
+  }
+
 }
 
-.v-enter-from,
-.v-leave-to {
-  opacity: 0;
+#left {
+  flex-shrink: 0;
+  /* makes sure that content is not cut off in a smaller browser window */
+  float: left;
+}
+
+.column {
+  height: 100%;
+  /* allows both columns to span the full height of the browser window */
+  display: flex;
+  flex-direction: column;
+  /* stacks the left and right headers above the bottom content */
+}
+
+.bottom {
+  flex-grow: 1;
+  /* ensures that the container will take up the full height of the parent container */
+  overflow-y: auto;
+  /* adds scroll to this container */
 }
 
 a {
   cursor: pointer;
-}
-
-.leftSide {
-  float: left;
-  height: 100vh!important;
 }
 </style>

@@ -1,10 +1,10 @@
 <template>
-  <aside :class="isVisible ? 'isVisible' : ''" >
+  <aside v-if="isVisible" class="animate__animated animate__fadeInLeft">
     <div class="d-flex flex-column flex-shrink-0 p-3 text-white">
-      <div class="brand">
-        <img src="../../assets/icons/logoInventary.svg" alt="DEVInventary">
-        <span class="fs-4">DEVInventary</span>
+      <div class="brand mx-auto mb-1">
+        <img src="../../assets/icons/logoInventary.svg" class="mx-auto " alt="DEVInventary">
       </div>
+      <span class="fs-4 text-white mx-auto mt-2">DEVInventary</span>
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <span>Geral</span>
@@ -40,9 +40,6 @@
         </li>
       </ul>
       <hr>
-      <div class="toggleIcon">
-        <i class="fa-solid fa-angles-left text-end" @click="toggleVisibility"></i>
-      </div>
     </div>
   </aside>
 
@@ -50,14 +47,16 @@
 
 <script setup>
 import { RouterLink } from 'vue-router'
-import { ref } from 'vue'
+import { computed } from 'vue'
+import { useStore } from 'vuex';
 
-const isVisible = ref(localStorage.getItem('isVisible') === 'true');
+const store = useStore();
 
-function toggleVisibility() {
-  isVisible.value = !isVisible.value;
-  localStorage.setItem('isVisible', isVisible.value);
-}
+store.commit('configModule/UPDATE_CONFIGS_LOCAL_STORAGE')
+
+const isVisible = computed(() => {
+  return store.state.configModule.configs.sidebarVisible;
+})
 
 </script>
 
@@ -71,16 +70,14 @@ aside {
   z-index: 1;
   width: 200px;
   background-color: var(--color-dark);
-  transition: 0.2s ease-out;
+  transition: all 1s ease-in-out;
 
-  .brand {
-    margin: 0 auto;
-    text-align: center;
-  }
+
 
   i {
     font-size: 1.5rem;
   }
+
   .toggleIcon {
     text-align: end;
 
@@ -88,35 +85,6 @@ aside {
       cursor: pointer;
     }
   }
-}
-
-.isVisible {
-  width: 5rem;
-  margin: 0;
-
-  a {
-    padding: 0.6rem;
-    text-align: center;
-    margin-bottom: 0.2rem;
-
-    i {
-      text-align: center;
-    }
-  }
-
-  span {
-    display: none;
-  }
-
-  .toggleIcon {
-    transform: rotate(180deg);
-    text-align: center;
-  }
-
-  img {
-    width: 2rem;
-  }
-
 }
 
 .form-check {
