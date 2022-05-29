@@ -147,6 +147,7 @@ function toggleRegister() {
   register.value.createAccount = register.value.register ? 'Entrar' : 'Criar conta';
 }
 
+// função para registro e login de usuários
 function onValidSubmit(values, actions) {
   if (register.value.register) {
     let checkEmail = store.state.authModule.users.find(user => user.email === form.value.email);
@@ -161,7 +162,7 @@ function onValidSubmit(values, actions) {
   }
 }
 
-// chama a função de registro do usuário
+// função específica para registro de usuário
 function registerUser(actions) {
   const loader = $loading.show()
   store.dispatch('authModule/updateUsers');
@@ -180,10 +181,9 @@ function registerUser(actions) {
   }, 1000)
 }
 
-// chama a função de login do usuário
+// função específica para login de usuário
 function loginUser(actions) {
   const loader = $loading.show();
-  //simula uma requisição...
   setTimeout(async () => {
     const logar = await store.dispatch('authModule/logIn', form.value)
     if (logar) {
@@ -198,16 +198,17 @@ function loginUser(actions) {
   }, 1000)
 }
 
+// função para tratamento de erros do formulário
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
     toast.error(errors[field], { timeout: 1500 });
   }
 }
 
+// função para aviso de funções em desenvolvimento
 function alertUser() {
   toast.warning('Função em desenvolvimento!', { timeout: 1500 });
 }
-
 </script>
 
 <style lang="scss" scoped>

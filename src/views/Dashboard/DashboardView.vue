@@ -135,21 +135,21 @@ import { gsap } from "gsap";
 import { RouterLink, useRouter } from "vue-router";
 import { createMessageBox } from 'vue-m-dialog'
 
-
+// variaveis globais
 const router = useRouter();
-
 const store = useStore();
 const show = ref(false);
 const showDashboard = ref(true);
 const item = ref({});
-
 const findBy = ref("codPatrimonio");
 const inputSearch = ref(null);
+
 
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
 store.commit('configModule/SET_PAGE_NAME', 'Dashboard')
 
+// variaveis computadas
 const items = computed(() => {
     if (inputSearch.value) {
         let total = store.state.itemsModule.items.filter(
@@ -180,6 +180,7 @@ const itemsLoaned = computed(() => {
     return store.state.itemsModule.items.filter(item => item.collaborator !== null);
 })
 
+//variaveis para efeito de animação
 const tweenedCollabs = reactive({
     number: 0
 })
@@ -198,27 +199,25 @@ function itemInfos(codPatrimonio) {
     show.value = true
 }
 
+// função para animação de itens
 gsap.to(tweenedCollabs, { duration: 1, number: Number(collabsCount.value.length) || 0 })
 gsap.to(tweendItems, { duration: 1, number: Number(itemsCount.value.length) || 0 })
 gsap.to(tweenedValueTotal, { duration: 1, number: Number(valueTotalItems.value) || 0 })
 gsap.to(tweenedItemsLoaned, { duration: 1, number: Number(itemsLoaned.value.length) || 0 })
 
-
+// função para exibir/ocultar modal
 function toggleModal() {
     show.value = !show.value;
 }
 
-function toggleModalDash() {
-    showDashboard.value = !showDashboard.value;
-}
-
-
+// função para abrir tela de edição de item
 function editItem(id) {
     show.value = false;
     id = id + '-dashboard'
     router.push({ name: 'items', params: { itemId: id } });
 }
 
+// função para abrir telas relativas aos cards do dashboard
 function infoDashRoute(destiny, route) {
     createMessageBox({
         title: 'Você tem certeza ?',
@@ -231,7 +230,6 @@ function infoDashRoute(destiny, route) {
         isMiddle: true,
     }).then(res => {
         if (res.ok) {
-            console.log(route)
             router.push({ name: route })
         }
     })

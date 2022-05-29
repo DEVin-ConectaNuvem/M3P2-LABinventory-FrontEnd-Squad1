@@ -110,9 +110,11 @@ const content = {
     },
   },
 };
+//obtém dados do params da rota - define também a origem da edição (dashboard ou lista de itens)
 const id = route.params.itemId ? Number(route.params.itemId.split('-')[0]) : null;
 const origin = id ? route.params.itemId.split('-')[1] : null;
 
+//atualização dos dados do item e seta página atual 
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
 store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de itens');
 
@@ -126,7 +128,7 @@ const infoById = computed(() => {
   return false;
 });
 
-
+// variável para retornar a contagem de itens cadastrados para novo codPatrimonio
 const getCountItems = computed(() => {
   if (store.state.itemsModule.items.length > 0) {
     return store.state.itemsModule.items.length + 1;
@@ -215,10 +217,10 @@ function editItem(actions) {
   }, 2000);
 }
 
+// Função para limpar alguns dos campos do formulário não abrangidos pelo veevalidate
 function clearForm() {
   form.value.codPatrimonio = '';
   form.value.description = '';
-  form.value.url = '';
 }
 
 // Função para cancelar a edição
@@ -230,8 +232,6 @@ function cancelEdit() {
     router.push({ name: "dashboard" });
   }
 }
-
-
 </script>
 
 <style lang="scss" scoped>

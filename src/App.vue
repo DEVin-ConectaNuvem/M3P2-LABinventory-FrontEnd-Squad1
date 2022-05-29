@@ -4,10 +4,11 @@ import SidebarMain from './components/shared/SidebarMain.vue';
 import HeaderMain from './components/shared/HeaderMain.vue';
 import { useStore } from 'vuex';
 import { computed } from 'vue'
-import { ref } from 'vue'
+
 
 const store = useStore();
 
+// verifica a visibilidade da sideBar
 const isVisible = computed(() => {
   return store.state.configModule.configs.sidebarVisible;
 })
@@ -29,7 +30,7 @@ const statusLogin = computed(() => {
     <div v-if="statusLogin">
       <HeaderMain></HeaderMain>
     </div>
-
+    
     <main>
       <transition>
         <div id="left" class="bottom" v-if="isVisible">
@@ -40,6 +41,7 @@ const statusLogin = computed(() => {
         <RouterView />
       </div>
     </main>
+
   </div>
 
 </template>

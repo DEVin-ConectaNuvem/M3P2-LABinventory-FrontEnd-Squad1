@@ -145,9 +145,9 @@ import {
 import axios from "axios";
 import moment from "moment";
 
-/* 
-variaveis funcionais gerais 
-*/
+ 
+// variaveis globais
+
 const $loading = useLoading();
 const toast = useToast();
 const store = useStore();
@@ -163,10 +163,10 @@ const content = {
   },
 };
 
-// obtem o id do usuário para edição do parametro da rota
+// variavel com parametro da rota (id)
 const id = route.params.userId;
 
-// commit para atualizar dados do localstorage ao montar tela
+// atualização dos dados da store
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de colaboradores');
 
@@ -181,7 +181,7 @@ const infoById = computed(() => {
   return false;
 });
 
-// botão de submit do formulário
+// dados do botão submit
 const btnForm = ref(infoById.value ? "Editar" : "Cadastrar");
 
 // variaveis do formulários - reativas (data)
@@ -233,14 +233,14 @@ function onValidSubmit(values, actions) {
   }
 }
 
-//função executada quando houver erros no formulário submetido
+//função executada para aviso de  erros do formulário
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
     toast.error(errors[field], { timeout: 1500 });
   }
 }
 
-// função para registrar novo colaborador
+// função para registro de novo colaborador
 function newCollaborator(actions) {
   const loader = $loading.show();
   setTimeout(() => {
@@ -267,7 +267,7 @@ function newCollaborator(actions) {
   }, 1000);
 }
 
-// Função para editar o colaborador
+// Função para edição de colaborador
 function editCollaborator(actions) {
   const loader = $loading.show();
   setTimeout(() => {
@@ -279,14 +279,14 @@ function editCollaborator(actions) {
   }, 2000);
 }
 
-// Função para cancelar a edição do colaborador
+// Função de cancelamento da edição de colaborador
 function cancelEdit() {
   toast.warning("Edição cancelada!", { timeout: 1000 });
   router.push({ name: "ListCollaborators" });
 }
 
 /* 
-Funções para validação de CEP - uso da api (VIACEP)
+Funções relativas a validação de CEP - uso da api (VIACEP)
 */
 function searchZipCode() {
   clearAddress();
@@ -320,6 +320,7 @@ function searchZipCode() {
     });
 }
 
+//função para limpar os campos de endereço
 function clearAddress() {
   form.value.city = "";
   form.value.state = "";

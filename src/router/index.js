@@ -81,15 +81,5 @@ const router = createRouter({
   ],
 });
 
-/* router.beforeEach(async (to, from) => {
-  if (
-    !statusLogin &&
-    to.name !== 'login'
-  ) {
-
-    return { name: 'Login' }
-  }
-})
- */
 
 export default router;
