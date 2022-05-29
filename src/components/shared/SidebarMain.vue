@@ -1,6 +1,6 @@
 <template>
   <aside>
-    <div class="d-flex flex-column flex-shrink-0 p-3 text-white">
+    <div class="d-flex flex-column flex-shrink-0 text-white">
       <div class="brand mx-auto mb-1">
         <img src="../../assets/icons/logoInventary.svg" class="mx-auto " alt="DEVInventary">
       </div>
@@ -70,10 +70,14 @@ aside {
   z-index: 1;
   width: 200px;
   background-color: var(--color-dark);
-
-  i {
+  
+  span{
+    padding-left: 10px ;
+  }
+  i{
     font-size: 1.2rem;
     cursor: pointer;
+    padding-left: 10px ;
   }
 }
 
@@ -84,17 +88,19 @@ aside {
 a {
   text-decoration: none;
   color: var(--color-grey);
+  
+  
 }
 
 a:hover,
 .router-link-exact-active {
   text-decoration: none;
-  background: var(--color-secondary);
-  background: -webkit-linear-gradient(to right, var(--color-secondary), #373B44);
-  background: linear-gradient(to right, var(--color-secondary), #373B44);
+  background: var(--color-medium);
   color: var(--color-white);
-  border-right: 2px solid var(--color-primary);
+  border-right: 10px solid var(--color-primary);
+  transition: all 0.3s ease;
 }
+
 
 // Medium devices (tablets, 768px and up)
 @media (max-width: 768px) { 

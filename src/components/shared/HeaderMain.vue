@@ -5,11 +5,11 @@
                 <i class="fa-solid fa-bars fs-2 text-white" @click="toggleVisibility"></i>
             </div>
             <div>
-                 <img src="../../assets/icons/logoInventary.svg" class="ms-3 imgLogo animate__animated animate__bounceIn" alt="DEVInventary" :class="isVisible ? 'd-none' : 'd-block' ">
+                <img src="../../assets/icons/logoInventary.svg" class="ms-3 imgLogo animate__animated animate__bounceIn"
+                    alt="DEVInventary" :class="isVisible ? 'd-none' : 'd-block'">
             </div>
-
             <div class="text-white fs-3 mx-auto text-center">
-                {{namePage}}
+               <strong> {{ namePage }} </strong>
             </div>
             <div class="dropdown text-end ">
                 <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
@@ -18,14 +18,8 @@
                     <div class="ms-2 avatar">
                         <vue-gravatar class="avatar" :email="logged.email" size="40" />
                     </div>
-                    <!-- <img src="../../assets/icons/account-avatar-profile-user-13-svgrepo-com.svg" width="32" height="32"
-                        class="rounded-circle me-2"> -->
                 </a>
                 <ul class="dropdown-menu text-white text-small shadow">
-                    <li><a class="dropdown-item text-white">Configurações</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
                     <li><a class="dropdown-item text-white" @click="logOut()">Sair</a></li>
                 </ul>
             </div>
@@ -48,7 +42,7 @@ const namePage = computed(() => {
 })
 
 const isVisible = computed(() => {
-  return store.state.configModule.configs.sidebarVisible;
+    return store.state.configModule.configs.sidebarVisible;
 })
 const logged = computed(() => {
     return store.state.authModule.userLogged
@@ -76,15 +70,15 @@ header {
     background-color: var(--color-dark);
 }
 
-i{
+i {
     cursor: pointer;
 }
 
-.toggleVisible{
+.toggleVisible {
     z-index: 9999;
 }
 
-.imgLogo{
+.imgLogo {
     width: 50px;
 }
 
