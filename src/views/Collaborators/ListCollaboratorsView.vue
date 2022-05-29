@@ -2,7 +2,7 @@
   <div class="container mt-3 ">
       <div class="content input-group">
             <input type="text" class="w-75 form-control animate__animated animate__flipInX"
-                placeholder="✍️ Buscar colabodorador..." v-model="inputSearch">
+                placeholder="✍️ Buscar colaborador..." v-model="inputSearch">
             <select class="badge bg-dark text-white text-center" v-model="findBy">
                 <option value="name" selected>Nome</option>
                 <option value="position">Cargo</option>
