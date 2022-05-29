@@ -12,7 +12,7 @@
     </div>
 
     <hr />
-    <h4>Lista de Items</h4>
+    <h4>Lista de Itens</h4>
 
     <paginate v-model="page" :page-count="totalPages" :page-range="3" :margin-pages="2" :prev-text="'Voltar'"
       :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">

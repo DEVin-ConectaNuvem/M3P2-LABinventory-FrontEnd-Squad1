@@ -323,7 +323,6 @@ p {
 }
 
 /* Animation */
-
 .parallax>use {
   animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
 }

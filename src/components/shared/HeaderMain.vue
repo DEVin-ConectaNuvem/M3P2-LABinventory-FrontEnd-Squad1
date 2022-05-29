@@ -8,11 +8,12 @@
                 <img src="../../assets/icons/logoInventary.svg" class="ms-3 imgLogo animate__animated animate__bounceIn"
                     alt="DEVInventary" :class="isVisible ? 'd-none' : 'd-block'">
             </div>
-            <div class="text-white fs-4 d-flex align-items-center text-center namePage">
-               <strong> {{ namePage }} </strong>
+            <div class=" d-flex align-items-center text-white flex-grow-1 ">
+            <div class="text-white text-center namePage">
+                <strong> {{ namePage }} </strong>
             </div>
-            <div class="dropdown text-end">
-                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+            <div class="text-end ">
+                <a href="#" class="d-flex align-items-center text-decoration-none text-white dropdown-toggle"
                     id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                     <strong v-text="logged.username" class="username"></strong>
                     <div class="ms-2 avatar">
@@ -22,6 +23,7 @@
                 <ul class="dropdown-menu text-white text-small shadow">
                     <li><a class="dropdown-item text-white" @click="logOut()">Sair</a></li>
                 </ul>
+            </div>
             </div>
         </div>
     </header>
@@ -68,7 +70,7 @@ header {
     background-color: var(--color-dark);
 }
 
-.namePage{
+.namePage {
     margin: 0 auto;
 }
 
@@ -116,8 +118,12 @@ i {
     .username {
         display: none;
     }
-    .namePage{
-    margin-left: 20px;
-}
+
+    .namePage {
+       
+       margin: 0 auto;
+      
+        
+    }
 }
 </style>
