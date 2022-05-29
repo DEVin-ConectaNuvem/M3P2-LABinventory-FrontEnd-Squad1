@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container ">
       <div class="content input-group">
             <input type="text" class="w-75 form-control animate__animated animate__flipInX"
                 placeholder="✍️ Buscar item..." v-model="inputSearch">
@@ -16,7 +16,7 @@
       :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">
     </paginate>
 
-    <div class="accordion" v-for="collaborator in collaborators" :key="collaborator.id">
+    <div class="accordion animate__animated animate__fadeIn" v-for="collaborator in collaborators" :key="collaborator.id">
       <div class="accordion-item">
         <h2 class="accordion-header" :id="collaborator.id">
           <button class="accordion-button collapsed text-capitalize" type="button" data-bs-toggle="collapse"

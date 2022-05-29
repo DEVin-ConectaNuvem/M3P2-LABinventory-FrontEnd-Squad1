@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container ">
     <div class="content input-group">
-      <input type="text" class="w-75 form-control animate__animated animate__flipInX" placeholder="'✍️ Buscar item... '"
+      <input type="text" class="w-75 form-control animate__animated animate__flipInX" placeholder="✍️ Buscar item... "
         v-model="inputSearch">
       <select class="badge bg-dark text-white text-center" id="" v-model="findBy">
         <option value="codPatrimonio" selected>Código de Patrimonio</option>
@@ -18,19 +18,26 @@
       :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">
     </paginate>
 
-    <div class="accordion" v-for="item in items" :key="item.codPatrimonio">
+    <div class="accordion animate__animated animate__fadeIn" v-for="item in items" :key="item.codPatrimonio">
       <div class="accordion-item ">
-        <h2 class="accordion-header " :id="item.codPatrimonio">
-          <button class="accordion-button collapsed text-capitalize" type="button" data-bs-toggle="collapse"
+        <div class="accordion-header " :id="item.codPatrimonio">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
             :data-bs-target="'#collapse' + item.codPatrimonio" aria-expanded="true"
             :aria-controls="'collapseOne' + item.codPatrimonio">
             <img class="img-fluid imgAccordion" :src="item.url" />
-            <p v-text="item.codPatrimonio" class="ms-2 nameCollab fs-5 me-2"></p>
-            <p class="fs-5" v-text="' - ' + item.title + ' - '"></p>
-            <p class="fs-5 ms-1 fw-bold" :class="item.collaborator ? 'text-primary' : 'text-success'"
-              v-text="item.collaborator ? item.collaborator : 'Item disponível'"></p>
+            <div class="flex-grow-1 ms-3 ">
+              #{{ item.codPatrimonio }} - {{ item.title }}
+            </div>
+            <div class="me-2 statusBadge">
+              <p class="fw-bold" :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"
+                v-text="item.collaborator ? item.collaborator : 'Item disponível'"></p>
+            </div>
           </button>
-        </h2>
+          <div class="me-2 d-md-none fs-5 text-center ">
+              <p class="fw-bold" :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"
+                v-text="item.collaborator ? item.collaborator : 'Item disponível'"></p>
+            </div>
+        </div>
 
         <div :id="'collapse' + item.codPatrimonio" class="accordion-collapse collapse"
           :aria-labelledby="item.codPatrimonio">
@@ -47,21 +54,15 @@
                 <br />
                 <strong>Emprestado desde:</strong> {{ item.loanAt }}
                 <hr>
-                <strong class="fs-5 fw-bold">Empréstimo: <span
-                    :class="item.collaborator ? 'text-primary' : 'text-success'"> {{
-                        item.collaborator ? item.collaborator : "Disponível"
-                    }}</span></strong>
-                <br />
-
               </div>
-              <div class="text-end ">
-                <button class="btn m-2" :class="item.collaborator ? 'btn-primary' : 'btn-success'"
+              <div class="text-md-end btn-group-sm ">
+                <button class="btn" :class="item.collaborator ? 'btn-primary' : 'btn-success'"
                   @click="loanCollaborator(item.codPatrimonio, item.collaborator)">
                   <i class="fa-solid" :class="item.collaborator ? 'fa-arrow-down' : 'fa-arrow-right-arrow-left'"></i>
                   <span v-text="item.collaborator ? ' Devolver Item' : ' Emprestar item '"> </span>
                 </button>
 
-                <button class="btn btn-danger" @click="editItem(item.codPatrimonio)">
+                <button class="btn btn-warning " @click="editItem(item.codPatrimonio)">
                   <i class="fa-solid fa-edit"></i> Editar item
                 </button>
               </div>
@@ -90,9 +91,11 @@
         </optgroup>
       </select>
       <template v-slot:footer>
-        <button class="btn btn-danger me-2" @click="cancelEditItem()">Cancelar</button>
-        <button class="btn btn-success"
-          @click="setLoan({ codPatrimonio: item.codPatrimonio, collaborator: item.collaborator })">Salvar</button>
+        <div class="d-flex">
+          <button class="btn btn-secondary me-2" @click="cancelEditItem()">Cancelar</button>
+          <button class="btn btn-success"
+            @click="setLoan({ codPatrimonio: item.codPatrimonio, collaborator: item.collaborator })">Salvar</button>
+        </div>
       </template>
     </m-dialog>
   </div>
@@ -104,7 +107,7 @@ import { RouterLink, useRouter } from "vue-router";
 import { ref, computed } from "vue";
 import { useStore } from "vuex";
 import moment from "moment";
-
+import { createMessageBox } from 'vue-m-dialog'
 
 const router = useRouter();
 const store = useStore();
@@ -115,7 +118,6 @@ const findBy = ref("codPatrimonio");
 const show = ref(false)
 const item = ref({})
 
-
 store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
 store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
 
@@ -125,7 +127,7 @@ const totalPages = computed(() => {
       store.state.itemsModule.items.filter((item) =>
         findBy.value === 'codPatrimonio'
           ? item[findBy.value] === Number(inputSearch.value)
-          : item[findBy.value].toLowerCase().includes(inputSearch.value.toLowerCase())
+          : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
 
       ).length / perPage.value
     );
@@ -143,7 +145,7 @@ const items = computed(() => {
       (item) =>
         findBy.value === 'codPatrimonio'
           ? item[findBy.value] === Number(inputSearch.value)
-          : item[findBy.value].toLowerCase().includes(inputSearch.value.toLowerCase())
+          : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
     )
     total = total.slice(
       (page.value - 1) * perPage.value,
@@ -165,7 +167,20 @@ const collaborators = computed(() => {
 
 function loanCollaborator(codPatrimonio, collaborator) {
   if (collaborator) {
-    setLoan({ codPatrimonio, collaborator: null })
+    createMessageBox({
+      title: 'Confirmação de devolução',
+      message: `Gostaria de confirmar a devolução do item código ${codPatrimonio} de ${collaborator} ?`,
+      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Confirmar',
+      hasMask: true,
+      draggable: true,
+      isPointerEventsNone: true,
+      isMiddle: true,
+    }).then(res => {
+      if (res.ok) {
+        setLoan({ codPatrimonio, collaborator: null })
+      }
+    })
   } else {
     item.value = store.state.itemsModule.items.find((item) => item.codPatrimonio === codPatrimonio)
     show.value = true
@@ -198,31 +213,7 @@ function cancelEditItem() {
 
 <style lang="scss" scoped>
 .imagemLoan {
-  max-height: 300px;
-}
-
-.content {
-  flex: 1 1 0%;
-  background-color: var(--color-light);
-  padding: 0.3rem;
-  border-radius: 1rem;
-  margin-right: 1rem;
-  color: var(--color-dark);
-  font-size: 1.25rem;
-}
-
-.card {
-  margin-bottom: 10px;
-  padding: 20px;
-  width: 200px;
-  height: 200px;
-}
-
-.card-main {
-  width: 15rem;
-  height: 10rem;
-  border: 2px solid red;
-  background-color: var(--color-dark);
+  max-height: 10rem;
 }
 
 .imgAccordion {
@@ -230,7 +221,55 @@ function cancelEditItem() {
   width: 3rem;
 }
 
-.nameCollab {
-  color: var(--color-secondary);
+.btn-group-sm {
+  .btn {
+    text-align: center;
+    width: 150px;
+    padding: 7px;
+    margin-left: 5px;
+  }
+}
+.statusBadge {
+    font-size: 18px;
+
+  .badge {
+    min-width: 130px;
+    margin: 0 auto;
+    padding: 7px;
+    margin-left: 5px;
+  }
+}
+.badgeGroup {
+  .badge {
+    min-width: 130px;
+    padding: 5px;
+    margin: 0 auto;
+  }
+}
+
+
+@media (max-width: 576px) {
+  .btn-group-sm {
+    display: grid;
+    row-gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+
+    .btn {
+      text-align: center;
+      width: 200px;
+      padding: 15px;
+    }
+
+    .imgAccordion {
+      border-radius: 10%;
+      width: 1rem;
+    }
+
+  }
+
+  .statusBadge {
+    display: none;
+  }
 }
 </style>

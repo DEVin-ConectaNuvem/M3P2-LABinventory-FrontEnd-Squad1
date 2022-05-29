@@ -10,12 +10,14 @@ const SET_ITEM_LOCAL_STORAGE = (state) => {
 
 const REGISTER_ITEM = (state, payload) => {
   state.items.push(payload);
-  localStorage.setItem("items", JSON.stringify(state.items));
 };
 
 const EDIT_ITEM = (state, payload) => {
+ 
   state.items.forEach((item, index) => {
-    if (item.id === payload.id) {
+    if (item.codPatrimonio === payload.codPatrimonio) {
+      console.log(item.id, 'State')
+      console.log(payload.id, 'Payload')
       state.items[index] = payload;
     }
   });

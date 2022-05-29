@@ -79,7 +79,7 @@
                     :to="{ name: 'items' }">
                     Realizar novo cadastro</router-link>
             </p>
-            <p class="text-danger" v-if="!items">
+            <p class="text-danger" v-if="items.length === 0">
                 Ainda não há items cadastrados no sistema - <router-link :to="{ name: 'items' }">Realizar novo
                     cadastro
                 </router-link>
@@ -134,7 +134,6 @@ import { useStore } from "vuex";
 import { gsap } from "gsap";
 import { RouterLink, useRouter } from "vue-router";
 import { createMessageBox } from 'vue-m-dialog'
-
 
 
 const router = useRouter();
@@ -237,8 +236,6 @@ function infoDashRoute(destiny, route) {
         }
     })
 }
-
-
 </script>
 
 <style lang="scss" scoped>

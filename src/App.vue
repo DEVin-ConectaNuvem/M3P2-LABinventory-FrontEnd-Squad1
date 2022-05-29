@@ -16,7 +16,6 @@ const statusLogin = computed(() => {
 })
 
 
-
 </script>
 
 <template>
@@ -54,6 +53,5 @@ a {
 .leftSide {
   float: left;
   height: 100vh!important;
-
 }
 </style>
