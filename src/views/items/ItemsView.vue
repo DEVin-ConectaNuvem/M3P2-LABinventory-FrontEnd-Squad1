@@ -157,7 +157,7 @@ const newForm = ref({})
 const url = ref(null);
 
 function imageFromUrl() {
-  if (form.value.url) {
+  if (form.value.url && form.value.url !== newForm.value.url) {
     url.value = form.value.url;
   }
 }
