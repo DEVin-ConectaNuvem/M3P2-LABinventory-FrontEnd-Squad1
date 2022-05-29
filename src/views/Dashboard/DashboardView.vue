@@ -249,8 +249,11 @@ i {
 
 img {
     margin: 0 auto;
-    height: 150px;
+    height: 100%;
+    max-width: 150px;
 }
+
+
 
 .cards {
     display: flex;
