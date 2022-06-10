@@ -58,7 +58,6 @@
 
 .box h1 {
   color: #fff;
- /*  padding: 2px 15px; */
   font-size: 1.2rem;
   font-weight: 550;
   background: var(--color-dark);
@@ -70,8 +69,8 @@
   width: 100%;
   padding-bottom: 8px; 
   margin: 0;
-  position: absolute;               /* 2 */
-  top: 100%;                         /* 3 */
+  position: absolute;              
+  top: 100%;                       
   transform: translate(0, -50%);
   color: #fff;
   font-weight: 500;

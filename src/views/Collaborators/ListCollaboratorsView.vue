@@ -146,6 +146,4 @@ function editCollab(id) {
 .nameCollab {
   color: var(--color-secondary);
 }
-
-
 </style>

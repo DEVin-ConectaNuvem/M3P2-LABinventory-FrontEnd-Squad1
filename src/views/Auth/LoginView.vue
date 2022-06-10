@@ -1,6 +1,5 @@
 <template>
   <section class="header">
-    <!--Content before waves-->
     <div class="inner-header  flex  ">
       <div class="container ">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -16,7 +15,6 @@
 
                     <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit"
                       class="animate__animated animate__backInLeft">
-
                       <div class="d-flex align-items-end justify-content-center mb-2 ">
                         <p class="mb-0 me-2 text-light " v-text="register.haveAccount"></p>
                         <a class="text-white" @click.stop="toggleRegister" v-text="register.createAccount"></a>
@@ -78,7 +76,6 @@
       </div>
     </div>
 
-    <!--Waves start-->
     <div>
       <svg class="waves mt-5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
         viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
@@ -93,9 +90,7 @@
         </g>
       </svg>
     </div>
-    <!--Waves end-->
   </section>
-
 </template>
 
 <script setup>
@@ -251,10 +246,8 @@ function alertUser() {
   opacity: 0;
 }
 
-
 .logo {
   width: 4rem;
-
 }
 
 h1 {
@@ -274,12 +267,8 @@ p {
   position: relative;
   text-align: center;
   background: #0F2027;
-  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);
-  /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #2C5364, #203A43, #0F2027);
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
   color: white;
 }
 
@@ -295,10 +284,10 @@ p {
   width: 100%;
   margin: 0;
   padding: 0;
+  height: 80vh;
 }
 
 .flex {
-  /*Flexbox for containers*/
   display: flex;
   justify-content: center;
   align-items: center;
@@ -310,7 +299,6 @@ p {
   width: 100%;
   height: 15vh;
   margin-bottom: -7px;
-  /*Fix for safari gap*/
   min-height: 100px;
   max-height: 150px;
 }
@@ -322,7 +310,6 @@ p {
   background-color: white;
 }
 
-/* Animation */
 .parallax>use {
   animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
 }
@@ -357,17 +344,16 @@ p {
   }
 }
 
-/*Shrinking for mobile*/
+
 @media (max-width: 768px) {
   .waves {
     height: 25%;
-    min-height: 30px;
+    max-height: 10px;
   }
 
   .logo{
     width: 7rem;
   }
-  
 
   .content {
     height: 30vh;
@@ -389,6 +375,11 @@ p {
 @media (min-width: 900px) {
   .logo {
     width: 10rem;
+  }
+
+  .waves {
+    height: 15%;
+    max-height: 30px;
   }
 
   .imgback {

@@ -61,23 +61,18 @@ const statusLogin = computed(() => {
 
 #left {
   flex-shrink: 0;
-  /* makes sure that content is not cut off in a smaller browser window */
   float: left;
 }
 
 .column {
   height: 100%;
-  /* allows both columns to span the full height of the browser window */
   display: flex;
   flex-direction: column;
-  /* stacks the left and right headers above the bottom content */
 }
 
 .bottom {
   flex-grow: 1;
-  /* ensures that the container will take up the full height of the parent container */
   overflow-y: auto;
-  /* adds scroll to this container */
 }
 
 a {
