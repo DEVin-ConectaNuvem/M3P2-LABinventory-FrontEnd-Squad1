@@ -1,0 +1,51 @@
+{
+  "name": "devinventary",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --port 5050",
+    "commit": "git-cz",
+    "release": "standard-version"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "dependencies": {
+    "@vee-validate/rules": "^4.5.11",
+    "animate.css": "^4.1.1",
+    "axios": "^0.27.2",
+    "gsap": "^3.10.4",
+    "moment": "^2.29.3",
+    "uid": "^2.0.0",
+    "vee-validate": "^4.5.11",
+    "vue": "^3.2.33",
+    "vue-input-facade": "^2.0.1",
+    "vue-loading-overlay": "5.0",
+    "vue-m-dialog": "^3.0.0",
+    "vue-router": "^4.0.14",
+    "vue-the-mask": "^0.11.1",
+    "vue-toast-notification": "3.0",
+    "vue-toastification": "^2.0.0-rc.5",
+    "vue3-gravatar": "^3.0.0",
+    "vuejs-paginate-next": "^1.0.2",
+    "vuex": "^4.0.2",
+    "yup": "^0.32.11"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^2.3.1",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "husky": "^8.0.1",
+    "node-sass": "^7.0.1",
+    "sass": "^1.51.0",
+    "sass-loader": "^12.6.0",
+    "vite": "^2.9.5",
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
+    "cz-conventional-changelog": "^3.3.0",
+    "git-cz": "^4.7.6",
+    "standard-version": "^9.3.0"
+  }
+}
