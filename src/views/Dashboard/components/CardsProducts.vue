@@ -1,12 +1,11 @@
 <template>
   <div class="wrap">
-
     <div class="box one">
       <h1>
         <slot name="title"></slot>
       </h1>
       <slot name="img" class="imageBg"></slot>
-      
+
       <div class="date">
         <h4>
           <slot name="codPatrimonio"> </slot>
@@ -19,9 +18,7 @@
   </div>
 </template>
 
-<script setup>
-
-</script>
+<script setup></script>
 <style lang="scss" scoped>
 .wrap {
   display: -webkit-box;
@@ -41,8 +38,8 @@
   height: 250px;
   margin-bottom: 10px;
   margin-top: 10px;
-  border-radius: 20px!important;
-  
+  border-radius: 20px !important;
+
   text-align: center;
   border-radius: 3px;
   -webkit-transition: 200ms ease-in-out;
@@ -67,14 +64,13 @@
 
 .poster {
   width: 100%;
-  padding-bottom: 8px; 
+  padding-bottom: 8px;
   margin: 0;
-  position: absolute;              
-  top: 100%;                       
+  position: absolute;
+  top: 100%;
   transform: translate(0, -50%);
   color: #fff;
   font-weight: 500;
   border-radius: 50px;
 }
-
 </style>

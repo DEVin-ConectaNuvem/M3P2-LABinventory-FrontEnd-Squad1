@@ -13,11 +13,10 @@ const REGISTER_ITEM = (state, payload) => {
 };
 
 const EDIT_ITEM = (state, payload) => {
- 
   state.items.forEach((item, index) => {
     if (item.codPatrimonio === payload.codPatrimonio) {
-      console.log(item.id, 'State')
-      console.log(payload.id, 'Payload')
+      console.log(item.id, "State");
+      console.log(payload.id, "Payload");
       state.items[index] = payload;
     }
   });
@@ -28,7 +27,7 @@ const SET_LOAN_ITEM = (state, payload) => {
     if (item.codPatrimonio === payload.codPatrimonio) {
       state.items[index].collaborator = payload.collaborator;
       state.items[index].loanAt = payload.loanAt;
-      console.log(payload)
+      console.log(payload);
     }
   });
 };

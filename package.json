@@ -6,7 +6,9 @@
     "build": "vite build",
     "preview": "vite preview --port 5050",
     "commit": "git-cz",
-    "release": "standard-version"
+    "release": "standard-version",
+    "lint": "prettier --check .",
+    "format": "prettier --write ."
   },
   "config": {
     "commitizen": {
@@ -39,6 +41,7 @@
     "@vue/cli-plugin-router": "~5.0.0",
     "husky": "^8.0.1",
     "node-sass": "^7.0.1",
+    "prettier": "^2.7.1",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
     "vite": "^2.9.5",

@@ -1,36 +1,32 @@
 <script setup>
-import { RouterView } from 'vue-router'
-import SidebarMain from './components/shared/SidebarMain.vue';
-import HeaderMain from './components/shared/HeaderMain.vue';
-import { useStore } from 'vuex';
-import { computed } from 'vue'
-
+import { RouterView } from "vue-router";
+import SidebarMain from "./components/shared/SidebarMain.vue";
+import HeaderMain from "./components/shared/HeaderMain.vue";
+import { useStore } from "vuex";
+import { computed } from "vue";
 
 const store = useStore();
 
 // verifica a visibilidade da sideBar
 const isVisible = computed(() => {
   return store.state.configModule.configs.sidebarVisible;
-})
+});
 
 // define estado inicial de login via tokenconfirmPassword
-store.dispatch('authModule/updateToken');
+store.dispatch("authModule/updateToken");
 
 // verifica alterações no login
 const statusLogin = computed(() => {
-  return store.state.authModule.isLogged
-})
-
-
+  return store.state.authModule.isLogged;
+});
 </script>
 
 <template>
   <div class="box">
-
     <div v-if="statusLogin">
       <HeaderMain></HeaderMain>
     </div>
-    
+
     <main>
       <transition>
         <div id="left" class="bottom" v-if="isVisible">
@@ -41,13 +37,11 @@ const statusLogin = computed(() => {
         <RouterView />
       </div>
     </main>
-
   </div>
-
 </template>
 
 <style lang="scss">
-@import url('./assets/css/base.css');
+@import url("./assets/css/base.css");
 
 .v-enter-active,
 .v-leave-active {

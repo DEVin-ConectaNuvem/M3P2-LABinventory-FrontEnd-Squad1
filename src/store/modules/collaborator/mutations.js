@@ -6,7 +6,7 @@ const UPDATE_COLLABORATOR_LOCAL_STORAGE = (state) => {
 
 const SET_COLLABORATOR_LOCAL_STORAGE = (state) => {
   localStorage.setItem("collaborators", JSON.stringify(state.collaborators));
-}
+};
 
 const REGISTER_COLLABORATOR = (state, payload) => {
   state.collaborators.push(payload);
@@ -25,5 +25,5 @@ export {
   UPDATE_COLLABORATOR_LOCAL_STORAGE,
   REGISTER_COLLABORATOR,
   EDIT_COLLABORATOR,
-  SET_COLLABORATOR_LOCAL_STORAGE
+  SET_COLLABORATOR_LOCAL_STORAGE,
 };

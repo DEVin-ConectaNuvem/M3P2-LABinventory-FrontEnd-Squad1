@@ -1,6 +1,10 @@
-import { registerCollaborator, editCollaborator } from './actions';
-import { UPDATE_COLLABORATOR_LOCAL_STORAGE, REGISTER_COLLABORATOR, EDIT_COLLABORATOR, SET_COLLABORATOR_LOCAL_STORAGE } from './mutations';
-
+import { registerCollaborator, editCollaborator } from "./actions";
+import {
+  UPDATE_COLLABORATOR_LOCAL_STORAGE,
+  REGISTER_COLLABORATOR,
+  EDIT_COLLABORATOR,
+  SET_COLLABORATOR_LOCAL_STORAGE,
+} from "./mutations";
 
 export default {
   namespaced: true,
@@ -16,7 +20,7 @@ export default {
   },
   mutations: {
     UPDATE_COLLABORATOR_LOCAL_STORAGE,
-    REGISTER_COLLABORATOR, 
+    REGISTER_COLLABORATOR,
     EDIT_COLLABORATOR,
     SET_COLLABORATOR_LOCAL_STORAGE,
   },

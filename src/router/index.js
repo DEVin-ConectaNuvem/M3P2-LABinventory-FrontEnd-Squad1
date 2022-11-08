@@ -6,7 +6,7 @@ const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: "/", 
+      path: "/",
       alias: "/dashboard",
       name: "dashboard",
       component: DashboardView,
@@ -15,7 +15,7 @@ const router = createRouter({
         if (auth) {
           return true;
         }
-        to = "/login"
+        to = "/login";
         return to;
       },
     },
@@ -26,7 +26,7 @@ const router = createRouter({
       beforeEnter: (to) => {
         const auth = localStorage.getItem("token");
         if (auth) {
-          to = {name: 'dashboard'}
+          to = { name: "dashboard" };
           return to;
         }
         return true;
@@ -41,20 +41,21 @@ const router = createRouter({
         if (auth) {
           return true;
         }
-        to = "/login"
+        to = "/login";
         return to;
       },
     },
     {
       path: "/lista-colaboradores",
       name: "ListCollaborators",
-      component: () => import("../views/Collaborators/ListCollaboratorsView.vue"),
+      component: () =>
+        import("../views/Collaborators/ListCollaboratorsView.vue"),
       beforeEnter: (to) => {
         const auth = localStorage.getItem("token");
         if (auth) {
           return true;
         }
-        to = "/login"
+        to = "/login";
         return to;
       },
     },
@@ -67,7 +68,7 @@ const router = createRouter({
         if (auth) {
           return true;
         }
-        to = "/login"
+        to = "/login";
         return to;
       },
     },
@@ -80,12 +81,11 @@ const router = createRouter({
         if (auth) {
           return true;
         }
-        to = "/login"
+        to = "/login";
         return to;
       },
     },
   ],
 });
-
 
 export default router;
