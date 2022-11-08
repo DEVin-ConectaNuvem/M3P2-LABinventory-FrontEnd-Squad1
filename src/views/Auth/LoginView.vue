@@ -10,7 +10,7 @@
                   <div class="card-body mx-md-4 mt-5">
                     <div class="text-center animate__animated animate__backInLeft">
                       <img src="../../assets/icons/logoInventary.svg" class="img-fluid logo " alt="logo">
-                      <h4 class="mt-1 ">Nós somos o <strong>DEVInventary</strong></h4>
+                      <h4 class="mt-1 ">{{ $t('login.title') }} <strong>DEVInventary</strong></h4>
                     </div>
 
                     <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit"
@@ -59,7 +59,7 @@
                         <button class="btn btn-light" type="button" @click="alertUser"><i
                             class="fa-brands fa-google"></i></button>
                         <hr>
-                        <a class="ms-2 text-white" v-show="!register.register" @click="alertUser">Esqueceu a senha?</a>
+                        <a class="ms-2 text-white" v-show="!register.register" @click="alertUser">{{ $t('login.forgetPassword') }}</a>
                       </div>
 
                     </VeeForm>
@@ -97,14 +97,17 @@
 import { uid } from 'uid';
 import { ref } from 'vue';
 import { useStore } from 'vuex'
-import { useToast } from "vue-toastification";
+
 import { useRouter } from 'vue-router';
 import { useLoading } from 'vue-loading-overlay'
 import { Form as VeeForm, Field as Veefield } from 'vee-validate';
 import { validateEmail, validatePassword } from '../../validators/validators.js'
+import { useTranslation } from "i18next-vue";
+const { t } = useTranslation();
+
 
 const $loading = useLoading()
-const toast = useToast();
+
 const store = useStore();
 const router = useRouter();
 
@@ -119,10 +122,10 @@ const form = ref({
 // Objeto para dados exibidos em tela conforme Login/Registro
 const register = ref({
   register: false,
-  textMain: 'Faça o login ou cadastre-se',
-  button: 'Acessar',
-  haveAccount: 'Não possui conta?',
-  createAccount: 'Cadastre-se',
+  textMain: t("register.textMain"),
+  button: t("register.button"),
+  haveAccount: t("register.haveAccount"),
+  createAccount: t("register.createAccount"),
 });
 
 // Objeto para validação do campo de confirmação de senha

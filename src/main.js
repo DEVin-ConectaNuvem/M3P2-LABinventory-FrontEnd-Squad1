@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import i18n from "./lang/i18n";
 import router from "./router";
 import store from "./store";
 import VueGravatar from "vue3-gravatar";
@@ -31,4 +32,4 @@ app.use(VueGravatar);
 app.use(VueTheMask);
 app.use(VueLoading);
 
-app.mount("#app");
+i18n(app).mount("#app");

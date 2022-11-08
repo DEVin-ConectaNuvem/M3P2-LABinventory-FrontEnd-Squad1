@@ -1,0 +1,21 @@
+export default {
+  login: {
+    title: "Nós somos o",
+    forgetPassword: "Esqueceu sua senha?",
+  },
+  register: {
+    textMain: "Faça o login ou cadastre-se",
+    button: "Acessar",
+    haveAccount: "Não possui conta?",
+    createAccount: "Cadastre-se",
+  },
+  validates: {
+    required: "Campo obrigatório",
+    email: "Email inválido",
+    password: "Senha inválida",
+    passwordConfirm: "As senhas não conferem",
+    passwordLength: "A senha deve ter no mínimo 8 caracteres",
+    passwordRequired: "A senha é obrigatória",
+    confirmPassword: "A confirmação da senha é obrigatória",
+  },
+};
