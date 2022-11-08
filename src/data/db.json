@@ -33,7 +33,7 @@
       "complement": "123",
       "reference": "teste",
       "createdAt": "Mon, Nov 7, 2022 9:43 PM",
-      "updatedAt": "Mon, Nov 7, 2022 10:45 PM"
+      "updatedAt": "Mon, Nov 7, 2022 9:43 PM"
     },
     {
       "id": "ce4b3d806821",
@@ -64,4 +64,3 @@
       "password2": "12345678"
     }
   ]
-}
