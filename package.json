@@ -6,7 +6,8 @@
     "build": "vite build",
     "preview": "vite preview --port 5050",
     "commit": "git-cz",
-    "release": "standard-version"
+    "release": "standard-version",
+    "db": "json-server --watch src/data/db.json"
   },
   "config": {
     "commitizen": {
