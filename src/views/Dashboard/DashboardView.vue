@@ -43,7 +43,7 @@
             <input type="text" class="w-75 form-control animate__animated animate__flipInX"
                 placeholder="✍️ Buscar item..." v-model="inputSearch">
             <select class="badge bg-dark text-white text-center" v-model="findBy">
-                <option value="codPatrimonio" selected>Código</option>
+                <option value="id" selected>Código</option>
                 <option value="title">Nome</option>
                 <option value="category">Categoria</option>
                 <option value="collaborator">Colaborador</option>
@@ -54,11 +54,11 @@
         <!-- Inicio seção de cards dos produtos  -->
         <section class="row">
             <cards-products class="col-sm-12 col-md-6 col-lg-3 col-xxl-3 animate__animated animate__fadeIn"
-                v-for="item in items" :key="item.codPatrimonio" @click="itemInfos(item.codPatrimonio)">
+                v-for="item in items" :key="item.id" @click="itemInfos(item.id)">
                 <template v-slot="card"></template>
                 <template v-slot:title>
                     <p class="text-center" :class="item.collaborator ? 'loaned' : 'avaliable'">
-                        {{ item.codPatrimonio + ' - ' + item.title }}
+                        {{ item.id + ' - ' + item.title }}
                     </p>
                 </template>
                 <template v-slot:img><img :src="item.url" class="imageBg "></template>
@@ -118,7 +118,7 @@
             </div>
             <template v-slot:footer>
                 <button class="btn btn-secondary me-2" @click="toggleModal">Cancelar</button>
-                <button class="btn btn-primary" @click="editItem(item.codPatrimonio)"><i
+                <button class="btn btn-primary" @click="editItem(item.id)"><i
                         class="fa-solid fa-pen-to-square"></i> Editar Item</button>
             </template>
         </m-dialog>
@@ -141,7 +141,7 @@ const router = useRouter();
 const store = useStore();
 const show = ref(false);
 const item = ref({});
-const findBy = ref("codPatrimonio");
+const findBy = ref("id");
 const inputSearch = ref(null);
 
 
@@ -154,7 +154,7 @@ const items = computed(() => {
     if (inputSearch.value) {
         let total = store.state.itemsModule.items.filter(
             (item) =>
-                findBy.value === 'codPatrimonio'
+                findBy.value === 'id'
                     ? item[findBy.value] === Number(inputSearch.value)
                     : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
         );
@@ -194,8 +194,8 @@ const tweenedItemsLoaned = reactive({
     number: 0
 })
 
-function itemInfos(codPatrimonio) {
-    item.value = store.state.itemsModule.items.find((item) => item.codPatrimonio === codPatrimonio)
+function itemInfos(id) {
+    item.value = store.state.itemsModule.items.find((item) => item.id === id)
     show.value = true
 }
 

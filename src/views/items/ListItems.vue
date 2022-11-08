@@ -4,7 +4,7 @@
       <input type="text" class="w-75 form-control animate__animated animate__flipInX" placeholder="✍️ Buscar item... "
         v-model="inputSearch">
       <select class="badge bg-dark text-white text-center" id="" v-model="findBy">
-        <option value="codPatrimonio" selected>Código de Patrimonio</option>
+        <option value="id" selected>Código de Patrimonio</option>
         <option value="title">Pelo título</option>
         <option value="category">Pela Categoria</option>
         <option value="collaborator">Pelo Colaborador</option>
@@ -18,15 +18,15 @@
       :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">
     </paginate>
 
-    <div class="accordion animate__animated animate__fadeIn" v-for="item in items" :key="item.codPatrimonio">
+    <div class="accordion animate__animated animate__fadeIn" v-for="item in items" :key="item.id">
       <div class="accordion-item ">
-        <div class="accordion-header " :id="item.codPatrimonio">
+        <div class="accordion-header " :id="item.id">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-            :data-bs-target="'#collapse' + item.codPatrimonio" aria-expanded="true"
-            :aria-controls="'collapseOne' + item.codPatrimonio">
+            :data-bs-target="'#collapse' + item.id" aria-expanded="true"
+            :aria-controls="'collapseOne' + item.id">
             <img class="img-fluid imgAccordion" :src="item.url" />
             <div class="flex-grow-1 ms-3 ">
-              #{{ item.codPatrimonio }} - {{ item.title }}
+              #{{ item.id }} - {{ item.title }}
             </div>
             <div class="me-2 statusBadge">
               <p class="fw-bold" :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"
@@ -39,8 +39,8 @@
             </div>
         </div>
 
-        <div :id="'collapse' + item.codPatrimonio" class="accordion-collapse collapse"
-          :aria-labelledby="item.codPatrimonio">
+        <div :id="'collapse' + item.id" class="accordion-collapse collapse"
+          :aria-labelledby="item.id">
           <div class="accordion-body">
             <div class="row">
               <div class="col-sm-12 col-md-6">
@@ -57,12 +57,12 @@
               </div>
               <div class="text-md-end btn-group-sm ">
                 <button class="btn" :class="item.collaborator ? 'btn-primary' : 'btn-success'"
-                  @click="loanCollaborator(item.codPatrimonio, item.collaborator)">
+                  @click="loanCollaborator(item.id, item.collaborator)">
                   <i class="fa-solid" :class="item.collaborator ? 'fa-arrow-down' : 'fa-arrow-right-arrow-left'"></i>
                   <span v-text="item.collaborator ? ' Devolver Item' : ' Emprestar item '"> </span>
                 </button>
 
-                <button class="btn btn-warning " @click="editItem(item.codPatrimonio)">
+                <button class="btn btn-warning " @click="editItem(item.id)">
                   <i class="fa-solid fa-edit"></i> Editar item
                 </button>
               </div>
@@ -94,7 +94,7 @@
         <div class="d-flex">
           <button class="btn btn-secondary me-2" @click="cancelEditItem()">Cancelar</button>
           <button class="btn btn-success"
-            @click="setLoan({ codPatrimonio: item.codPatrimonio, collaborator: item.collaborator })">Salvar</button>
+            @click="setLoan({ id: item.id, collaborator: item.collaborator })">Salvar</button>
         </div>
       </template>
     </m-dialog>
@@ -114,7 +114,7 @@ const store = useStore();
 const inputSearch = ref(null);
 const page = ref(1);
 const perPage = ref(5);
-const findBy = ref("codPatrimonio");
+const findBy = ref("id");
 const show = ref(false)
 const item = ref({})
 
@@ -126,7 +126,7 @@ const totalPages = computed(() => {
   if (inputSearch.value) {
     return Math.ceil(
       store.state.itemsModule.items.filter((item) =>
-        findBy.value === 'codPatrimonio'
+        findBy.value === 'id'
           ? item[findBy.value] === Number(inputSearch.value)
           : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
 
@@ -144,7 +144,7 @@ const items = computed(() => {
     page.value = 1;
     let total = store.state.itemsModule.items.filter(
       (item) =>
-        findBy.value === 'codPatrimonio'
+        findBy.value === 'id'
           ? item[findBy.value] === Number(inputSearch.value)
           : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
     )
@@ -166,11 +166,11 @@ const collaborators = computed(() => {
   return store.state.collaboratorModule.collaborators
 });
 
-function loanCollaborator(codPatrimonio, collaborator) {
+function loanCollaborator(id, collaborator) {
   if (collaborator) {
     createMessageBox({
       title: 'Confirmação de devolução',
-      message: `Gostaria de confirmar a devolução do item código ${codPatrimonio} de ${collaborator} ?`,
+      message: `Gostaria de confirmar a devolução do item código ${id} de ${collaborator} ?`,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Confirmar',
       hasMask: true,
@@ -179,18 +179,18 @@ function loanCollaborator(codPatrimonio, collaborator) {
       isMiddle: true,
     }).then(res => {
       if (res.ok) {
-        setLoan({ codPatrimonio, collaborator: null })
+        setLoan({ id, collaborator: null })
       }
     })
   } else {
-    item.value = store.state.itemsModule.items.find((item) => item.codPatrimonio === codPatrimonio)
+    item.value = store.state.itemsModule.items.find((item) => item.id === id)
     show.value = true
   }
 }
 
 function setLoan(item) {
   const data = {
-    codPatrimonio: item.codPatrimonio,
+    id: item.id,
     collaborator: item.collaborator ? item.collaborator : null,
     loanAt: item.collaborator ? moment().format("DD/MM/YYYY hh:mm") : null
   }
