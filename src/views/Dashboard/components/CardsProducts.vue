@@ -1,15 +1,13 @@
 <template>
   <div class="wrap">
-
     <div class="box one">
       <h1>
         <slot name="title"></slot>
       </h1>
       <slot name="img" class="imageBg"></slot>
-      
       <div class="date">
         <h4>
-          <slot name="codPatrimonio"> </slot>
+          <slot name="id"> </slot>
         </h4>
       </div>
       <div class="poster">
