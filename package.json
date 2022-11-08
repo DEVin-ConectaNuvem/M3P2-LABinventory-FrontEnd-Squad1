@@ -7,7 +7,7 @@
     "preview": "vite preview --port 5050",
     "commit": "git-cz",
     "release": "standard-version",
-    "db": "json-server --watch src/data/db.json"
+    "db": "json-server --watch src/data/db.json --port 3004"
   },
   "config": {
     "commitizen": {
