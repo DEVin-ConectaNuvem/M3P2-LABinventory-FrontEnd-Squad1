@@ -1,7 +1,7 @@
 import axios from "axios";
 
 /**
- * useAxios: hook para retornar uma instância do axios
+ * useAxios: hook to use axios instance
  *
  * @export
  * 
