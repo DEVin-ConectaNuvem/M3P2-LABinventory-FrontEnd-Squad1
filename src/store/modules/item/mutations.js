@@ -1,42 +1,53 @@
-const UPDATE_ITEMS_LOCAL_STORAGE = (state) => {
-  state.items = localStorage.getItem("items")
-    ? JSON.parse(localStorage.getItem("items"))
-    : [];
-};
+import { useAxios } from "../../../hooks";
 
-const SET_ITEM_LOCAL_STORAGE = (state) => {
-  localStorage.setItem("items", JSON.stringify(state.items));
+const UPDATE_ITEMS_LOCAL_STORAGE = async (state) => {
+  try {
+    const res =
+      (await useAxios().axios.get("http://localhost:3000/items")) || [];
+    state.items = res.data;
+    return res.data;
+  } catch (error) {
+    throw new Error("Erro ao obter atualizar itens");
+  }
 };
 
 const REGISTER_ITEM = (state, payload) => {
-  state.items.push(payload);
+  try {
+    const res = useAxios().axios.post("http://localhost:3000/items", payload);
+    state.items.push(res.data);
+    return res.data;
+  } catch (error) {
+    throw new Error("Erro ao registrar item");
+  }
 };
 
 const EDIT_ITEM = (state, payload) => {
- 
-  state.items.forEach((item, index) => {
-    if (item.codPatrimonio === payload.codPatrimonio) {
-      console.log(item.id, 'State')
-      console.log(payload.id, 'Payload')
-      state.items[index] = payload;
-    }
-  });
+  try {
+    const res = useAxios().axios.put(
+      `http://localhost:3000/items/${payload.id}`,
+      payload
+    );
+    return res.data;
+  } catch (error) {
+    throw new Error("Erro ao editar item");
+  }
 };
 
 const SET_LOAN_ITEM = (state, payload) => {
-  state.items.forEach((item, index) => {
-    if (item.codPatrimonio === payload.codPatrimonio) {
-      state.items[index].collaborator = payload.collaborator;
-      state.items[index].loanAt = payload.loanAt;
-      console.log(payload)
-    }
-  });
+  try {
+    const res = useAxios().axios.patch(
+      `http://localhost:3000/items/${payload.id}`,
+      { collaborator: payload.collaborator, loanAt: payload.loanAt }
+    );
+    return res.data;
+  } catch (error) {
+    throw new Error("Erro ao emprestar item");
+  }
 };
 
 export {
   UPDATE_ITEMS_LOCAL_STORAGE,
   REGISTER_ITEM,
-  SET_ITEM_LOCAL_STORAGE,
   EDIT_ITEM,
   SET_LOAN_ITEM,
 };

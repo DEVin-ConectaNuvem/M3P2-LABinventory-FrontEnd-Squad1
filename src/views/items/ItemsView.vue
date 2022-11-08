@@ -8,8 +8,8 @@
         <hr />
         <div class="col-sm-12 col-md-6 col-lg-3">
           <label class="form-label">Cód. de Patrimônio <span>*</span></label>
-          <input type="text" name="codPatrimonio" class="form-control" placeholder="Cód. automatico"
-            v-model="form.codPatrimonio" disabled />
+          <input type="text" name="id" class="form-control" placeholder="Cód. automatico"
+            v-model="form.id" disabled />
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Título do item <span>*</span></label>
@@ -120,13 +120,13 @@ store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de itens');
 const infoById = computed(() => {
   if (id) {
     return store.state.itemsModule.items.find(
-      (item) => item.codPatrimonio === id
+      (item) => item.id === id
     );
   }
   return false;
 });
 
-// variável para retornar a contagem de itens cadastrados para novo codPatrimonio
+// variável para retornar a contagem de itens cadastrados para novo id
 const getCountItems = computed(() => {
   if (store.state.itemsModule.items.length > 0) {
     return store.state.itemsModule.items.length + 1;
@@ -140,7 +140,7 @@ const btnForm = ref(infoById.value ? "Editar" : "Cadastrar");
 
 // variaveis do formulários - reativas (data)
 const form = ref({
-  codPatrimonio: infoById.value ? infoById.value.codPatrimonio : null,
+  id: infoById.value ? infoById.value.id : null,
   title: infoById.value ? infoById.value.title : null,
   description: infoById.value ? infoById.value.description : null,
   category: infoById.value ? infoById.value.category : null,
@@ -191,7 +191,7 @@ function onInvalidSubmit({ errors }) {
 function newItem(actions) {
   const loader = $loading.show();
   setTimeout(() => {
-    newForm.value.codPatrimonio = getCountItems.value;
+    newForm.value.id = getCountItems.value;
     newForm.value.updatedAt = moment().format("llll");
     store.dispatch("itemsModule/registerItem", newForm.value);
     clearForm()
@@ -229,7 +229,7 @@ function editItem(actions) {
 
 // Função para limpar alguns dos campos do formulário não abrangidos pelo veevalidate
 function clearForm() {
-  form.value.codPatrimonio = '';
+  form.value.id = '';
   form.value.description = '';
   url.value = null;
 }
