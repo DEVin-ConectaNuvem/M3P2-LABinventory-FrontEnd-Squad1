@@ -113,6 +113,10 @@
             :rules="required" v-model="form.reference" required :class="{ 'is-invalid': errors.reference }" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.reference }}</div>
         </div>
+        <div class="col-sm-12 col-md-6 col-lg-4">
+          <label class="form-label">Foto Colaborador</label>
+          <input type="file" name="uploadFile" class="form-control" @input="form.uploadFile" @change="onFileChange">
+        </div>
       </div>
       <div class="text-end">
         <button :type="infoById ? 'button' : 'reset'" @click="infoById ? cancelEdit() : ''"
@@ -201,6 +205,7 @@ const form = ref({
   houseNumber: infoById.value ? infoById.value.houseNumber : null,
   complement: infoById.value ? infoById.value.complement : null,
   reference: infoById.value ? infoById.value.reference : null,
+  uploadFile: infoById.value ? infoById.value.uploadFile: null,
   createdAt: infoById.value
     ? infoById.value.createdAt
     : moment().format("llll"),
@@ -327,6 +332,16 @@ function clearAddress() {
   form.value.neighborhood = "";
   form.value.street = "";
 }
+
+function onFileChange(event) {
+  if(event) {
+    form.value = {
+      ... form.value,
+      uploadFile: {... event.target.files[0]}
+    }
+  }
+}
+
 </script>
 
 <style lang="scss" scoped>
