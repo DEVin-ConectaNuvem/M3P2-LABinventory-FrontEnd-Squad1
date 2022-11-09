@@ -2,22 +2,20 @@
   "name": "devinventary",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview --port 5050",
+    "test:unit": "vue-cli-service test:unit",
     "commit": "git-cz",
+    "db": "json-server --watch src/data/db.json --port 3004",
+    "dev": "vite",
+    "preview": "vite preview --port 5050",
     "release": "standard-version"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   },
   "dependencies": {
     "@vee-validate/rules": "^4.5.11",
     "animate.css": "^4.1.1",
     "axios": "^0.27.2",
     "gsap": "^3.10.4",
+    "json-server": "^0.17.1",
     "moment": "^2.29.3",
     "uid": "^2.0.0",
     "vee-validate": "^4.5.11",
@@ -35,17 +33,27 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
     "@vitejs/plugin-vue": "^2.3.1",
     "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-unit-jest": "~5.0.0",
+    "@vue/test-utils": "^2.2.1",
+    "@vue/vue3-jest": "^27.0.0-alpha.1",
+    "babel-jest": "^27.0.6",
+    "cz-conventional-changelog": "^3.3.0",
+    "git-cz": "^4.7.6",
     "husky": "^8.0.1",
+    "jest": "^27.0.5",
     "node-sass": "^7.0.1",
     "sass": "^1.51.0",
     "sass-loader": "^12.6.0",
-    "vite": "^2.9.5",
-    "@commitlint/cli": "^12.1.4",
-    "@commitlint/config-conventional": "^12.1.4",
-    "cz-conventional-changelog": "^3.3.0",
-    "git-cz": "^4.7.6",
-    "standard-version": "^9.3.0"
+    "standard-version": "^9.3.0",
+    "vite": "^2.9.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

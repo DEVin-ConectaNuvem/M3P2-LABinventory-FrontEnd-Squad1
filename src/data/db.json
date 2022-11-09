@@ -1,0 +1,67 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "title": "Headset Gamer Teste",
+      "description": "HyperX confortável para todo tipo de rosto\nOs fones de ouvido giram 90° e ficam bem apoiados confortavelmente em torno do pescoço durante os intervalos de batalhas. Como todo head",
+      "category": "Periférico",
+      "value": "149.99",
+      "url": "https://images.kabum.com.br/produtos/fotos/81132/81132_index_gg.jpg",
+      "brand": "HyperX",
+      "model": "HX-HSCS-BK/NA",
+      "collaborator": null,
+      "createdAt": "Mon, Nov 7, 2022 9:39 PM",
+      "updatedAt": "Mon, Nov 7, 2022 11:10 PM",
+      "loanAt": null
+    }
+  ],
+  "collaborators": [
+    {
+      "id": "c3d534df4115",
+      "name": "João da Silva",
+      "email": "joaosilvaTeste@gmail.com",
+      "phone": "(11) 9999-9999",
+      "position": "Desenvolvedor Backend",
+      "gender": "Masculino",
+      "zipcode": "85501-037",
+      "birthDay": "2000-01-01",
+      "city": "Pato Branco",
+      "state": "PR",
+      "neighborhood": "Centro",
+      "street": "Rua Osvaldo Aranha",
+      "houseNumber": 157,
+      "complement": "123",
+      "reference": "teste",
+      "createdAt": "Mon, Nov 7, 2022 9:43 PM",
+      "updatedAt": "Mon, Nov 7, 2022 9:43 PM"
+    },
+    {
+      "id": "ce4b3d806821",
+      "name": "Ana Joana",
+      "email": "ana123@gmail.com",
+      "phone": "(11) 9994-5999",
+      "position": "Desenvolvedor Frontend",
+      "gender": "Feminino",
+      "zipcode": "85501-043",
+      "birthDay": "2000-01-01",
+      "city": "Pato Branco",
+      "state": "PR",
+      "neighborhood": "Centro",
+      "street": "Rua Tapajós",
+      "houseNumber": 505,
+      "complement": "123",
+      "reference": "teste",
+      "createdAt": "Mon, Nov 7, 2022 10:42 PM",
+      "updatedAt": "Mon, Nov 7, 2022 10:44 PM"
+    }
+  ],
+  "users": [
+    {
+      "id": "e3d534df411",
+      "email": "edumartinsrib@live.com",
+      "username": "edumartinsrib",
+      "password": "12345678",
+      "password2": "12345678"
+    }
+  ]
+}
