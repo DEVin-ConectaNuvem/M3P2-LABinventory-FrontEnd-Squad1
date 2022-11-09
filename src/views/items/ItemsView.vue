@@ -73,7 +73,7 @@
       <div class="row mt-3">
         <div class="col-sm-12 col-md-6">
           <div v-if="!archive" class="form-label">
-            <label class="form-label">Selecione um arquivo(anexo)</label>
+            <label class="form-label">Selecione um arquivo (anexo)</label>
             <input type="file" @change="onFile" class="form-control">
           </div>
         </div>
