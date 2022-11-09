@@ -1,5 +1,5 @@
 import { registerCollaborator, editCollaborator } from './actions';
-import { UPDATE_COLLABORATOR_LOCAL_STORAGE, REGISTER_COLLABORATOR, EDIT_COLLABORATOR, SET_COLLABORATOR_LOCAL_STORAGE } from './mutations';
+import { UPDATE_COLLABORATOR_LOCAL_STORAGE, REGISTER_COLLABORATOR, EDIT_COLLABORATOR } from './mutations';
 
 
 export default {
@@ -17,7 +17,6 @@ export default {
   mutations: {
     UPDATE_COLLABORATOR_LOCAL_STORAGE,
     REGISTER_COLLABORATOR, 
-    EDIT_COLLABORATOR,
-    SET_COLLABORATOR_LOCAL_STORAGE,
+    EDIT_COLLABORATOR
   },
 };
