@@ -115,10 +115,10 @@
         </div>
       </div>
       <div class="text-end">
-        <button :type="infoById ? 'button' : 'reset'" @click="infoById ? cancelEdit() : ''"
-          class="btn btn-secondary me-2 mt-2" v-text="infoById ? 'Cancelar' : 'Limpar'"></button>
-        <button type="submit" class="mt-2" :class="infoById ? 'btn btn-primary' : 'btn btn-success'"
-          v-text="btnForm"></button>
+        <button :type="id ? 'button' : 'reset'" @click="id ? cancelEdit() : ''"
+          class="btn btn-secondary me-2 mt-2" v-text="id ? 'Cancelar' : 'Limpar'"></button>
+        <button type="submit" class="mt-2" :class="id ? 'btn btn-primary' : 'btn btn-success'"
+          v-text="id ? 'Editar': 'Cadastrar'"></button>
       </div>
     </VeeForm>
   </div>
@@ -126,13 +126,13 @@
 
 <script setup>
 import { uid } from "uid";
-import { ref, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 import ToastNotification from "./components/ToastNotification.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
-import { Form as VeeForm, Field as Veefield, defineRule } from "vee-validate";
+import { Form as VeeForm, Field as Veefield } from "vee-validate";
 import {
   validateEmail,
   validateName,
@@ -142,12 +142,10 @@ import {
   validateNumber,
   validateCEP,
 } from "../../validators/validators";
-import axios from "axios";
+import { useAxios } from "../../hooks";
 import moment from "moment";
 
-
-// variaveis globais
-
+const { axios } = useAxios();
 const $loading = useLoading();
 const toast = useToast();
 const store = useStore();
@@ -162,132 +160,130 @@ const content = {
     },
   },
 };
-
-// variavel com parametro da rota (id)
 const id = route.params.userId;
-
-// atualização dos dados da store
-store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
-store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de colaboradores');
-
-
-// variavel para verificar se o usuario esta editando ou criando um novo colaborador
-const infoById = computed(() => {
-  if (id) {
-    return store.state.collaboratorModule.collaborators.find(
-      (collaborator) => collaborator.id === id
-    );
-  }
-  return false;
-});
-
-// dados do botão submit
-const btnForm = ref(infoById.value ? "Editar" : "Cadastrar");
-
-// variaveis do formulários - reativas (data)
 const form = ref({
-  id: infoById.value ? infoById.value.id : null,
-  name: infoById.value ? infoById.value.name : null,
-  email: infoById.value ? infoById.value.email : null,
-  phone: infoById.value ? infoById.value.phone : null,
-  position: infoById.value ? infoById.value.position : null,
-  gender: infoById.value ? infoById.value.gender : null,
-  zipcode: infoById.value ? infoById.value.zipcode : null,
-  birthDay: infoById.value ? infoById.value.birthDay : null,
-  city: infoById.value ? infoById.value.city : null,
-  state: infoById.value ? infoById.value.state : null,
-  neighborhood: infoById.value ? infoById.value.neighborhood : null,
-  street: infoById.value ? infoById.value.street : null,
-  houseNumber: infoById.value ? infoById.value.houseNumber : null,
-  complement: infoById.value ? infoById.value.complement : null,
-  reference: infoById.value ? infoById.value.reference : null,
-  createdAt: infoById.value
-    ? infoById.value.createdAt
-    : moment().format("llll"),
-  updatedAt: infoById.value ? moment().format("llll") : null,
+  id: null,
+  name: null,
+  email: null,
+  phone: null,
+  position: null,
+  gender: null,
+  zipcode: null,
+  birthDay: null,
+  city: null,
+  state: null,
+  neighborhood: null,
+  street: null,
+  houseNumber: null,
+  complement: null,
+  reference: null,
+  createdAt: null,
+  updatedAt: null,
 });
 const newForm = ref({})
 
-
-/* 
-Funções para submit do formulário
-*/
-//função executada quando o formulário for submetido com sucesso
-function onValidSubmit(values, actions) {
-  newForm.value = { ...form.value }
-  const checkEmail = store.state.collaboratorModule.collaborators.find(
-    (collaborator) => collaborator.email === values.email
-  );
-  const checkEmailEdit = infoById.value.email === values.email;
-
-  if (checkEmail && !checkEmailEdit) {
-    toast.error("Email já cadastrado", content);
-    actions.setErrors({ email: "Email já cadastrado" });
-    return
+onMounted(async() => {
+  if (id) {
+    store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
+    store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de colaboradores');
+    const dataForm = await getCollaboratorById(id);
+    if (dataForm) {
+      form.value = dataForm;
+    }
   }
+});
 
-  if (infoById.value) {
-    editCollaborator(actions);
-  } else {
-    newCollaborator(actions);
+async function getCollaboratorById(id){
+  const loader = $loading.show();
+  try {
+    const res = await axios.get(
+      `http://localhost:3004/collaborators/${id}`
+    );
+    return res.data;
+  } catch (error) {
+    toast.error("Erro ao buscar colaborador", content);
+  } finally {
+    loader.hide();
   }
 }
 
-//função executada para aviso de  erros do formulário
+async function onValidSubmit(actions) {
+  try {
+    newForm.value = { ...form.value }
+    const checkEmail = await checkEmailExists(newForm.value.email);
+    if (Array.isArray(checkEmail) && checkEmail.length > 0) {
+      toast.error("Email já cadastrado", content);
+      return;
+    }
+    if (id) {
+      await editCollaborator(actions);
+    } else {
+      await newCollaborator(actions);
+    }
+  } catch (error) {
+    toast.error("Erro ao cadastrar colaborador", content);
+  }
+}
+
+async function checkEmailExists(email) {
+  const res = await axios.get(`http://localhost:3004/collaborators?email=${email}`);
+  if(id){
+    const result = res.data.filter((item) => item.id !== id);
+    return result
+  }
+  return res
+}
+
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
     toast.error(errors[field], { timeout: 1500 });
   }
 }
 
-// função para registro de novo colaborador
-function newCollaborator(actions) {
+async function newCollaborator(actions) {
   const loader = $loading.show();
-  setTimeout(() => {
-    infoById.value ? infoById.value.id : (newForm.value.id = "c" + uid());
-    infoById.value
-      ? infoById.value.createdAt
-      : (newForm.value.createdAt = moment().format("llll"));
+  try {
+    !id ? (newForm.value.id = "c" + uid()) : "";
+    !id ? (newForm.value.createdAt = moment().format("DD/MM/YYYY")) : "";
     newForm.value.updatedAt = moment().format("llll");
-    store.dispatch("collaboratorModule/registerCollaborator", newForm.value);
-    actions.resetForm();
+    const res = await axios.post(
+      "http://localhost:3004/collaborators",
+      newForm.value
+    );
+    if (res.status === 201) {
+      toast.success("Colaborador cadastrado com sucesso", content);
+      router.push({ name: "ListCollaborators" });
+    }
+  } catch (error) {
+    toast.error("Erro ao cadastrar colaborador", content);
+  } finally {
     loader.hide();
-    toast(content, {
-      position: "top-right",
-      closeOnClick: false,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-      draggable: false,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: true,
-      closeButton: "button",
-      icon: "fas fa-rocket",
-      rtl: false,
-    });
-  }, 1000);
+  }
 }
 
-// Função para edição de colaborador
-function editCollaborator(actions) {
+async function editCollaborator(actions) {
   const loader = $loading.show();
-  setTimeout(() => {
-    store.dispatch("collaboratorModule/editCollaborator", form.value);
-    actions.resetForm();
-    loader.hide();
-    toast.success("Colaborador editado com sucesso!");
+  try {
+    const res = await axios.put(
+      `http://localhost:3004/collaborators/${id}`,
+      newForm.value
+    );
+    if (res.status === 200) {
+      toast.success("Colaborador editado com sucesso", content);
+    }
     router.push({ name: "ListCollaborators" });
-  }, 2000);
+  } catch (error) {
+    toast.error("Erro ao editar colaborador", content);
+  } finally {
+    loader.hide();
+  }
 }
 
-// Função de cancelamento da edição de colaborador
 function cancelEdit() {
   toast.warning("Edição cancelada!", { timeout: 1000 });
   router.push({ name: "ListCollaborators" });
 }
 
-/* 
-Funções relativas a validação de CEP - uso da api (VIACEP)
-*/
 function searchZipCode() {
   clearAddress();
 
@@ -320,7 +316,6 @@ function searchZipCode() {
     });
 }
 
-//função para limpar os campos de endereço
 function clearAddress() {
   form.value.city = "";
   form.value.state = "";
