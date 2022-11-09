@@ -1,3 +1,7 @@
+import { useAxios } from "../../../hooks";
+
+const { axios } = useAxios();
+
 const SET_LOGIN_IN = (state, payload) => {
     state.userLogged = payload;
     state.isLogged = true;
@@ -13,18 +17,29 @@ const SET_LOG_OUT = (state) => {
     localStorage.removeItem('token');
 }
 
-const UPDATE_USERS_LOCAL_STORAGE = (state) => {
-    state.users = localStorage.getItem("users") ? JSON.parse(localStorage.getItem("users")) : [];
+const UPDATE_USERS_LOCAL_STORAGE = async (state) => {
+    try {
+        const res = (await axios.get("http://localhost:3004/users")) || [];
+        state.users = res.data;
+    } catch (error) {
+        throw new Error("Erro ao obter usuários");
+    }
 }
 
-const REGISTER_USER = (state, payload) => {
-    state.users.push(payload);
-    localStorage.setItem("users", JSON.stringify(state.users));
+const REGISTER_USER = async (state, payload) => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3004/users",
+        payload
+      );
+      state.users = [...state.users, res.data];
+    } catch (error) {
+        throw new Error("Erro ao registrar usuário");
+    }
 }
 
 const UPDATE_TOKEN = (state) => {
     const token = JSON.parse(localStorage.getItem('token'));
-    
     if (token){
     const user = state.users.find(
     (user) => user.id === token.id

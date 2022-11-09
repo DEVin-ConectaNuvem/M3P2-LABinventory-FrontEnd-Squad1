@@ -1,9 +1,11 @@
 import { useAxios } from "../../../hooks";
 
+const { axios } = useAxios();
+
 const UPDATE_ITEMS_LOCAL_STORAGE = async (state) => {
   try {
     const res =
-      (await useAxios().axios.get("http://localhost:3000/items")) || [];
+      (await axios.get("http://localhost:3004/items")) || [];
     state.items = res.data;
     return res.data;
   } catch (error) {
@@ -13,7 +15,7 @@ const UPDATE_ITEMS_LOCAL_STORAGE = async (state) => {
 
 const REGISTER_ITEM = (state, payload) => {
   try {
-    const res = useAxios().axios.post("http://localhost:3000/items", payload);
+    const res = axios.post("http://localhost:3004/items", payload);
     state.items.push(res.data);
     return res.data;
   } catch (error) {
@@ -23,8 +25,8 @@ const REGISTER_ITEM = (state, payload) => {
 
 const EDIT_ITEM = (state, payload) => {
   try {
-    const res = useAxios().axios.put(
-      `http://localhost:3000/items/${payload.id}`,
+    const res = axios.put(
+      `http://localhost:3004/items/${payload.id}`,
       payload
     );
     return res.data;
@@ -35,8 +37,8 @@ const EDIT_ITEM = (state, payload) => {
 
 const SET_LOAN_ITEM = (state, payload) => {
   try {
-    const res = useAxios().axios.patch(
-      `http://localhost:3000/items/${payload.id}`,
+    const res = axios.patch(
+      `http://localhost:3004/items/${payload.id}`,
       { collaborator: payload.collaborator, loanAt: payload.loanAt }
     );
     return res.data;
