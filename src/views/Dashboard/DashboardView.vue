@@ -36,7 +36,7 @@
         </section>
         <h4>Busca de itens</h4>
         <div class="content input-group">
-            <input type="text" class="w-75 form-control animate__animated animate__flipInX"
+            <input data-testid="search-input-item"  type="text" class="w-75 form-control animate__animated animate__flipInX"
                 placeholder="✍️ Buscar item..." v-model="inputSearch">
             <select class="badge bg-dark text-white text-center" v-model="findBy">
                 <option value="id" selected>Código</option>

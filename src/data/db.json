@@ -480,6 +480,13 @@
       "username": "edumartinsrib",
       "password": "12345678",
       "password2": "12345678"
+    },
+    {
+      "id": "74420eb32d7",
+      "email": "teste@teste.com.br",
+      "username": "teste",
+      "password": "12345678",
+      "password2": "12345678"
     }
   ]
 }
