@@ -10,7 +10,18 @@
 //
 //
 // -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
+Cypress.Commands.add('login', (email, password) => { 
+    cy.visit('http://localhost:3000')
+    cy.wait(1000);
+    cy.get("[data-testid='login-input-email']").type(email)
+    cy.get("[data-testid='login-input-password']").type(password)
+    cy.contains("Acessar").click();
+ })
+
+ Cypress.Commands.add('openSidebar', () => { 
+    
+    cy.get(".toggleVisible").click()
+ })
 //
 //
 // -- This is a child command --
