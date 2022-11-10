@@ -24,7 +24,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text">@</span>
                         </div>
-                        <Veefield type="text" class="form-control" name="email" placeholder="Digite o e-mail"
+                        <Veefield data-testid="login-input-email" type="text" class="form-control" name="email" placeholder="Digite o e-mail"
                           aria-label="Email" v-model="form.email" required :class="{ 'is-invalid': errors.email }"
                           :rules="validateEmail" />
                         <div class="invalid-feedback">{{ errors.email }}</div>
@@ -34,7 +34,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text">&#128273</span>
                         </div>
-                        <Veefield type="password" class="form-control" placeholder="Digite sua senha" aria-label="senha"
+                        <Veefield data-testid="login-input-password" type="password" class="form-control" placeholder="Digite sua senha" aria-label="senha"
                           v-model="form.password" required name="password" :class="{ 'is-invalid': errors.password }"
                           :rules="validatePassword" />
                         <div class="invalid-feedback">{{ errors.password }}</div>
