@@ -20,15 +20,15 @@
 
     <div class="accordion animate__animated animate__fadeIn" v-for="item in allItems" :key="item.id">
       <div class="accordion-item ">
-        <div class="accordion-header " :id="item.id">
+        <div class="accordion-header " :data-testid="`item-${item.id}`" :id="item.id">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
             :data-bs-target="'#collapse' + item.id" aria-expanded="true" :aria-controls="'collapseOne' + item.id">
             <img class="img-fluid imgAccordion" :src="item.url" />
             <div class="flex-grow-1 ms-3 ">
-              #{{ item.id }} - {{ item.title }}
+              #{{ item.id }} - <span :data-testid="`item-${item.id}-title`">{{ item.title }}</span>
             </div>
             <div class="me-2 statusBadge">
-              <p class="fw-bold" :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"
+              <p :data-testid="`item-${item.id}-status`" class="fw-bold" :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"
                 v-text="item.collaborator ? item.collaborator : 'Item disponível'"></p>
             </div>
           </button>
@@ -41,26 +41,39 @@
         <div :id="'collapse' + item.id" class="accordion-collapse collapse" :aria-labelledby="item.id">
           <div class="accordion-body">
             <div class="row">
-              <div class="col-sm-12 col-md-6">
+              <div class="col-sm-12 col-md-6" :data-testid="`item-${item.id}-description`">
                 <strong>Descrição:</strong> {{ item.description }}
                 <br />
               </div>
-              <div class="col-sm-12 col-md-6 ">
-                <strong>Criado em:</strong> {{ item.createdAt }}
+              <div class="col-sm-12 col-md-6">
+                <strong>Criado em:</strong>
+                <span :data-testid="`item-${item.id}-created-at`">
+                  {{ item.createdAt }}
+                </span> 
                 <br />
-                <strong>Última modificação:</strong> {{ item.updatedAt }}
+                <strong>Última modificação:</strong>
+                <span :data-testid="`item-${item.id}-updated-at`">
+                  {{ item.updatedAt }}
+                </span>
                 <br />
-                <strong>Emprestado desde:</strong> {{ item.loanAt }}
+                <strong>Emprestado desde:</strong> 
+                <span :data-testid="`item-${item.id}-loan-at`">
+                  {{ item.loanAt }}
+                </span>
                 <hr>
               </div>
               <div class="text-md-end btn-group-sm ">
-                <button class="btn" :class="item.collaborator ? 'btn-primary' : 'btn-success'"
-                  @click="loanCollaborator(item.id, item.collaborator)">
+                <button
+                  :data-testid="`item-${item.id}-borrow-or-return-button`"
+                  class="btn" :class="item.collaborator ? 'btn-primary' : 'btn-success'"
+                  @click="loanCollaborator(item.id, item.collaborator)"
+                >
                   <i class="fa-solid" :class="item.collaborator ? 'fa-arrow-down' : 'fa-arrow-right-arrow-left'"></i>
                   <span v-text="item.collaborator ? ' Devolver Item' : ' Emprestar item '"> </span>
                 </button>
-
-                <button class="btn btn-warning " @click="editItem(item.id)">
+                <button
+                  :data-testid="`item-${item.id}-edit-button`"
+                  class="btn btn-warning " @click="editItem(item.id)">
                   <i class="fa-solid fa-edit"></i> Editar item
                 </button>
               </div>
@@ -79,20 +92,24 @@
 
     <m-dialog v-model="show" title="Empréstimo de itens">
       <hr>
-      <p v-text="item.title"></p>
-      <img :src="item.url" class="img-fluid imagemLoan" alt="imagem do item">
+      <p data-testid="item-dialog-title">{{ item.title }}</p>
+      <img data-testid="img-dialog" :src="item.url" class="img-fluid imagemLoan" alt="imagem do item">
       <hr>
       <p>Colaborador:</p>
-      <select class="form-select" v-model="item.collaborator">
+      <select data-testid="select-collaborators" class="form-select" v-model="item.collaborator">
         <optgroup label="Colaboradores">
-          <option v-for="collab in collaborators" v-text="collab.name"></option>
+          <option v-for="collab in collaborators">
+            <span class="collaborators">{{ collab.name }}</span>
+          </option>
         </optgroup>
       </select>
       <template v-slot:footer>
         <div class="d-flex">
           <button class="btn btn-secondary me-2" @click="cancelEditItem()">Cancelar</button>
-          <button class="btn btn-success"
-            @click="setLoan({ id: item.id, collaborator: item.collaborator })">Salvar</button>
+          <button
+            data-testid="save-button"
+            class="btn btn-success"
+            @click="show = false">Salvar</button>
         </div>
       </template>
     </m-dialog>
