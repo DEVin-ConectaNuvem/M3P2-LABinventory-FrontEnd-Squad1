@@ -1,14 +1,14 @@
 <template>
   <div class="container mt-3 ">
-      <div class="content input-group">
-            <input type="text" class="w-75 form-control animate__animated animate__flipInX"
-                placeholder="✍️ Buscar colaborador..." v-model="inputSearch">
-            <select class="badge bg-dark text-white text-center" v-model="findBy">
-                <option value="name" selected>Nome</option>
-                <option value="position">Cargo</option>
-                <option value="email">E-mail</option>
-            </select>
-        </div>
+    <div class="content input-group">
+      <input type="text" class="w-75 form-control animate__animated animate__flipInX"
+        placeholder="✍️ Buscar colaborador..." v-model="inputSearch">
+      <select class="badge bg-dark text-white text-center" v-model="findBy">
+        <option value="name" selected>Nome</option>
+        <option value="position">Cargo</option>
+        <option value="email">E-mail</option>
+      </select>
+    </div>
     <hr />
     <h4>Lista de colaboradores</h4>
 
@@ -16,7 +16,8 @@
       :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">
     </paginate>
 
-    <div class="accordion animate__animated animate__fadeIn" v-for="collaborator in collaborators" :key="collaborator.id">
+    <div class="accordion animate__animated animate__fadeIn" v-for="collaborator in collaborators"
+      :key="collaborator.id">
       <div class="accordion-item">
         <h2 class="accordion-header" :id="collaborator.id">
           <button class="accordion-button collapsed text-capitalize" type="button" data-bs-toggle="collapse"
@@ -66,32 +67,40 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import Paginate from "vuejs-paginate-next";
 import { RouterLink, useRouter } from "vue-router";
+import { useAxios, useLodash } from "../../hooks";
 
-
+const { $_ } = useLodash();
+const { axios } = useAxios();
+const allCollabs = ref([]);
+const allCollabsCount = ref(0);
 const router = useRouter();
 const store = useStore();
-const inputSearch = ref("");
+const inputSearch = ref(""); "axios": "^0.27.2",
 const page = ref(1);
-const perPage = ref(5);
+const perPage = ref(10);
 const findBy = ref("name");
+const search = ref({
+  field: '',
+  value: ''
+})
 
-store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
+
 store.commit('configModule/SET_PAGE_NAME', 'Listagem de colaboradores');
 
 const totalPages = computed(() => {
   if (inputSearch.value) {
     return Math.ceil(
-      store.state.collaboratorModule.collaborators.filter((collaborator) =>
+      allCollabs.value.filter((collaborator) =>
         collaborator[findBy.value].toLowerCase().includes(inputSearch.value.toLowerCase())
       ).length / perPage.value
     );
   } else {
     return Math.ceil(
-      store.state.collaboratorModule.collaborators.length / perPage.value
+      allCollabs.value.length / perPage.value
     );
   }
 });
@@ -99,7 +108,7 @@ const totalPages = computed(() => {
 const collaborators = computed(() => {
   if (inputSearch.value) {
     page.value = 1;
-    let total = store.state.collaboratorModule.collaborators.filter(
+    let total = allCollabs.value.filter(
       (collaborator) =>
         collaborator[findBy.value]
           .toLowerCase()
@@ -111,17 +120,55 @@ const collaborators = computed(() => {
     );
     return total;
   } else {
-    return store.state.collaboratorModule.collaborators.slice(
+    return allCollabs.value.slice(
       (page.value - 1) * perPage.value,
       page.value * perPage.value
     );
   }
 });
 
-const itemsLoaned = computed(() => {
-  return store.state.itemsModule.items.filter(
-    (item) => item.collaborator
-  );
+async function loadData() {
+  try {
+    const serverItemsCount = await axios.get("/collaborators");
+    const res = await axios.get(`/collaborators?_page=${page.value}&_limit=${perPage.value}`);
+    allCollabs.value = res.data;
+    allCollabsCount.value = serverItemsCount.data.length;
+  } catch (error) {
+    console.log(error);
+
+  }
+}
+
+watch(inputSearch, async () => {
+  if (inputSearch) {
+    search.value.field = findBy.value;
+    search.value.value = inputSearch.value;
+    $_.debounce(async (inputSearch) => {
+      console.log('teste')
+      await searchText(inputSearch)
+    },
+      500);
+  }
+});
+
+async function searchText(value) {
+  try {
+    const res = await axios.get(`/collaborators?${search.value.field}_like=${value}`);
+    allCollabs.value = res.data;
+  } catch (error) {
+    console.log(error);
+
+  }
+}
+
+onMounted(() => {
+  loadData();
+});
+
+watch(page, () => {
+  if (newValue !== oldValue && oldValue) {
+    loadData();
+  }
 });
 
 

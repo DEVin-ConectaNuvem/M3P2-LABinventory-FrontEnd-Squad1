@@ -19,7 +19,7 @@ const SET_LOG_OUT = (state) => {
 
 const UPDATE_USERS_LOCAL_STORAGE = async (state) => {
     try {
-        const res = (await axios.get("http://localhost:3004/users")) || [];
+        const res = (await axios.get("/users")) || [];
         state.users = res.data;
     } catch (error) {
         throw new Error("Erro ao obter usuários");
@@ -29,7 +29,7 @@ const UPDATE_USERS_LOCAL_STORAGE = async (state) => {
 const REGISTER_USER = async (state, payload) => {
     try {
       const res = await axios.post(
-        "http://localhost:3004/users",
+        "/users",
         payload
       );
       state.users = [...state.users, res.data];

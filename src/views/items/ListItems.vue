@@ -18,12 +18,11 @@
       :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">
     </paginate>
 
-    <div class="accordion animate__animated animate__fadeIn" v-for="item in items" :key="item.id">
+    <div class="accordion animate__animated animate__fadeIn" v-for="item in allItems" :key="item.id">
       <div class="accordion-item ">
         <div class="accordion-header " :id="item.id">
           <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-            :data-bs-target="'#collapse' + item.id" aria-expanded="true"
-            :aria-controls="'collapseOne' + item.id">
+            :data-bs-target="'#collapse' + item.id" aria-expanded="true" :aria-controls="'collapseOne' + item.id">
             <img class="img-fluid imgAccordion" :src="item.url" />
             <div class="flex-grow-1 ms-3 ">
               #{{ item.id }} - {{ item.title }}
@@ -34,13 +33,12 @@
             </div>
           </button>
           <div class="me-2 d-md-none fs-5 text-center ">
-              <p class="fw-bold" :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"
-                v-text="item.collaborator ? item.collaborator : 'Item disponível'"></p>
-            </div>
+            <p class="fw-bold" :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"
+              v-text="item.collaborator ? item.collaborator : 'Item disponível'"></p>
+          </div>
         </div>
 
-        <div :id="'collapse' + item.id" class="accordion-collapse collapse"
-          :aria-labelledby="item.id">
+        <div :id="'collapse' + item.id" class="accordion-collapse collapse" :aria-labelledby="item.id">
           <div class="accordion-body">
             <div class="row">
               <div class="col-sm-12 col-md-6">
@@ -71,11 +69,11 @@
         </div>
       </div>
     </div>
-    <p class="text-danger" v-show="items.length === 0 && inputSearch">
+    <p class="text-danger" v-show="allItems.length === 0 && inputSearch">
       Não há itens cadastrados com este <strong>código de patrimônio</strong> - <router-link :to="{ name: 'items' }">
         Realizar novo cadastro</router-link>
     </p>
-    <p class="text-danger" v-show="items.length === 0 && !inputSearch">
+    <p class="text-danger" v-show="allItems.length === 0 && !inputSearch">
       Não há itens cadastrados - <router-link :to="{ name: 'items' }">Realizar novo cadastro</router-link>
     </p>
 
@@ -103,29 +101,32 @@
 
 <script setup>
 import Paginate from "vuejs-paginate-next";
+import { useAxios } from "../../hooks";
 import { RouterLink, useRouter } from "vue-router";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import moment from "moment";
 import { createMessageBox } from 'vue-m-dialog'
 
 const router = useRouter();
 const store = useStore();
+const { axios } = useAxios();
 const inputSearch = ref(null);
 const page = ref(1);
 const perPage = ref(5);
 const findBy = ref("id");
 const show = ref(false)
 const item = ref({})
+const collaborators = ref([])
+const allItems = ref([])
+const allItensCount = ref(0)
 
-store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
-store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
 store.commit('configModule/SET_PAGE_NAME', 'Listagem de itens');
 
 const totalPages = computed(() => {
   if (inputSearch.value) {
     return Math.ceil(
-      store.state.itemsModule.items.filter((item) =>
+      allItems.value.filter((item) =>
         findBy.value === 'id'
           ? item[findBy.value] === Number(inputSearch.value)
           : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
@@ -134,7 +135,7 @@ const totalPages = computed(() => {
     );
   } else {
     return Math.ceil(
-      store.state.itemsModule.items.length / perPage.value
+      allItensCount.value / perPage.value
     );
   }
 });
@@ -142,7 +143,7 @@ const totalPages = computed(() => {
 const items = computed(() => {
   if (inputSearch.value) {
     page.value = 1;
-    let total = store.state.itemsModule.items.filter(
+    let total = allItems.value.filter(
       (item) =>
         findBy.value === 'id'
           ? item[findBy.value] === Number(inputSearch.value)
@@ -155,47 +156,81 @@ const items = computed(() => {
 
     return total;
   } else {
-    return store.state.itemsModule.items.slice(
+    return allItems.value.slice(
       (page.value - 1) * perPage.value,
       page.value * perPage.value
     );
   }
 });
 
-const collaborators = computed(() => {
-  return store.state.collaboratorModule.collaborators
+async function loadData() {
+  try {
+    const itemsPaginate = await axios.get(`/items?_limit=${perPage.value}&_page=${page.value}`);
+    const itemsDataCount = await axios.get(`/items`);
+    const collabs = await axios.get("/collaborators");
+    allItems.value = itemsPaginate.data;
+    allItensCount.value = itemsDataCount.data.length
+    collaborators.value = collabs.data;
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+
+onMounted(async () => {
+  await loadData()
 });
 
-function loanCollaborator(id, collaborator) {
+watch(page, async () => {
+  await loadData()
+});
+
+async function loanCollaborator(itemId, collaborator) {
   if (collaborator) {
-    createMessageBox({
+    const choose = await createMessageBox({
       title: 'Confirmação de devolução',
-      message: `Gostaria de confirmar a devolução do item código ${id} de ${collaborator} ?`,
+      message: `Gostaria de confirmar a devolução do item código ${itemId} de ${collaborator} ?`,
       cancelButtonText: 'Cancelar',
       confirmButtonText: 'Confirmar',
       hasMask: true,
       draggable: true,
       isPointerEventsNone: true,
       isMiddle: true,
-    }).then(res => {
-      if (res.ok) {
-        setLoan({ id, collaborator: null })
-      }
     })
+    if (choose.ok) {
+      await setLoan(itemId, collaborator)
+    }
+
   } else {
-    item.value = store.state.itemsModule.items.find((item) => item.id === id)
+    item.value = allItems.value.find((item) => item.id === itemId)
     show.value = true
   }
 }
 
-function setLoan(item) {
-  const data = {
-    id: item.id,
-    collaborator: item.collaborator ? item.collaborator : null,
-    loanAt: item.collaborator ? moment().format("DD/MM/YYYY hh:mm") : null
+async function setLoan(itemId, collaborator = null) {
+  try {
+    console.log(itemId.id, itemId.collaborator)
+    const payload = {
+      collaborator: itemId?.collaborator ? itemId.collaborator : null,
+      loanAt: itemId?.collaborator ? moment().format("DD/MM/YYYY hh:mm") : null,
+      updatedAt: moment().format("DD/MM/YYYY hh:mm"),
+    }
+    const res = await axios.patch(
+      `/items/${itemId.id || itemId}`, {
+      collaborator: payload.collaborator,
+      loanAt: payload.loanAt,
+      updatedAt: payload.updatedAt,
+    }
+    );
+
+    if (res.status === 200) {
+      show.value = false
+      await loadData()
+    }
+    return res.data;
+  } catch (error) {
+    throw new Error('Erro ao emprestar item');
   }
-  const setLoan = store.dispatch("itemsModule/setLoanItem", data);
-  show.value = false
 }
 
 function editItem(id) {
@@ -203,9 +238,8 @@ function editItem(id) {
   router.push({ name: 'items', params: { itemId: id } });
 }
 
-function cancelEditItem() {
-  store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
-  store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
+async function cancelEditItem() {
+  await loadData()
   show.value = false
 }
 
@@ -230,8 +264,9 @@ function cancelEditItem() {
     margin-left: 5px;
   }
 }
+
 .statusBadge {
-    font-size: 18px;
+  font-size: 18px;
 
   .badge {
     min-width: 130px;
@@ -240,6 +275,7 @@ function cancelEditItem() {
     margin-left: 5px;
   }
 }
+
 .badgeGroup {
   .badge {
     min-width: 130px;
