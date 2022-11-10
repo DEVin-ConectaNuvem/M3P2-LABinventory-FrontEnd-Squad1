@@ -1,4 +1,4 @@
-import { selectARandomAvailableItem, selectARandomCollaborator } from '../helpers/services/utils';
+import { selectARandomAvailableItem, selectARandomCollaborator, selectARandomBorrowedItem } from '../helpers/services/utils';
 
 describe("Verifica se é possível emprestar um item", () => {
 	let items = [];
@@ -86,6 +86,42 @@ describe("Verifica se é possível emprestar um item", () => {
 
     cy.get(`[data-testid='item-${item.id}-status']`).should(
 			"include.text", collaborator.name
+		);
+	})
+})
+
+describe("Verifica se é possível devolver um item", () => {
+	let items = [];
+
+	beforeEach(() => {
+		cy.login("admin@teste.com", "12345678")
+
+		cy.wait(1000);
+
+		cy.openSidebar();
+
+		cy.contains("Empréstimo").click();
+
+    cy.request("GET", "/items").as("getItems").then((interception) => {
+      items = interception.body;
+    });
+	})
+
+	it("Devolve um item com sucesso", () => {
+		const item  = selectARandomBorrowedItem(items);
+
+		cy.get(`[data-testid='item-${item.id}']`)
+			.should('include.text', item.title)
+			.click();
+
+		cy.get(`[data-testid='item-${item.id}-borrow-or-return-button']`)
+			.should("include.text", "Devolver Item")
+			.click();
+
+		cy.get(".m-dialog--confirm-btn").click();
+
+    cy.get(`[data-testid='item-${item.id}-status']`).should(
+			"include.text", "Item disponível"
 		);
 	})
 })
