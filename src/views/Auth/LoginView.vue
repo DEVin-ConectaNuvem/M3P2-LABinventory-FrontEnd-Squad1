@@ -13,7 +13,7 @@
                       <h4 class="mt-1 ">Nós somos o <strong>DEVInventary</strong></h4>
                     </div>
 
-                    <VeeForm @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit"
+                    <VeeForm data-testid="vue-toast-info" @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit"
                       class="animate__animated animate__backInLeft">
                       <div class="d-flex align-items-end justify-content-center mb-2 ">
                         <p class="mb-0 me-2 text-light " v-text="register.haveAccount"></p>
