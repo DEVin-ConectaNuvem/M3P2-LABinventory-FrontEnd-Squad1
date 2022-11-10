@@ -3,9 +3,9 @@ export function selectARandomIndex(array) {
   return randomindex;
 }
 
-export function selectARandomAvailableItem(items) {
-  items = items.filter(({ collaborator }) => !collaborator);
-
+export function selectARandomAvailableItem(items, limit=5) {
+  items = items.filter(({ collaborator }, i) => !collaborator && i < limit);
+5
   const index = selectARandomIndex(items);
   const item = items[index];
 
