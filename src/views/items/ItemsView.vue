@@ -70,6 +70,15 @@
         </div>
       </div>
 
+      <div class="row mt-3">
+        <div class="col-sm-12 col-md-6">
+          <div v-if="!archive" class="form-label">
+            <label class="form-label">Selecione um arquivo (anexo)</label>
+            <input type="file" @change="onFile" class="form-control">
+          </div>
+        </div>
+      </div>
+
       <div class="text-end">
         <button :type="infoById ? 'button' : 'reset'" @click="infoById ? cancelEdit() : ''"
           class="btn btn-secondary me-2 mt-2" v-text="infoById ? 'Cancelar' : 'Limpar'"></button>
@@ -156,6 +165,8 @@ const form = ref({
 const newForm = ref({})
 const url = ref(null);
 
+const archive = ref('');
+
 function imageFromUrl() {
   if (form.value.url && form.value.url !== newForm.value.url) {
     url.value = form.value.url;
@@ -164,6 +175,27 @@ function imageFromUrl() {
 
 //função de exibição da imagem ao montar tela
 imageFromUrl();
+
+//função de selecionar o arquivo
+function onFile(e) {
+  let files = e.target.files || e.dataTransfer.files;
+      if (!files.length)
+        return;
+      createArchive(files[0]);
+  console.log(archive)
+}
+
+//função de criar o arquivo
+function createArchive(file){
+  
+  var archive = new Image();
+  let reader = new FileReader();
+  let vm = this;
+    reader.onload = (e) => {
+      vm.archive = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
 
 /* 
 Funções para submit do formulário
