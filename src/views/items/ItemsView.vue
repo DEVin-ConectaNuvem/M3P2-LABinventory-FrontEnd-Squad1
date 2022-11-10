@@ -8,8 +8,7 @@
         <hr />
         <div class="col-sm-12 col-md-6 col-lg-3">
           <label class="form-label">Cód. de Patrimônio <span>*</span></label>
-          <input type="text" name="id" class="form-control" placeholder="Cód. automatico"
-            v-model="form.id" disabled />
+          <input type="text" name="id" class="form-control" placeholder="Cód. automatico" v-model="form.id" disabled />
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Título do item <span>*</span></label>
@@ -59,7 +58,7 @@
         <div class="col-sm-12 col-md-6">
           <label class="form-label">Url (imagem do produto) <span>*</span></label>
           <Veefield type="url" name="url" class="form-control" placeholder="caminho url da imagem" v-model="form.url"
-            required :class="{ 'is-invalid': errors.url }" @focusout="imageFromUrl" :rules="required" />
+            required :class="{ 'is-invalid': errors.url }" :rules="required" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.url }}</div>
           <img :src="url" name="imgUrl" class="img-fluid text-center" width="120">
         </div>
@@ -71,18 +70,19 @@
       </div>
 
       <div class="text-end">
-        <button :type="infoById ? 'button' : 'reset'" @click="infoById ? cancelEdit() : ''"
-          class="btn btn-secondary me-2 mt-2" v-text="infoById ? 'Cancelar' : 'Limpar'"></button>
-        <button type="submit" class="mt-2 btn" :class="infoById ? 'btn-primary' : 'btn-success'"
-          v-text="btnForm"></button>
+        <button :type="id ? 'button' : 'reset'" @click="id ? cancelEdit() : ''" class="btn btn-secondary me-2 mt-2"
+          v-text="id ? 'Cancelar' : 'Limpar'"></button>
+        <button type="submit" class="mt-2 btn" :class="id ? 'btn-primary' : 'btn-success'"
+          v-text="id ? 'Editar' : 'Cadastrar'"></button>
       </div>
     </VeeForm>
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
+import { useAxios } from "../../hooks"
 import { useToast } from "vue-toastification";
 import ToastNotification from "./components/ToastNotification.vue";
 import { useRoute, useRouter } from "vue-router";
@@ -90,15 +90,12 @@ import { useLoading } from "vue-loading-overlay";
 import { Form as VeeForm, Field as Veefield } from "vee-validate";
 import { required, validateNumber } from "../../validators/validators";
 import moment from "moment";
-
-/* 
-variaveis funcionais gerais 
-*/
 const store = useStore();
 const route = useRoute();
 const $loading = useLoading();
 const toast = useToast();
 const router = useRouter();
+const { axios } = useAxios();
 const content = {
   component: ToastNotification,
   listeners: {
@@ -108,140 +105,122 @@ const content = {
     },
   },
 };
-//obtém dados do params da rota - define também a origem da edição (dashboard ou lista de itens)
 const id = route.params.itemId ? Number(route.params.itemId.split('-')[0]) : null;
 const origin = id ? route.params.itemId.split('-')[1] : null;
-
-//atualização dos dados do item e seta página atual 
-store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
-store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de itens');
-
-// variavel para verificar se o usuario esta editando ou criando um novo colaborador
-const infoById = computed(() => {
-  if (id) {
-    return store.state.itemsModule.items.find(
-      (item) => item.id === id
-    );
-  }
-  return false;
-});
-
-// variável para retornar a contagem de itens cadastrados para novo id
-const getCountItems = computed(() => {
-  if (store.state.itemsModule.items.length > 0) {
-    return store.state.itemsModule.items.length + 1;
-  } else {
-    return 1;
-  }
-});
-
-// botão de submit do formulário
-const btnForm = ref(infoById.value ? "Editar" : "Cadastrar");
-
-// variaveis do formulários - reativas (data)
 const form = ref({
-  id: infoById.value ? infoById.value.id : null,
-  title: infoById.value ? infoById.value.title : null,
-  description: infoById.value ? infoById.value.description : null,
-  category: infoById.value ? infoById.value.category : null,
-  value: infoById.value ? infoById.value.value : null,
-  url: infoById.value ? infoById.value.url : null,
-  brand: infoById.value ? infoById.value.brand : null,
-  model: infoById.value ? infoById.value.model : null,
-  collaborator: infoById.value ? infoById.value.collaborator : null,
-  createdAt: infoById.value ? infoById.value.createdAt : moment().format("llll"),
-  updatedAt: infoById.value ? moment().format("llll") : "",
-  loanAt: infoById.value ? infoById.value.loanAt : null,
+  id: null,
+  title: null,
+  description: null,
+  category: null,
+  value: null,
+  url: null,
+  brand: null,
+  model: null,
+  collaborator: null,
+  createdAt: null,
+  updatedAt: null,
+  loanAt: null,
 });
 const newForm = ref({})
 const url = ref(null);
 
-function imageFromUrl() {
-  if (form.value.url && form.value.url !== newForm.value.url) {
-    url.value = form.value.url;
+onMounted(async () => {
+  store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de itens');
+  if (id) {
+    const dataForm = await getInfoItemById(id);
+    if (dataForm) {
+      form.value = dataForm;
+    }
+  }
+});
+
+async function getInfoItemById(id) {
+  const loader = $loading.show();
+  try {
+    const res = await axios.get(
+      `http://localhost:3004/items/${id}`
+    );
+    return res.data;
+  } catch (error) {
+    toast.error("Erro ao buscar item", content);
+  } finally {
+    loader.hide();
   }
 }
 
-//função de exibição da imagem ao montar tela
-imageFromUrl();
-
-/* 
-Funções para submit do formulário
-*/
-//função executada quando o formulário for submetido com sucesso
-function onValidSubmit(values, actions) {
+async function onValidSubmit(values, actions) {
   newForm.value = { ...form.value }
-  if (infoById.value) {
-    editItem(actions);
-    actions.resetForm();
+  if (id) {
+    await editItem(actions);
   } else {
-    newItem(actions);
-    actions.resetForm();
+    await newItem(actions);
   }
 }
 
-//função executada quando houver erros no formulário submetido
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
     toast.error(errors[field], { timeout: 1500 });
   }
 }
 
-// função para registrar novo item
-function newItem(actions) {
+async function newItem() {
   const loader = $loading.show();
-  setTimeout(() => {
-    newForm.value.id = getCountItems.value;
+  try {
     newForm.value.updatedAt = moment().format("llll");
-    store.dispatch("itemsModule/registerItem", newForm.value);
-    clearForm()
-    loader.hide();
-    toast(content, {
-      position: "top-right",
-      closeOnClick: false,
-      pauseOnFocusLoss: false,
-      pauseOnHover: false,
-      draggable: false,
-      draggablePercent: 0.6,
-      showCloseButtonOnHover: true,
-      closeButton: "button",
-      icon: "fas fa-rocket",
-      rtl: false,
-    });
-  }, 1000);
-}
-
-// Função para editar item
-function editItem(actions) {
-  const loader = $loading.show();
-  setTimeout(() => {
-    newForm.value.updatedAt = moment().format("llll");
-    store.dispatch("itemsModule/editItem", newForm.value);
-    loader.hide();
-    toast.success("Item editado com sucesso!");
-    if (origin === 'list') {
-      router.push({ name: "listItems" });
-    } else if (origin === 'dashboard') {
-      router.push({ name: "dashboard" });
+    const res = await axios.post(
+      "http://localhost:3004/items",
+      newForm.value
+    );
+    if (res.status === 201) {
+      toast(content, {
+        position: "top-right",
+        closeOnClick: false,
+        pauseOnFocusLoss: false,
+        pauseOnHover: false,
+        draggable: false,
+        draggablePercent: 0.6,
+        showCloseButtonOnHover: true,
+        closeButton: "button",
+        icon: "fas fa-rocket",
+        rtl: false,
+      });
     }
-  }, 2000);
+    clearForm()
+  } catch (error) {
+    toast.error(error.message, { timeout: 1500 });
+  } finally {
+    loader.hide();
+  }
 }
 
-// Função para limpar alguns dos campos do formulário não abrangidos pelo veevalidate
+async function editItem(actions) {
+  const loader = $loading.show();
+  try {
+    newForm.value.updatedAt = moment().format("llll");
+    const res = await axios.put(
+      `/items/${id}`,
+      newForm.value
+    );
+    if (res.status === 200) {
+      toast.success("Item editado com sucesso", content);
+    }
+    origin === 'list' ? router.push({ name: "listItems" }) : router.push({ name: "dashboard" });
+  } catch (error) {
+    toast.error(error.message, { timeout: 1500 });
+  } finally {
+    loader.hide();
+  }
+}
+
 function clearForm() {
   form.value.id = '';
   form.value.description = '';
   url.value = null;
 }
 
-// Função para cancelar a edição
 function cancelEdit() {
   toast.warning("Edição cancelada!", { timeout: 1000 });
-  if (origin === 'list') {
-    router.push({ name: "listItems" });
-  } else if (origin === 'dashboard') {
-    router.push({ name: "dashboard" });
-  }
+  origin === 'list' ? router.push({ name: "listItems" }) : router.push({ name: "dashboard" });
 }
 </script>
 

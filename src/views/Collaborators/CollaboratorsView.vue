@@ -115,10 +115,10 @@
         </div>
       </div>
       <div class="text-end">
-        <button :type="id ? 'button' : 'reset'" @click="id ? cancelEdit() : ''"
-          class="btn btn-secondary me-2 mt-2" v-text="id ? 'Cancelar' : 'Limpar'"></button>
+        <button :type="id ? 'button' : 'reset'" @click="id ? cancelEdit() : ''" class="btn btn-secondary me-2 mt-2"
+          v-text="id ? 'Cancelar' : 'Limpar'"></button>
         <button type="submit" class="mt-2" :class="id ? 'btn btn-primary' : 'btn btn-success'"
-          v-text="id ? 'Editar': 'Cadastrar'"></button>
+          v-text="id ? 'Editar' : 'Cadastrar'"></button>
       </div>
     </VeeForm>
   </div>
@@ -182,10 +182,9 @@ const form = ref({
 });
 const newForm = ref({})
 
-onMounted(async() => {
+onMounted(async () => {
+  store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de colaboradores');
   if (id) {
-    store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
-    store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de colaboradores');
     const dataForm = await getCollaboratorById(id);
     if (dataForm) {
       form.value = dataForm;
@@ -193,11 +192,11 @@ onMounted(async() => {
   }
 });
 
-async function getCollaboratorById(id){
+async function getCollaboratorById(id) {
   const loader = $loading.show();
   try {
     const res = await axios.get(
-      `http://localhost:3004/collaborators/${id}`
+      `/collaborators/${id}`
     );
     return res.data;
   } catch (error) {
@@ -226,8 +225,8 @@ async function onValidSubmit(actions) {
 }
 
 async function checkEmailExists(email) {
-  const res = await axios.get(`http://localhost:3004/collaborators?email=${email}`);
-  if(id){
+  const res = await axios.get(`/collaborators?email=${email}`);
+  if (id) {
     const result = res.data.filter((item) => item.id !== id);
     return result
   }
@@ -247,7 +246,7 @@ async function newCollaborator(actions) {
     !id ? (newForm.value.createdAt = moment().format("DD/MM/YYYY")) : "";
     newForm.value.updatedAt = moment().format("llll");
     const res = await axios.post(
-      "http://localhost:3004/collaborators",
+      "/collaborators",
       newForm.value
     );
     if (res.status === 201) {
@@ -265,7 +264,7 @@ async function editCollaborator(actions) {
   const loader = $loading.show();
   try {
     const res = await axios.put(
-      `http://localhost:3004/collaborators/${id}`,
+      `/collaborators/${id}`,
       newForm.value
     );
     if (res.status === 200) {
