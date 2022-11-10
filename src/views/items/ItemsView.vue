@@ -115,9 +115,9 @@
       <div class="row mt-3">
         <div class="col-sm-12 col-md-6">
           <label class="form-label"
-            >Selecione ou arraste uma imagem <span>*</span></label
+            >Selecione uma imagem <span>*</span></label
           >
-          <upload-box></upload-box>
+          <upload-box fileProps='image' @file-ready="teste"></upload-box>
         </div>
         <div class="col-sm-12 col-md-6">
           <label class="form-label">Descrição do item<span>*</span></label>
@@ -319,6 +319,10 @@ function cancelEdit() {
     router.push({ name: "dashboard" });
   }
 }
+
+function teste(objeto){
+  console.log(objeto)
+} 
 </script>
 
 <style lang="scss" scoped>
