@@ -103,8 +103,8 @@ describe("Verifica se é possível devolver um item", () => {
 		cy.contains("Empréstimo").click();
 
     cy.request("GET", "/items").as("getItems").then((interception) => {
-      items = interception.body;
-    });
+			items = interception.body;
+		});
 	})
 
 	it("Devolve um item com sucesso", () => {

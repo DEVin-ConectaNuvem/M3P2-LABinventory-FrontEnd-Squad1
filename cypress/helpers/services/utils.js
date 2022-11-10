@@ -24,6 +24,8 @@ export function selectARandomBorrowedItem(items) {
   items = items.filter(({ collaborator }, i) => collaborator);
   const index = selectARandomIndex(items);
   const item = items[index];
+
   return item;
+
 }
->>>>>>> 9e0cc6e (feat(c-69): testa se é possível emprestar um item)
+

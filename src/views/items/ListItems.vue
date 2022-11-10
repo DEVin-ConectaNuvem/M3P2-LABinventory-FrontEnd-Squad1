@@ -117,13 +117,13 @@
 </template>
 
 <script setup>
-import Paginate from "vuejs-paginate-next";
-import { useAxios } from "../../hooks";
-import { RouterLink, useRouter } from "vue-router";
-import { ref, computed, onMounted, watch } from "vue";
-import { useStore } from "vuex";
 import moment from "moment";
-import { createMessageBox } from 'vue-m-dialog'
+import { computed, onMounted, ref, watch } from "vue";
+import { createMessageBox } from 'vue-m-dialog';
+import { RouterLink, useRouter } from "vue-router";
+import Paginate from "vuejs-paginate-next";
+import { useStore } from "vuex";
+import { useAxios } from "../../hooks";
 
 const router = useRouter();
 const store = useStore();
