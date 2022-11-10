@@ -95,13 +95,13 @@
 
 <script setup>
 import { uid } from 'uid';
+import { Field as Veefield, Form as VeeForm } from 'vee-validate';
 import { ref } from 'vue';
-import { useStore } from 'vuex'
-import { useToast } from "vue-toastification";
+import { useLoading } from 'vue-loading-overlay';
 import { useRouter } from 'vue-router';
-import { useLoading } from 'vue-loading-overlay'
-import { Form as VeeForm, Field as Veefield } from 'vee-validate';
-import { validateEmail, validatePassword } from '../../validators/validators.js'
+import { useToast } from "vue-toastification";
+import { useStore } from 'vuex';
+import { validateEmail, validatePassword } from '../../validators/validators.js';
 
 const $loading = useLoading()
 const toast = useToast();
