@@ -34,14 +34,13 @@
                     <p :class="item.collaborator ? 'text-bg-primary' : 'text-bg-success'"
                         v-text="item.collaborator ? item.collaborator : 'Disponível'"></p>
                 </template>
-            
+
                 <template v-slot:category><button class="btn btn-primary w-100 btndetails bg-dark">Mais
                         detalhes</button></template>
             </cards-products>
             <paginate v-model="page" :page-count="totalPages" :page-range="3" :margin-pages="2" :prev-text="'Voltar'"
                 :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'"
-                class="justify-content-center"
-                >
+                class="justify-content-center">
             </paginate>
         </section>
         <div class="mt-3">
@@ -56,45 +55,17 @@
                 </router-link>
             </p>
         </div>
-        <m-dialog v-model="show" title="Informações Adicionais">
-            <div class="row text-center">
-                <div class="col-sm-12 col-md-6">
-                    <img :src="item.url" class="border imagemLoan" alt="imagem do item">
-                </div>
-                <div class="col-sm-12 col-md-6 ml-0">
-                    <p> <strong>Item:</strong> <br> <span class="badge bg-secondary">{{ item.title }}</span></p>
-                    <p><strong>Categoria:</strong> {{ item.category }}</p>
-                    <p><strong>Marca:</strong> {{ item.brand }}</p>
-                    <p><strong>Modelo:</strong> {{ item.model }}</p>
-                    <p><strong>Valor:</strong> R${{ item.value }}</p>
-                    <p><strong>Status:</strong> <span
-                            :class="item.collaborator ? 'badge bg-primary' : 'badge bg-success'"> {{ item.collaborator ?
-                                    item.collaborator : 'Disponível'
-                            }}</span></p>
-                </div>
-                <div class="mt-1">
-                    <hr class="text-success mb-1">
-                    <p class="text-start">
-                        <strong>Descrição:</strong>
-                        <br>
-                        <span class="fw-light text-break">
-                            {{ item.description }}
-                        </span>
-                    </p>
-                </div>
-            </div>
-            <template v-slot:footer>
-                <button class="btn btn-secondary me-2" @click="toggleModal">Cancelar</button>
-                <button class="btn btn-primary" @click="editItem(item.id)"><i class="fa-solid fa-pen-to-square"></i>
-                    Editar Item</button>
-            </template>
-        </m-dialog>
+        <dialog-dashboard :item="item" :show="show" @closeModal="toggleModal" @editItem="editItem">
+
+        </dialog-dashboard>
+
     </div>
 </template>
 
 <script setup>
 import CardsDashboard from './components/CardsDashboard.vue';
 import CardsProducts from './components/CardsProducts.vue';
+import DialogDashboard from './components/DialogDashboard.vue';
 import Paginate from "vuejs-paginate-next";
 import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { useStore } from "vuex";
