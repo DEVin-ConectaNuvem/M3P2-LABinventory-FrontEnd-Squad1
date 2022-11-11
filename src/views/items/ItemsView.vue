@@ -202,7 +202,7 @@ async function getInfoItemById(id) {
   const loader = $loading.show();
   try {
     const res = await axios.get(
-      `http://localhost:3004/items/${id}`
+      `/items/${id}`
     );
     return res.data;
   } catch (error) {
@@ -232,7 +232,7 @@ async function newItem() {
   try {
     newForm.value.updatedAt = moment().format("llll");
     const res = await axios.post(
-      "http://localhost:3004/items",
+      "/items",
       newForm.value
     );
     if (res.status === 201) {

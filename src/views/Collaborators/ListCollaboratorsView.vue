@@ -72,7 +72,9 @@ import { useStore } from "vuex";
 import Paginate from "vuejs-paginate-next";
 import { RouterLink, useRouter } from "vue-router";
 import { useAxios, useLodash } from "../../hooks";
+import { useLoading } from "vue-loading-overlay";
 
+const $loading = useLoading();
 const { $_ } = useLodash();
 const { axios } = useAxios();
 const allCollabs = ref([]);
@@ -81,7 +83,7 @@ const router = useRouter();
 const store = useStore();
 const inputSearch = ref(""); 
 const page = ref(1);
-const perPage = ref(10);
+const perPage = ref(8);
 const findBy = ref("name");
 const search = ref({
   field: '',
@@ -100,7 +102,7 @@ const totalPages = computed(() => {
     );
   } else {
     return Math.ceil(
-      allCollabs.value.length / perPage.value
+      allCollabsCount.value / perPage.value
     );
   }
 });
@@ -108,34 +110,31 @@ const totalPages = computed(() => {
 const collaborators = computed(() => {
   if (inputSearch.value) {
     page.value = 1;
-    let total = allCollabs.value.filter(
+    const result = allCollabs.value.filter(
       (collaborator) =>
         collaborator[findBy.value]
           .toLowerCase()
           .includes(inputSearch.value.toLowerCase())
     );
-    total = total.slice(
-      (page.value - 1) * perPage.value,
-      page.value * perPage.value
-    );
-    return total;
+    return result;
   } else {
-    return allCollabs.value.slice(
-      (page.value - 1) * perPage.value,
-      page.value * perPage.value
-    );
+    return allCollabs.value
   }
 });
 
 async function loadData() {
+  const loader = $loading.show()
   try {
     const serverItemsCount = await axios.get("/collaborators");
     const res = await axios.get(`/collaborators?_page=${page.value}&_limit=${perPage.value}`);
     allCollabs.value = res.data;
     allCollabsCount.value = serverItemsCount.data.length;
   } catch (error) {
-    console.log(error);
-
+    $toast.error("Erro ao carregar os colaboradores");
+  } finally {
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
 
@@ -143,8 +142,7 @@ watch(inputSearch, async () => {
   if (inputSearch) {
     search.value.field = findBy.value;
     search.value.value = inputSearch.value;
-    $_.debounce(async (inputSearch) => {
-      console.log('teste')
+    $debounce(async (inputSearch) => {
       await searchText(inputSearch)
     },
       500);
@@ -161,13 +159,13 @@ async function searchText(value) {
   }
 }
 
-onMounted(() => {
-  loadData();
+onMounted(async () => {
+  await loadData();
 });
 
-watch(page, () => {
+watch(page, async (newValue, oldValue) => {
   if (newValue !== oldValue && oldValue) {
-    loadData();
+    await loadData();
   }
 });
 
