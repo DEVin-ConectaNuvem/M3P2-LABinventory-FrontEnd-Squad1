@@ -45,7 +45,7 @@
                           <div class="input-group-prepend">
                             <span class="input-group-text">&#128273</span>
                           </div>
-                          <Veefield type="password" class="form-control" placeholder="Digite novamente a sua senha"
+                          <Veefield data-testid="register-input-password" type="password" class="form-control" placeholder="Digite novamente a sua senha"
                             aria-label="senha" v-model="form.confirmPassword" name="confirmPassword"
                             :rules="validateConfirmPassword" :class="{ 'is-invalid': errors.confirmPassword }" />
                           <div class="invalid-feedback">{{ errors.confirmPassword }}</div>
