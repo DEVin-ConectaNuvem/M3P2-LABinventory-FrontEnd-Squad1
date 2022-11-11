@@ -56,7 +56,7 @@
                         <button :class="register.register ? 'btn btn-success me-3' : 'btn btn-info text-dark me-3'"
                           type="submit" v-text="register.button">
                         </button>
-                        <button class="btn btn-light" type="button" @click="alertUser"><i
+                        <button data-testid="login-google-button" class="btn btn-light" type="button" @click="alertUser"><i
                             class="fa-brands fa-google"></i></button>
                         <hr>
                         <a class="ms-2 text-white" v-show="!register.register" @click="alertUser">Esqueceu a senha?</a>
