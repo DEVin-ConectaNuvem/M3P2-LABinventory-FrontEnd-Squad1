@@ -22,6 +22,17 @@ Cypress.Commands.add('login', (email, password) => {
     
     cy.get(".toggleVisible").click()
  })
+
+Cypress.Commands.add("register", (email, firstPassword, secondPassword) => {
+   cy.visit("http://localhost:3000")
+   cy.wait(1000);
+   cy.contains("Cadastre-se").click()
+   cy.get("[data-testid='login-input-email']").type(email)
+   cy.get("[data-testid='login-input-password']").type(firstPassword)
+   cy.get("[data-testid='register-input-password']").type(secondPassword)
+   cy.contains("Cadastrar").click();
+});
+
 //
 //
 // -- This is a child command --
