@@ -1,6 +1,5 @@
 <template>
     <div class="container mt-3">
-        <!-- Inicio da seção cards do dashboard  -->
         <section class="row cards">
             <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-info "
                 @click="infoDashRoute('colaboradores', 'ListCollaborators')">
@@ -35,9 +34,6 @@
                 <template v-slot:infos>Nº de empréstimos</template>
             </cards-dashboard>
         </section>
-        <!-- Fim da seção de cards do dashboard  -->
-
-        <!-- Inicio Formulário de busca  -->
         <h4>Busca de itens</h4>
         <div class="content input-group">
             <input type="text" class="w-75 form-control animate__animated animate__flipInX"
@@ -49,9 +45,6 @@
                 <option value="collaborator">Colaborador</option>
             </select>
         </div>
-        <!-- Fim formulário de busca  -->
-
-        <!-- Inicio seção de cards dos produtos  -->
         <section class="row">
             <cards-products class="col-sm-12 col-md-6 col-lg-3 col-xxl-3 animate__animated animate__fadeIn"
                 v-for="item in items" :key="item.id" @click="itemInfos(item.id)">
@@ -71,9 +64,6 @@
                         detalhes</button></template>
             </cards-products>
         </section>
-        <!-- Fim da seção de cards dos produtos  -->
-
-        <!-- Inicio seção para tratamento de informações vazia  -->
         <div class="mt-3">
             <p class="text-danger" v-if="items.length === 0 && inputSearch">
                 Ainda não há itens cadastrados com este <strong>termo de pesquisa</strong> - <router-link
@@ -86,9 +76,6 @@
                 </router-link>
             </p>
         </div>
-        <!-- Fim da seção para tratamento de informações vazia  -->
-
-        <!-- Inicio da seção do Modal para exibição das informações do produto -->
         <m-dialog v-model="show" title="Informações Adicionais">
             <div class="row text-center">
                 <div class="col-sm-12 col-md-6">
@@ -118,41 +105,70 @@
             </div>
             <template v-slot:footer>
                 <button class="btn btn-secondary me-2" @click="toggleModal">Cancelar</button>
-                <button class="btn btn-primary" @click="editItem(item.id)"><i
-                        class="fa-solid fa-pen-to-square"></i> Editar Item</button>
+                <button class="btn btn-primary" @click="editItem(item.id)"><i class="fa-solid fa-pen-to-square"></i>
+                    Editar Item</button>
             </template>
         </m-dialog>
-        <!-- Fim da seção do Modal para exibição das informações do produto -->
-
     </div>
 </template>
 
 <script setup>
 import CardsDashboard from './components/CardsDashboard.vue';
 import CardsProducts from './components/CardsProducts.vue';
-import { ref, computed, reactive, watch } from 'vue'
+import { ref, computed, reactive, onMounted } from 'vue'
 import { useStore } from "vuex";
 import { gsap } from "gsap";
 import { RouterLink, useRouter } from "vue-router";
 import { createMessageBox } from 'vue-m-dialog'
+import { useAxios } from '../../hooks';
 
-// variaveis globais
+
+const { axios } = useAxios();
 const router = useRouter();
 const store = useStore();
 const show = ref(false);
 const item = ref({});
 const findBy = ref("id");
 const inputSearch = ref(null);
+const allItems = ref([]);
+const itemsDashboard = ref({
+    itemsCount: 0,
+    collabsCount: 0,
+    valueTotalItems: 0,
+    itemsLoaned: 0
+})
 
+onMounted(async () => {
+    await loadData();
+    gsap.to(tweenedCollabs, { duration: 1, number: Number(itemsDashboard.value.collabsCount) || 0 })
+    gsap.to(tweendItems, { duration: 1, number: Number(itemsDashboard.value.itemsCount) || 0 })
+    gsap.to(tweenedValueTotal, { duration: 1, number: Number(itemsDashboard.value.valueTotalItems) || 0 })
+    gsap.to(tweenedItemsLoaned, { duration: 1, number: Number(itemsDashboard.value.itemsLoaned) || 0 })
+})
 
-store.commit("collaboratorModule/UPDATE_COLLABORATOR_LOCAL_STORAGE");
-store.commit("itemsModule/UPDATE_ITEMS_LOCAL_STORAGE");
+async function loadData() {
+    try {
+        const itemsCount = await axios.get('/items/');
+        const collabsCount = await axios.get('/collaborators/');
+        const itemsLoaned = itemsCount.data.filter(item => item.collaborator);
+        const valueTotalItems = itemsCount.data.reduce((acc, item) => acc + parseFloat(item.value), 0);
+        allItems.value = itemsCount.data;
+        itemsDashboard.value = {
+            itemsCount: itemsCount.data.length,
+            collabsCount: collabsCount.data.length,
+            valueTotalItems: valueTotalItems.toFixed(2),
+            itemsLoaned: itemsLoaned.length
+        }
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 store.commit('configModule/SET_PAGE_NAME', 'Dashboard')
 
-// variaveis computadas
 const items = computed(() => {
     if (inputSearch.value) {
-        let total = store.state.itemsModule.items.filter(
+        let total = allItems.value.filter(
             (item) =>
                 findBy.value === 'id'
                     ? item[findBy.value] === Number(inputSearch.value)
@@ -160,27 +176,10 @@ const items = computed(() => {
         );
         return total;
     } else {
-        return store.state.itemsModule.items;
+        return allItems.value;
     }
 });
 
-const itemsCount = computed(() => {
-    return store.state.itemsModule.items;
-})
-const collabsCount = computed(() => {
-    return store.state.collaboratorModule.collaborators;
-})
-const valueTotalItems = computed(() => {
-    return store.state.itemsModule.items.reduce((acc, item) => {
-        acc += parseFloat(item.value);
-        return acc;
-    }, 0);
-})
-const itemsLoaned = computed(() => {
-    return store.state.itemsModule.items.filter(item => item.collaborator !== null);
-})
-
-//variaveis para efeito de animação
 const tweenedCollabs = reactive({
     number: 0
 })
@@ -194,30 +193,26 @@ const tweenedItemsLoaned = reactive({
     number: 0
 })
 
-function itemInfos(id) {
-    item.value = store.state.itemsModule.items.find((item) => item.id === id)
-    show.value = true
+async function itemInfos(id) {
+    try {
+        const itemInfos = allItems.value.find(item => item.id === id);
+        item.value = itemInfos;
+        show.value = true;
+    } catch (error) {
+        toast.error('Erro ao carregar as informações do item');
+    }
 }
 
-// função para animação de itens
-gsap.to(tweenedCollabs, { duration: 1, number: Number(collabsCount.value.length) || 0 })
-gsap.to(tweendItems, { duration: 1, number: Number(itemsCount.value.length) || 0 })
-gsap.to(tweenedValueTotal, { duration: 1, number: Number(valueTotalItems.value) || 0 })
-gsap.to(tweenedItemsLoaned, { duration: 1, number: Number(itemsLoaned.value.length) || 0 })
-
-// função para exibir/ocultar modal
 function toggleModal() {
     show.value = !show.value;
 }
 
-// função para abrir tela de edição de item
 function editItem(id) {
     show.value = false;
     id = id + '-dashboard'
     router.push({ name: 'items', params: { itemId: id } });
 }
 
-// função para abrir telas relativas aos cards do dashboard
 function infoDashRoute(destiny, route) {
     createMessageBox({
         title: 'Você tem certeza ?',

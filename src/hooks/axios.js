@@ -8,6 +8,9 @@ import axios from "axios";
  */
 export function useAxios() {
   return {
-    axios: axios.create()
-  }
+    axios: axios.create({
+      baseURL: "http://localhost:3004",
+      timeout: 8000,
+    }),
+  };
 }
