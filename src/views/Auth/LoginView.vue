@@ -67,7 +67,7 @@
                 </div>
                 <div class="col-lg-6 d-flex align-items-center">
                   <img src="../../assets/icons/Workspace_2_SVG.svg"
-                    class="imgback img-fluid animate__animated animate__backInRight" alt="">
+                    class="imgback img-fluid animate__animated animate__backInRight" alt="wallpaper-login-image">
                 </div>
               </div>
             </div>
