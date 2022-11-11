@@ -107,7 +107,11 @@ import { ref, computed, onMounted, watch } from "vue";
 import { useStore } from "vuex";
 import moment from "moment";
 import { createMessageBox } from 'vue-m-dialog'
+import { useLoading } from "vue-loading-overlay";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
+const $loading = useLoading();
 const router = useRouter();
 const store = useStore();
 const { axios } = useAxios();
@@ -164,6 +168,7 @@ const items = computed(() => {
 });
 
 async function loadData() {
+  const loader = $loading.show()
   try {
     const itemsPaginate = await axios.get(`/items?_limit=${perPage.value}&_page=${page.value}`);
     const itemsDataCount = await axios.get(`/items`);
@@ -172,7 +177,11 @@ async function loadData() {
     allItensCount.value = itemsDataCount.data.length
     collaborators.value = collabs.data;
   } catch (error) {
-    console.log(error.message)
+    toast.error("Erro ao carregar os dados", 1500);
+  } finally{
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
 
@@ -186,30 +195,36 @@ watch(page, async () => {
 });
 
 async function loanCollaborator(itemId, collaborator) {
-  if (collaborator) {
-    const choose = await createMessageBox({
-      title: 'Confirmação de devolução',
-      message: `Gostaria de confirmar a devolução do item código ${itemId} de ${collaborator} ?`,
-      cancelButtonText: 'Cancelar',
-      confirmButtonText: 'Confirmar',
-      hasMask: true,
-      draggable: true,
-      isPointerEventsNone: true,
-      isMiddle: true,
-    })
-    if (choose.ok) {
-      await setLoan(itemId, collaborator)
+  const loader = $loading.show()
+  try {
+    if (collaborator) {
+      const choose = await createMessageBox({
+        title: 'Confirmação de devolução',
+        message: `Gostaria de confirmar a devolução do item código ${itemId} de ${collaborator} ?`,
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Confirmar',
+        hasMask: true,
+        draggable: true,
+        isPointerEventsNone: true,
+        isMiddle: true,
+      })
+      if (choose.ok) {
+        await setLoan(itemId, collaborator)
+      }
+    } else {
+      item.value = allItems.value.find((item) => item.id === itemId)
+      show.value = true
     }
-
-  } else {
-    item.value = allItems.value.find((item) => item.id === itemId)
-    show.value = true
+  } catch (error) {
+    toast.error("Erro ao emprestar item", 1500);
+  } finally {
+    loader.hide
   }
+  
 }
 
 async function setLoan(itemId, collaborator = null) {
   try {
-    console.log(itemId.id, itemId.collaborator)
     const payload = {
       collaborator: itemId?.collaborator ? itemId.collaborator : null,
       loanAt: itemId?.collaborator ? moment().format("DD/MM/YYYY hh:mm") : null,
@@ -229,7 +244,7 @@ async function setLoan(itemId, collaborator = null) {
     }
     return res.data;
   } catch (error) {
-    throw new Error('Erro ao emprestar item');
+    toast.error("Erro ao emprestar item", 1500);
   }
 }
 

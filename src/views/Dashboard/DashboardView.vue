@@ -1,53 +1,28 @@
 <template>
     <div class="container mt-3">
         <section class="row cards">
-            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-info "
-                @click="infoDashRoute('colaboradores', 'ListCollaborators')">
-                <template v-slot:icon><i class="widgets-icons-2 bg-gradient-scooter fa-solid fa-users"></i></template>
-                <template v-slot:count>{{ tweenedCollabs.number.toFixed(0) }}</template>
-                <template v-slot:title>Colaboradores</template>
-                <template v-slot:infos>Total colaboradores</template>
-            </cards-dashboard>
-            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-danger"
-                @click="infoDashRoute('itens', 'listItems')">
-                <template v-slot:icon><i
-                        class="widgets-icons-2 bg-gradient-bloody fa-solid fa-boxes-stacked"></i></template>
-                <template v-slot:count>{{ tweendItems.number.toFixed(0) }}</template>
-                <template v-slot:title>Itens</template>
-                <template v-slot:infos>Números de itens</template>
-            </cards-dashboard>
-            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-success"
-                @click="infoDashRoute('itens', 'listItems')">
-                <template v-slot:icon><i
-                        class="widgets-icons-2 bg-gradient-ohhappiness  fa-solid fa-sack-dollar"></i></template>
-                <template v-slot:count>R$ {{ tweenedValueTotal.number.toFixed(2) }}</template>
-                <template v-slot:title>Valores</template>
-                <template v-slot:infos>Valor total de items</template>
-            </cards-dashboard>
-            <cards-dashboard class="col-sm-12 col-md-6 col-lg-3 border-warning"
-                @click="infoDashRoute('empréstimos', 'listItems')">
-                <template v-slot:icon>
-                    <i class="widgets-icons-2 bg-gradient-blooker fa-solid fa-arrow-right-arrow-left "></i>
-                </template>
-                <template v-slot:count>{{ tweenedItemsLoaned.number.toFixed(0) }}</template>
-                <template v-slot:title>Empréstimos</template>
-                <template v-slot:infos>Nº de empréstimos</template>
+            <cards-dashboard :class="card.class" v-for="card in infoDashboard" :key="card.title" @click="card.link">
+                <template v-slot:icon><i :class="card.icon"></i></template>
+                <template v-slot:count>{{ card.count }}</template>
+                <template v-slot:title>{{ card.title }}</template>
+                <template v-slot:infos>{{ card.infos }}</template>
             </cards-dashboard>
         </section>
         <h4>Busca de itens</h4>
         <div class="content input-group">
-            <input data-testid="search-input-item"  type="text" class="w-75 form-control animate__animated animate__flipInX"
-                placeholder="✍️ Buscar item..." v-model="inputSearch">
+            <input data-testid="search-input-item" type="text"
+                class="w-75 form-control animate__animated animate__flipInX" placeholder="✍️ Buscar item..."
+                v-model="inputSearch">
             <select class="badge bg-dark text-white text-center" v-model="findBy">
                 <option value="id" selected>Código</option>
-                <option value="title">Nome</option>
+                <option value="title">Titulo</option>
                 <option value="category">Categoria</option>
                 <option value="collaborator">Colaborador</option>
             </select>
         </div>
         <section class="row">
             <cards-products class="col-sm-12 col-md-6 col-lg-3 col-xxl-3 animate__animated animate__fadeIn"
-                v-for="item in items" :key="item.id" @click="itemInfos(item.id)">
+                v-for="item in itemsPaginateComputed" :key="item.id" @click="itemInfos(item.id)">
                 <template v-slot="card"></template>
                 <template v-slot:title>
                     <p class="text-center" :class="item.collaborator ? 'loaned' : 'avaliable'">
@@ -59,18 +34,23 @@
                     <p :class="item.collaborator ? 'text-bg-primary' : 'text-bg-success'"
                         v-text="item.collaborator ? item.collaborator : 'Disponível'"></p>
                 </template>
-
+            
                 <template v-slot:category><button class="btn btn-primary w-100 btndetails bg-dark">Mais
                         detalhes</button></template>
             </cards-products>
+            <paginate v-model="page" :page-count="totalPages" :page-range="3" :margin-pages="2" :prev-text="'Voltar'"
+                :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'"
+                class="justify-content-center"
+                >
+            </paginate>
         </section>
         <div class="mt-3">
-            <p class="text-danger" v-if="items.length === 0 && inputSearch">
+            <p class="text-danger" v-if="itemsPaginateComputed.length === 0 && inputSearch">
                 Ainda não há itens cadastrados com este <strong>termo de pesquisa</strong> - <router-link
                     :to="{ name: 'items' }">
                     Realizar novo cadastro</router-link>
             </p>
-            <p class="text-danger" v-if="items.length === 0">
+            <p class="text-danger" v-if="itemsPaginateComputed.length === 0 && !inputSearch">
                 Ainda não há items cadastrados no sistema - <router-link :to="{ name: 'items' }">Realizar novo
                     cadastro
                 </router-link>
@@ -115,14 +95,17 @@
 <script setup>
 import CardsDashboard from './components/CardsDashboard.vue';
 import CardsProducts from './components/CardsProducts.vue';
-import { ref, computed, reactive, onMounted } from 'vue'
+import Paginate from "vuejs-paginate-next";
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { useStore } from "vuex";
-import { gsap } from "gsap";
 import { RouterLink, useRouter } from "vue-router";
 import { createMessageBox } from 'vue-m-dialog'
 import { useAxios } from '../../hooks';
+import { useLoading } from "vue-loading-overlay";
+import { useToast } from "vue-toastification";
 
-
+const toast = useToast();
+const $loading = useLoading();
 const { axios } = useAxios();
 const router = useRouter();
 const store = useStore();
@@ -137,13 +120,67 @@ const itemsDashboard = ref({
     valueTotalItems: 0,
     itemsLoaned: 0
 })
+const page = ref(1);
+const perPage = ref(8);
+const itemsPaginate = ref([]);
+const infoDashboard = ref([])
+
+const totalPages = computed(() => {
+    if (inputSearch.value) {
+        return Math.ceil(
+            itemsPaginate.value.filter((item) =>
+                findBy.value === 'id'
+                    ? item[findBy.value] === Number(inputSearch.value)
+                    : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
+
+            ).length / perPage.value
+        );
+    } else {
+        return Math.ceil(
+            itemsDashboard.value.itemsCount / perPage.value
+        );
+    }
+});
 
 onMounted(async () => {
     await loadData();
-    gsap.to(tweenedCollabs, { duration: 1, number: Number(itemsDashboard.value.collabsCount) || 0 })
-    gsap.to(tweendItems, { duration: 1, number: Number(itemsDashboard.value.itemsCount) || 0 })
-    gsap.to(tweenedValueTotal, { duration: 1, number: Number(itemsDashboard.value.valueTotalItems) || 0 })
-    gsap.to(tweenedItemsLoaned, { duration: 1, number: Number(itemsDashboard.value.itemsLoaned) || 0 })
+    await loadDataPagination();
+    nextTick(() => {
+        infoDashboard.value.push(
+            {
+                title: "Total colaboradores",
+                icon: "widgets-icons-2 bg-gradient-scooter fa-solid fa-users",
+                count: itemsDashboard.value.collabsCount.toFixed(0),
+                infos: "Colaboradores",
+                link: () => infoDashRoute('colaboradores', 'ListCollaborators'),
+                class: "col-sm-12 col-md-6 col-lg-3 border-info"
+            },
+            {
+                title: "Números de itens",
+                icon: "widgets-icons-2 bg-gradient-bloody fa-solid fa-boxes-stacked",
+                count: itemsDashboard.value.itemsCount.toFixed(0),
+                infos: "Itens",
+                link: () => infoDashRoute('itens', 'listItems'),
+                class: "col-sm-12 col-md-6 col-lg-3 border-danger"
+            },
+            {
+                title: "Valor total de items",
+                icon: "widgets-icons-2 bg-gradient-ohhappiness  fa-solid fa-sack-dollar",
+                count: itemsDashboard.value.valueTotalItems,
+                infos: "Valores",
+                link: () => infoDashRoute('itens', 'listItems'),
+                class: "col-sm-12 col-md-6 col-lg-3 border-success"
+            },
+            {
+                title: "Empréstimos",
+                icon: "widgets-icons-2 bg-gradient-blooker fa-solid fa-arrow-right-arrow-left",
+                count: itemsDashboard.value.itemsLoaned.toFixed(0),
+                infos: "Nº de empréstimos",
+                link: () => infoDashRoute('itens', 'listItems'),
+                class: "col-sm-12 col-md-6 col-lg-3 border-warning"
+            }
+        )
+    })
 })
 
 async function loadData() {
@@ -160,37 +197,31 @@ async function loadData() {
             itemsLoaned: itemsLoaned.length
         }
     } catch (error) {
-        console.log(error.message)
+        toast.error(error.message)
+    }
+}
+
+async function loadDataPagination(searchValue = null) {
+    const loader = $loading.show()
+    try {
+        if (searchValue) {
+            const items = await axios.get(`/items/?${findBy.value}_like=${searchValue}`);
+            itemsPaginate.value = items.data;
+        } else {
+            const items = await axios.get(`/items/?page=${page.value}&per_page=${perPage.value}`);
+            itemsPaginate.value = items.data;
+        }
+    } catch (error) {
+        toast.error(error.message)
+    } finally {
+        loader.hide()
     }
 }
 
 store.commit('configModule/SET_PAGE_NAME', 'Dashboard')
 
-const items = computed(() => {
-    if (inputSearch.value) {
-        let total = allItems.value.filter(
-            (item) =>
-                findBy.value === 'id'
-                    ? item[findBy.value] === Number(inputSearch.value)
-                    : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
-        );
-        return total;
-    } else {
-        return allItems.value;
-    }
-});
-
-const tweenedCollabs = reactive({
-    number: 0
-})
-const tweendItems = reactive({
-    number: 0
-})
-const tweenedValueTotal = reactive({
-    number: 0
-})
-const tweenedItemsLoaned = reactive({
-    number: 0
+const itemsPaginateComputed = computed(() => {
+    return itemsPaginate.value
 })
 
 async function itemInfos(id) {
@@ -229,6 +260,26 @@ function infoDashRoute(destiny, route) {
         }
     })
 }
+
+watch(page, async () => {
+    await loadDataPagination()
+});
+
+watch(inputSearch, async (newValue, oldValue) => {
+    if (newValue !== oldValue) {
+        page.value = 1;
+        await loadDataPagination(newValue)
+    }
+});
+
+watch(findBy, async (newValue, oldValue) => {
+    if (newValue !== oldValue && inputSearch.value) {
+        page.value = 1;
+        await loadDataPagination(inputSearch.value)
+    }
+});
+
+
 </script>
 
 <style lang="scss" scoped>
