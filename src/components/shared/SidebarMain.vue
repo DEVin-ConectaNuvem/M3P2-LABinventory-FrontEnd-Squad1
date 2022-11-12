@@ -2,9 +2,9 @@
   <aside>
     <div class="d-flex flex-column flex-shrink-0 text-white ">
       <div class="brand mx-auto mb-1">
-        <img src="../../assets/icons/logoInventary.svg" class="mx-auto " alt="DEVInventary">
+        <img src="../../assets/icons/logoInventary.svg" class="mx-auto " alt="LABinventary">
       </div>
-      <span class="fs-4 text-white mx-auto mt-2">DEVInventary</span>
+      <span class="fs-4 text-white mx-auto mt-2">LABinventary</span>
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <span>Geral</span>
