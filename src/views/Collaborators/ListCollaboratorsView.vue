@@ -1,22 +1,13 @@
 <template>
   <div class="container mt-3 ">
-    <div class="content input-group">
-      <input type="text" class="w-75 form-control animate__animated animate__flipInX"
-        placeholder="✍️ Buscar colaborador..." v-model="inputSearch">
-      <select class="badge bg-dark text-white text-center" v-model="findBy">
-        <option value="name" selected>Nome</option>
-        <option value="position">Cargo</option>
-        <option value="email">E-mail</option>
-      </select>
-    </div>
+    <search-input :options="parameterSearch.options" @returnData="loadDataSearch">
+    </search-input>
     <hr />
     <h4>Lista de colaboradores</h4>
-
     <paginate v-model="page" :page-count="totalPages" :page-range="3" :margin-pages="2" :prev-text="'Voltar'"
       :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">
     </paginate>
-
-    <div class="accordion animate__animated animate__fadeIn" v-for="collaborator in collaborators"
+    <div class="accordion animate__animated animate__fadeIn" v-for="collaborator in collabsPaginateComputed"
       :key="collaborator.id">
       <div class="accordion-item">
         <h2 class="accordion-header" :id="collaborator.id">
@@ -55,11 +46,12 @@
         </div>
       </div>
     </div>
-    <p class="text-danger" v-show="collaborators.length === 0 && inputSearch">
-      Não há colaboradores cadastrados com este <strong>nome</strong> - <router-link :to="{ name: 'colaboradores' }">
+    <p class="text-danger" v-show="collabsPaginateComputed.length === 0 && inputSearch">
+      Não há colaboradores cadastrados com este <strong>termo de pesquisa</strong> - <router-link
+        :to="{ name: 'colaboradores' }">
         Realizar novo cadastro</router-link>
     </p>
-    <p class="text-danger" v-show="collaborators.length === 0 && !inputSearch">
+    <p class="text-danger" v-show="!allCollabsCount">
       Não há colaboradores cadastrados - <router-link :to="{ name: 'colaboradores' }">Realizar novo cadastro
       </router-link>
     </p>
@@ -67,13 +59,16 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import SearchInput from '../../components/shared/SearchInput.vue';
+import { ref, computed, onMounted, watch, reactive } from "vue";
 import { useStore } from "vuex";
 import Paginate from "vuejs-paginate-next";
 import { RouterLink, useRouter } from "vue-router";
 import { useAxios, useLodash } from "../../hooks";
 import { useLoading } from "vue-loading-overlay";
+import { useToast } from "vue-toastification";
 
+const $toast = useToast();
 const $loading = useLoading();
 const { $_ } = useLodash();
 const { axios } = useAxios();
@@ -81,55 +76,40 @@ const allCollabs = ref([]);
 const allCollabsCount = ref(0);
 const router = useRouter();
 const store = useStore();
-const inputSearch = ref(""); 
+const inputSearch = ref(null);
 const page = ref(1);
-const perPage = ref(8);
-const findBy = ref("name");
-const search = ref({
-  field: '',
-  value: ''
+const perPage = ref(5);
+const collabsPaginate = ref([]);
+const parameterSearch = reactive({
+  options: [
+    { "text": "Nome", "value": "name" },
+    { "text": "Cargo", "value": "position" },
+    { "text": "E-mail", "value": "email" }
+  ]
 })
-
+const inputConfig = reactive({
+  searchText: '',
+  searchField: 'id',
+})
 
 store.commit('configModule/SET_PAGE_NAME', 'Listagem de colaboradores');
 
 const totalPages = computed(() => {
-  if (inputSearch.value) {
-    return Math.ceil(
-      allCollabs.value.filter((collaborator) =>
-        collaborator[findBy.value].toLowerCase().includes(inputSearch.value.toLowerCase())
-      ).length / perPage.value
-    );
+  if (!inputConfig.searchText) {
+    return Math.ceil(allCollabs.value.length / perPage.value);
   } else {
-    return Math.ceil(
-      allCollabsCount.value / perPage.value
-    );
+    return Math.ceil(collabsPaginate.value.length / perPage.value);
   }
-});
-
-const collaborators = computed(() => {
-  if (inputSearch.value) {
-    page.value = 1;
-    const result = allCollabs.value.filter(
-      (collaborator) =>
-        collaborator[findBy.value]
-          .toLowerCase()
-          .includes(inputSearch.value.toLowerCase())
-    );
-    return result;
-  } else {
-    return allCollabs.value
-  }
-});
+})
 
 async function loadData() {
   const loader = $loading.show()
   try {
-    const serverItemsCount = await axios.get("/collaborators");
-    const res = await axios.get(`/collaborators?_page=${page.value}&_limit=${perPage.value}`);
+    const res = await axios.get(`/collaborators`);
     allCollabs.value = res.data;
-    allCollabsCount.value = serverItemsCount.data.length;
+    allCollabsCount.value = res.data.length;
   } catch (error) {
+    console.log(error.message)
     $toast.error("Erro ao carregar os colaboradores");
   } finally {
     setTimeout(() => {
@@ -138,37 +118,50 @@ async function loadData() {
   }
 }
 
-watch(inputSearch, async () => {
-  if (inputSearch) {
-    search.value.field = findBy.value;
-    search.value.value = inputSearch.value;
-    $debounce(async (inputSearch) => {
-      await searchText(inputSearch)
-    },
-      500);
-  }
-});
-
-async function searchText(value) {
+async function loadDataPagination() {
+  const loader = $loading.show()
   try {
-    const res = await axios.get(`/collaborators?${search.value.field}_like=${value}`);
-    allCollabs.value = res.data;
+    let url = ''
+    if (inputConfig.searchText) {
+      const operator = parameterSearch.options.find((opt) => opt.value === inputConfig.searchField).operatorSearch || '_like='
+      url = `/collaborators?${inputConfig.searchField}${operator}${inputConfig.searchText}&_limit=${perPage.value}&_page=${page.value}`
+    } else {
+      url = `/collaborators?_limit=${perPage.value}&_page=${page.value}`
+    }
+    const response = await axios.get(url);
+    collabsPaginate.value = response.data;
   } catch (error) {
-    console.log(error);
-
+    $toast.error(error.message)
+  } finally {
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
+const collabsPaginateComputed = computed(() => {
+  return collabsPaginate.value
+})
 
 onMounted(async () => {
-  await loadData();
+  await loadData()
+  await loadDataPagination()
 });
 
 watch(page, async (newValue, oldValue) => {
-  if (newValue !== oldValue && oldValue) {
-    await loadData();
+  if (newValue != oldValue) {
+    await loadDataPagination()
   }
 });
 
+async function loadDataSearch(searchText, searchField) {
+  if (searchText && searchField) {
+    inputConfig.searchText = searchText;
+    inputConfig.searchField = searchField;
+  } else {
+    inputConfig.searchText = '';
+  }
+  await loadDataPagination()
+}
 
 function editCollab(id) {
   router.push({ name: 'colaboradores', params: { userId: id } });

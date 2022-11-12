@@ -12,12 +12,7 @@
 import { defineProps, computed, ref, defineEmits, onMounted, watch } from 'vue'
 import { watchDebounced } from '@vueuse/core'
 
-
 const props = defineProps({
-    findBy: {
-        type: String,
-        required: true
-    },
     options: {
         type: Array,
         required: false
