@@ -222,7 +222,7 @@ async function onValidSubmit(values, actions) {
   newForm.value = { ...form.value }
   if (id) {
     await editItem(actions);
-  } else {
+  } else { 
     await newItem(actions);
   }
 }

@@ -494,6 +494,13 @@
       "username": "Admin",
       "password": "12345678",
       "password2": "12345678"
+    },
+    {
+      "id": "1423677f599",
+      "email": "test@test.com",
+      "username": "test",
+      "password": "12345678",
+      "password2": "12345678"
     }
   ]
 }
