@@ -9,17 +9,9 @@
             </cards-dashboard>
         </section>
         <h4>Busca de itens</h4>
-        <div class="content input-group">
-            <input data-testid="search-input-item" type="text"
-                class="w-75 form-control animate__animated animate__flipInX" placeholder="✍️ Buscar item..."
-                v-model="inputSearch">
-            <select class="badge bg-dark text-white text-center" v-model="findBy">
-                <option value="id" selected>Código</option>
-                <option value="title">Titulo</option>
-                <option value="category">Categoria</option>
-                <option value="collaborator">Colaborador</option>
-            </select>
-        </div>
+        <search-input :api="parameterSearch.api" :options="parameterSearch.options" :findBy="parameterSearch.findBy"
+            :operatorSearch="parameterSearch.operatorSearch" @returnData="loadDataSearch" :optionsPage="optionsPage">
+        </search-input>
         <section class="row">
             <cards-products class="col-sm-12 col-md-6 col-lg-3 col-xxl-3 animate__animated animate__fadeIn"
                 v-for="item in itemsPaginateComputed" :key="item.id" @click="itemInfos(item.id)">
@@ -39,24 +31,23 @@
                         detalhes</button></template>
             </cards-products>
             <paginate v-model="page" :page-count="totalPages" :page-range="3" :margin-pages="2" :prev-text="'Voltar'"
-                :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'"
+                :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'" v-show="totalPages > 1"
                 class="justify-content-center">
             </paginate>
         </section>
         <div class="mt-3">
-            <p class="text-danger" v-if="itemsPaginateComputed.length === 0 && inputSearch">
+            <p class="text-danger" v-if="itemsPaginateComputed.length === 0">
                 Ainda não há itens cadastrados com este <strong>termo de pesquisa</strong> - <router-link
                     :to="{ name: 'items' }">
                     Realizar novo cadastro</router-link>
             </p>
-            <p class="text-danger" v-if="itemsPaginateComputed.length === 0 && !inputSearch">
+            <p class="text-danger" v-if="!itemsDashboard.itemsCount">
                 Ainda não há items cadastrados no sistema - <router-link :to="{ name: 'items' }">Realizar novo
                     cadastro
                 </router-link>
             </p>
         </div>
         <dialog-dashboard :item="item" :show="show" @closeModal="toggleModal" @editItem="editItem">
-
         </dialog-dashboard>
 
     </div>
@@ -66,8 +57,9 @@
 import CardsDashboard from './components/CardsDashboard.vue';
 import CardsProducts from './components/CardsProducts.vue';
 import DialogDashboard from './components/DialogDashboard.vue';
+import SearchInput from '../../components/shared/SearchInput.vue';
 import Paginate from "vuejs-paginate-next";
-import { ref, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted, nextTick, reactive } from 'vue'
 import { useStore } from "vuex";
 import { RouterLink, useRouter } from "vue-router";
 import { createMessageBox } from 'vue-m-dialog'
@@ -82,8 +74,6 @@ const router = useRouter();
 const store = useStore();
 const show = ref(false);
 const item = ref({});
-const findBy = ref("id");
-const inputSearch = ref(null);
 const allItems = ref([]);
 const itemsDashboard = ref({
     itemsCount: 0,
@@ -91,30 +81,42 @@ const itemsDashboard = ref({
     valueTotalItems: 0,
     itemsLoaned: 0
 })
+const optionsPage = reactive({
+    page: 1,
+    limit: 8
+})
 const page = ref(1);
 const perPage = ref(8);
 const itemsPaginate = ref([]);
 const infoDashboard = ref([])
+const parameterSearch = reactive({
+    options: [
+        { "text": "Código", "value": "id", "operatorSearch": "=" },
+        { "text": "Título", "value": "title" },
+        { "text": "Categoria", "value": "category" },
+        { "text": "Descrição", "value": "description" },
+        { "text": "Marca", "value": "brand" },
+        { "text": "Modelo", "value": "model" },
+        {"text" : "Colaborador", "value" : "collaborator"}
+
+    ]
+})
+const inputConfig = reactive({
+    searchText: '',
+    searchField: 'id',
+})
 
 const totalPages = computed(() => {
-    if (inputSearch.value) {
-        return Math.ceil(
-            itemsPaginate.value.filter((item) =>
-                findBy.value === 'id'
-                    ? item[findBy.value] === Number(inputSearch.value)
-                    : item[findBy.value]?.toLowerCase().includes(inputSearch.value.toLowerCase())
-
-            ).length / perPage.value
-        );
+    if (!inputConfig.searchText) {
+        return Math.ceil(itemsDashboard.value.itemsCount / perPage.value);
     } else {
-        return Math.ceil(
-            itemsDashboard.value.itemsCount / perPage.value
-        );
+        return Math.ceil(itemsPaginate.value.length / perPage.value);
     }
-});
+})
+store.commit('configModule/SET_PAGE_NAME', 'Dashboard')
 
 onMounted(async () => {
-    await loadData();
+    await loadDataDashboard();
     await loadDataPagination();
     nextTick(() => {
         infoDashboard.value.push(
@@ -154,7 +156,7 @@ onMounted(async () => {
     })
 })
 
-async function loadData() {
+async function loadDataDashboard() {
     try {
         const itemsCount = await axios.get('/items/');
         const collabsCount = await axios.get('/collaborators/');
@@ -172,24 +174,24 @@ async function loadData() {
     }
 }
 
-async function loadDataPagination(searchValue = null) {
+async function loadDataPagination() {
     const loader = $loading.show()
     try {
-        if (searchValue) {
-            const items = await axios.get(`/items/?${findBy.value}_like=${searchValue}`);
-            itemsPaginate.value = items.data;
+        let url = ''
+        if (inputConfig.searchText) {
+            const operator = parameterSearch.options.find((opt) => opt.value === inputConfig.searchField).operatorSearch || '_like='
+            url = `/items?${inputConfig.searchField}${operator}${inputConfig.searchText}&_limit=${perPage.value}&_page=${page.value}`
         } else {
-            const items = await axios.get(`/items/?page=${page.value}&per_page=${perPage.value}`);
-            itemsPaginate.value = items.data;
+            url = `/items?_limit=${perPage.value}&_page=${page.value}`
         }
+        const response = await axios.get(url);
+        itemsPaginate.value = response.data;
     } catch (error) {
         toast.error(error.message)
     } finally {
         loader.hide()
     }
 }
-
-store.commit('configModule/SET_PAGE_NAME', 'Dashboard')
 
 const itemsPaginateComputed = computed(() => {
     return itemsPaginate.value
@@ -233,22 +235,19 @@ function infoDashRoute(destiny, route) {
 }
 
 watch(page, async () => {
+    optionsPage.page = page.value;
     await loadDataPagination()
 });
 
-watch(inputSearch, async (newValue, oldValue) => {
-    if (newValue !== oldValue) {
-        page.value = 1;
-        await loadDataPagination(newValue)
+async function loadDataSearch(searchText, searchField) {
+    if (searchText && searchField) {
+        inputConfig.searchText = searchText;
+        inputConfig.searchField = searchField;
+    } else {
+        inputConfig.searchText = '';
     }
-});
-
-watch(findBy, async (newValue, oldValue) => {
-    if (newValue !== oldValue && inputSearch.value) {
-        page.value = 1;
-        await loadDataPagination(inputSearch.value)
-    }
-});
+    await loadDataPagination()
+}
 
 
 </script>
