@@ -2,6 +2,7 @@
   <div class="container mt-3">
     <h4 class="mb-3">Preencha os campos para cadastrar/editar um item</h4>
     <VeeForm
+      data-testid="vue-toast-info"
       @submit="onValidSubmit"
       v-slot="{ errors }"
       @invalid-submit="onInvalidSubmit"
@@ -17,6 +18,7 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Título do item <span>*</span></label>
           <Veefield
+            data-testid="reg-input-title"
             type="text"
             name="title"
             class="form-control"
@@ -35,6 +37,7 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Categoria <span>*</span></label>
           <Veefield
+            data-testid="reg-input-category"
             as="select"
             name="category"
             class="form-select"
@@ -61,6 +64,7 @@
         <div class="col-sm-6 col-md-4 col-lg-3">
           <label class="form-label">Valor <span>*</span></label>
           <Veefield
+            data-testid="reg-input-value"
             type="number"
             name="value"
             class="form-control"
@@ -78,6 +82,7 @@
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Marca <span>*</span></label>
           <Veefield
+            data-testid="reg-input-brand"
             type="text"
             name="brand"
             class="form-control"
@@ -95,6 +100,7 @@
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Modelo <span>*</span></label>
           <Veefield
+            data-testid="reg-input-model"
             type="text"
             name="model"
             class="form-control"
