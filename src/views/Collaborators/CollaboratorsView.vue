@@ -126,10 +126,10 @@
 
 <script setup>
 import { uid } from "uid";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
-import ToastNotification from "./components/ToastNotification.vue";
+import ToastNotification from "../../components/shared/ToastNotification.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
 import { Form as VeeForm, Field as Veefield } from "vee-validate";
@@ -151,13 +151,23 @@ const toast = useToast();
 const store = useStore();
 const route = useRoute();
 const router = useRouter();
+const toastInfo = reactive({
+  msg: "Cadastro de colaborador realizado com sucesso!",
+  buttonNew: "Cadastrar novo colaborador",
+  buttonList: "Listar colaboradores",
+});
 const content = {
   component: ToastNotification,
+  props: toastInfo,
   listeners: {
     listCollabs: () => {
       toast.clear();
       router.push({ name: "ListCollaborators" });
     },
+    closeToast: () => {
+      toast.clear();
+    },
+
   },
 };
 const id = route.params.userId;
@@ -208,19 +218,20 @@ async function getCollaboratorById(id) {
   }
 }
 
-async function onValidSubmit(actions) {
+async function onValidSubmit(values, actions) {
   try {
-    newForm.value = { ...form.value }
+    newForm.value = { ...values }
     const checkEmail = await checkEmailExists(newForm.value.email);
     if (Array.isArray(checkEmail) && checkEmail.length > 0) {
       toast.error("Email já cadastrado", content);
       return;
     }
     if (id) {
-      await editCollaborator(actions);
+      await editCollaborator();
     } else {
-      await newCollaborator(actions);
+      await newCollaborator();
     }
+    actions.resetForm();
   } catch (error) {
     toast.error("Erro ao cadastrar colaborador", content);
   }
@@ -241,7 +252,7 @@ function onInvalidSubmit({ errors }) {
   }
 }
 
-async function newCollaborator(actions) {
+async function newCollaborator() {
   const loader = $loading.show();
   try {
     !id ? (newForm.value.id = "c" + uid()) : "";
@@ -252,11 +263,21 @@ async function newCollaborator(actions) {
       newForm.value
     );
     if (res.status === 201) {
-      toast.success("Colaborador cadastrado com sucesso", content);
-      router.push({ name: "ListCollaborators" });
+        toast(content, {
+          position: "top-right",
+          closeOnClick: false,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+          draggable: false,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: true,
+          closeButton: "button",
+          icon: "fas fa-rocket",
+          rtl: false,
+        });
     }
   } catch (error) {
-    toast.error("Erro ao cadastrar colaborador", content);
+    toast.error("Erro ao cadastrar colaborador");
   } finally {
     setTimeout(() => {
       loader.hide()
@@ -264,7 +285,7 @@ async function newCollaborator(actions) {
   }
 }
 
-async function editCollaborator(actions) {
+async function editCollaborator() {
   const loader = $loading.show();
   try {
     const res = await axios.put(
