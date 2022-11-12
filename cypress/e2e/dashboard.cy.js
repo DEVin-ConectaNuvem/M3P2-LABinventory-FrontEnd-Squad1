@@ -1,9 +1,10 @@
 describe('Dashboard', () => {
-    it('Visita a pagina dashboard, procura um item e valida a mensagem de nenhum item encontrado e a rota para cadastrar novo item.', () => {
-        
-        cy.login("admin@teste.com", "12345678")
+    beforeEach(() => {
+		cy.login("admin@teste.com", "12345678")
 
-        cy.wait(3000)
+		cy.wait(3000);
+	}),
+    it('Visita a pagina dashboard, procura um item e valida a mensagem de nenhum item encontrado e a rota para cadastrar novo item.', () => {
 
         cy.get('input[placeholder*="Buscar item..."]').type("!#@#");
 
@@ -19,10 +20,6 @@ describe('Dashboard', () => {
 
     }),
     it('Visita a pagina dashboard e valida se os cards com informações totais de colaboradores está sendo exibida e ao clicar no card, abre um modal que nós redireciona para listagem de colaboradores', () => {
-        
-        cy.login("admin@teste.com", "12345678")
-
-        cy.wait(3000);
 
         cy.get('h4[class="my-1"]');
 
@@ -37,10 +34,6 @@ describe('Dashboard', () => {
     }),
     it('Visita a pagina dashboard e valida se os cards com informações totais de itens, valores e empréstimos está sendo exibida e ao clicar no card, abre um modal que nós redireciona para listagem de itens', () => {
 
-        cy.login("admin@teste.com", "12345678")
-
-        cy.wait(3000);
-
         cy.get('h4[class="my-1"]');
 
         cy.get('p:contains("Itens")').click();
@@ -48,7 +41,7 @@ describe('Dashboard', () => {
         cy.get('button:contains("Verificar!")').click();
         cy.contains("Listagem de itens");
 
-        cy.get('i[class="fa-solid fa-bars fs-2 text-white"]').click();
+        cy.openSidebar();
         cy.get('span:contains("Inventário")').click();
 
         cy.get('p:contains("Valores")').click();
