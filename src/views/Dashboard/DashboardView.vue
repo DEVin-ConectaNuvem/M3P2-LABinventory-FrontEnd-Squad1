@@ -9,8 +9,7 @@
             </cards-dashboard>
         </section>
         <h4>Busca de itens</h4>
-        <search-input :api="parameterSearch.api" :options="parameterSearch.options" :findBy="parameterSearch.findBy"
-            :operatorSearch="parameterSearch.operatorSearch" @returnData="loadDataSearch" :optionsPage="optionsPage">
+        <search-input :options="parameterSearch.options" @returnData="loadDataSearch">
         </search-input>
         <section class="row">
             <cards-products
@@ -101,7 +100,8 @@ const parameterSearch = reactive({
         { "text": "Modelo", "value": "model" },
         {"text" : "Colaborador", "value" : "collaborator"}
 
-    ]
+    ],
+    findBy: "id"
 })
 const inputConfig = reactive({
     searchText: '',
@@ -115,6 +115,7 @@ const totalPages = computed(() => {
         return Math.ceil(itemsPaginate.value.length / perPage.value);
     }
 })
+
 store.commit('configModule/SET_PAGE_NAME', 'Dashboard')
 
 onMounted(async () => {
@@ -191,7 +192,9 @@ async function loadDataPagination() {
     } catch (error) {
         toast.error(error.message)
     } finally {
-        loader.hide()
+        setTimeout(() => {
+            loader.hide()
+        }, 500);
     }
 }
 
