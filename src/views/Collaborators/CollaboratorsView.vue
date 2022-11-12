@@ -202,7 +202,9 @@ async function getCollaboratorById(id) {
   } catch (error) {
     toast.error("Erro ao buscar colaborador", content);
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
 
@@ -256,7 +258,9 @@ async function newCollaborator(actions) {
   } catch (error) {
     toast.error("Erro ao cadastrar colaborador", content);
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
 
@@ -274,7 +278,9 @@ async function editCollaborator(actions) {
   } catch (error) {
     toast.error("Erro ao editar colaborador", content);
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
 
@@ -311,6 +317,7 @@ function searchZipCode() {
 
     })
     .catch((error) => {
+      loader.hide();
       toast.error(error, { timeout: 1500 });
     });
 }
