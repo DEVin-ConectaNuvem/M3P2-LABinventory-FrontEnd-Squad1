@@ -5,7 +5,7 @@ describe("Verifica se é possível emprestar um item", () => {
 	let collaborators = [];
 
 	beforeEach(() => {
-		cy.login("admin@teste.com", "12345678")
+		cy.login("admin@teste.com", "12345678");
 
 		cy.wait(1000);
 

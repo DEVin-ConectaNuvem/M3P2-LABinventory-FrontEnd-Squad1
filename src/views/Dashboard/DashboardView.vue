@@ -13,17 +13,19 @@
             :operatorSearch="parameterSearch.operatorSearch" @returnData="loadDataSearch" :optionsPage="optionsPage">
         </search-input>
         <section class="row">
-            <cards-products class="col-sm-12 col-md-6 col-lg-3 col-xxl-3 animate__animated animate__fadeIn"
+            <cards-products
+                :data-testid="`item-${item.id}`" 
+                class="col-sm-12 col-md-6 col-lg-3 col-xxl-3 animate__animated animate__fadeIn"
                 v-for="item in itemsPaginateComputed" :key="item.id" @click="itemInfos(item.id)">
                 <template v-slot="card"></template>
                 <template v-slot:title>
-                    <p class="text-center" :class="item.collaborator ? 'loaned' : 'avaliable'">
+                    <p class="text-center" :class="item.collaborator ? 'loaned' : 'avaliable'" :data-testid="`item-${item.id}-title`">
                         {{ item.id + ' - ' + item.title }}
                     </p>
                 </template>
                 <template v-slot:img><img :src="item.url" class="imageBg "></template>
                 <template v-slot:collab>
-                    <p :class="item.collaborator ? 'text-bg-primary' : 'text-bg-success'"
+                    <p :data-testid="`item-${item.id}-status`" :class="item.collaborator ? 'text-bg-primary' : 'text-bg-success'"
                         v-text="item.collaborator ? item.collaborator : 'Disponível'"></p>
                 </template>
 

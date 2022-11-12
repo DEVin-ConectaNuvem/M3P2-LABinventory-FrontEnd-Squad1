@@ -29,3 +29,11 @@ export function selectARandomBorrowedItem(items) {
 
 }
 
+export function selectARandomItem(items) {
+  items = items.filter((_item, i) =>  i < 20);
+
+  const index = selectARandomIndex(items);
+
+  return items[index];
+}
+
