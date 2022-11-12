@@ -1,6 +1,6 @@
 <template>
     <div>
-        <m-dialog v-model="show" title="Informações Adicionais" class="modal" width="600px" padding="50px">
+        <m-dialog v-model="showModal" title="Informações Adicionais" class="modal" width="600px" padding="50px">
             <div class="row text-center">
                 <div class="col-sm-12 col-md-6">
                     <img :src="item.url" class="border imagemLoan" alt="imagem do item">
@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
+import { computed } from "vue";
 
 const props = defineProps({
     item: {
@@ -53,6 +53,8 @@ const props = defineProps({
         required: true
     }
 });
+
+const showModal = computed(() => props.show);
 
 defineEmits(['closeModal', 'editItem'])
 
