@@ -21,38 +21,32 @@ describe("Realiza os testes de registro de colaborador", () => {
         cy.contains("div", "O campo é obrigatório");
         cy.reload();
 
+        cy.get("[data-testid=colab-zipcode]").clear().blur();
+        cy.contains("div", "O CEP é obrigatório");
 
 
+        cy.get("[data-testid=colab-city]");
+        cy.contains("div", "O campo é obrigatório");
+
+        cy.get("[data-testid=colab-state]");
+        cy.contains("div", "O campo é obrigatório");
+
+        cy.get("[data-testid=colab-neighborhood]").clear().blur();
+        cy.contains("div", "O campo é obrigatório");
         
-        // cy.get("[data-testid=item-model]").clear().blur();
-        // cy.contains("div", "O campo é obrigatório");
-        // cy.get("[data-testid=item-model]").type("modelo né pae");
+        cy.get("[data-testid=colab-street]").clear().blur();
+        cy.contains("div", "O campo é obrigatório");
+        cy.reload();
+
+        cy.get("[data-testid=colab-number]").clear().blur();
+        cy.contains("div", "O número deve igual ou maior que zero");
+        cy.reload();
+
+        cy.get("[data-testid=colab-complement]").clear().blur();
+        cy.contains("div", "O campo é obrigatório");
         
-
-        // cy.get("[data-testid=item-brand]").clear().blur();
-        // cy.contains("div", "O campo é obrigatório");
-        // cy.get("[data-testid=item-brand]").type("Nova marca");
-
-        // cy.get("[data-testid=item-value]").clear().blur();
-        // cy.contains("div", "O número deve igual ou maior que zero");
-        // cy.get("[data-testid=item-value]").type("2500");
-
-        // cy.get('select').select("Cadeira");
-        
-        // cy.contains("button", "Editar").click();
-
-        // cy.contains("p", `${item.id} - Vamooo`).click();
-
-        // if (item.collaborator) {
-        //     cy.contains(item.collaborator);
-        // } else {
-        //     cy.contains("Disponível");
-        // }
-
-        // cy.contains("p", "modelo né pae");
-        // cy.contains("p", `${item.id} - Vamooo`);
-        // cy.contains("p", "Nova marca");
-        // cy.contains("p", "2500");
-        // cy.contains("p", "Cadeira");
-	})
-})
+        cy.get("[data-testid=colab-reference]").clear().blur();
+        cy.contains("div", "O campo é obrigatório");
+	
+        });
+});
