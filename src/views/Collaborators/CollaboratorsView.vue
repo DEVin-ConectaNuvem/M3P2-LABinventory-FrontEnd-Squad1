@@ -28,12 +28,15 @@
             </Veefield>
             <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.gender }}</div>
           </div>
+          
           <div class="col-sm-12 col-md-6 col-lg-4">
             <label class="form-label">Data de nascimento <span>*</span></label>
             <Veefield type="date" data-testid="input-birthday" name="birthDay" class="form-control" placeholder="Data de nascimento"
+            <Veefield type="date" name="birthDay" class="form-control" placeholder="Data de nascimento"
               v-model="form.birthDay" required :class="{ 'is-invalid': errors.birthDay }" :rules="validateDate" />
             <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.birthDay }}</div>
           </div>
+          
           <div class="col-sm-12 col-md-6 col-lg-4">
             <label class="form-label">Telefone <span>*</span></label>
             <Veefield type="text" data-testid="input-phone" name="phone" class="form-control" placeholder="Fixo ou celular" v-model="form.phone"
@@ -41,12 +44,14 @@
               :rules="validatePhone" />
             <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.phone }}</div>
           </div>
+          
           <div class="col-sm-12 col-md-6 col-lg-4">
             <label class="form-label">E-mail <span>*</span></label>
             <Veefield type="email" data-testid="input-email" name="email" class="form-control" placeholder="Ex: José@gmail.com"
               v-model="form.email" required :class="{ 'is-invalid': errors.email }" :rules="validateEmail" />
             <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.email }}</div>
           </div>
+          
           <div class="col-sm-12 col-md-6 col-lg-4">
             <label class="form-label">Cargo <span>*</span></label>
             <Veefield as="select" data-testid="input-position" name="position" class="form-select" placeholder="Ex: desenvolvedor"
@@ -197,6 +202,8 @@ const form = ref({
   updatedAt: null,
   imageUser: null
 });
+
+
 const newForm = ref({})
 onMounted(async () => {
   store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de colaboradores');
@@ -222,6 +229,7 @@ async function getCollaboratorById(id) {
     }, 500);
   }
 }
+
 async function onValidSubmit(values, actions) {
   try {
     newForm.value = { ...values }
@@ -240,19 +248,22 @@ async function onValidSubmit(values, actions) {
     toast.error("Erro ao cadastrar colaborador", content);
   }
 }
+
 async function checkEmailExists(email) {
   const res = await axios.get(`/collaborators?email=${email}`);
   if (id) {
-    const result = res.data.filter((item) => item.id !== id);
+    const result = res.data.filter((collab) => collab.id !== id);
     return result
+  } else {
+    return res.data
   }
-  return res
 }
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
     toast.error(errors[field], { timeout: 1500 });
   }
 }
+
 async function newCollaborator() {
   const loader = $loading.show();
   try {
@@ -285,6 +296,7 @@ async function newCollaborator() {
     }, 500);
   }
 }
+
 async function editCollaborator() {
   const loader = $loading.show();
   try {
@@ -337,11 +349,13 @@ function searchZipCode() {
       toast.error(error, { timeout: 1500 });
     });
 }
+
 function saveImageUser(imgBase64){
   if(imgBase64){
     form.value.imageUser = imgBase64
   }
 }
+
 function clearAddress() {
   form.value.city = "";
   form.value.state = "";

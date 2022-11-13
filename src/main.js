@@ -25,7 +25,7 @@ app.use(router);
 app.use(store);
 app.use(Toast, {
   shareAppContext: true,
-  maxToasts: 20,
+  maxToasts: 5,
 });
 app.use(VueGravatar);
 app.use(VueTheMask);

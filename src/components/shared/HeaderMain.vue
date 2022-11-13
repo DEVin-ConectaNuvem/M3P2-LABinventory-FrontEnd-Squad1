@@ -6,7 +6,7 @@
             </div>
             <div>
                 <img src="../../assets/icons/logoInventary.svg" class="ms-3 imgLogo animate__animated animate__bounceIn"
-                    alt="DEVInventary" :class="isVisible ? 'd-none' : 'd-block'">
+                    alt="LABInventary" :class="isVisible ? 'd-none' : 'd-block'">
             </div>
             <div class=" d-flex align-items-center text-white flex-grow-1 ">
             <div class="text-white text-center namePage">
@@ -60,8 +60,6 @@ function logOut() {
     store.dispatch('authModule/logOut')
     router.push({ name: 'login' })
 }
-
-
 </script>
 
 <style lang="scss" scoped>

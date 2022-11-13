@@ -2,6 +2,7 @@
   <div class="container mt-3">
     <h4 class="mb-3">Preencha os campos para cadastrar/editar um item</h4>
     <VeeForm
+      data-testid="vue-toast-info"
       @submit="onValidSubmit"
       v-slot="{ errors }"
       @invalid-submit="onInvalidSubmit"
@@ -17,6 +18,7 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Título do item <span>*</span></label>
           <Veefield
+            data-testid="input-title"
             type="text"
             name="title"
             class="form-control"
@@ -35,6 +37,7 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Categoria <span>*</span></label>
           <Veefield
+            data-testid="input-category"
             as="select"
             name="category"
             class="form-select"
@@ -61,6 +64,7 @@
         <div class="col-sm-6 col-md-4 col-lg-3">
           <label class="form-label">Valor <span>*</span></label>
           <Veefield
+            data-testid="input-value"
             type="number"
             name="value"
             class="form-control"
@@ -78,6 +82,7 @@
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Marca <span>*</span></label>
           <Veefield
+            data-testid="input-brand"
             type="text"
             name="brand"
             class="form-control"
@@ -95,6 +100,7 @@
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Modelo <span>*</span></label>
           <Veefield
+            data-testid="input-model"
             type="text"
             name="model"
             class="form-control"
@@ -128,6 +134,7 @@
             placeholder="Digite as especificações do item"
             class="form-control"
             maxlength="180"
+            data-testid="item-description"
           ></textarea>
         </div>
       </div>
@@ -136,18 +143,18 @@
         <button :type="id ? 'button' : 'reset'" @click="id ? cancelEdit() : ''" class="btn btn-secondary me-2 mt-2"
           v-text="id ? 'Cancelar' : 'Limpar'"></button>
         <button type="submit" class="mt-2 btn" :class="id ? 'btn-primary' : 'btn-success'"
-          v-text="id ? 'Editar' : 'Cadastrar'"></button>
+          v-text="id ? 'Editar' : 'Cadastrar'" data-testid='button-reg'></button>
       </div>
     </VeeForm>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { useAxios } from "../../hooks"
 import { useToast } from "vue-toastification";
-import ToastNotification from "./components/ToastNotification.vue";
+import ToastNotification from "../../components/shared/ToastNotification.vue";
 import UploadBox from "../../components/shared/UploadBox.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
@@ -160,13 +167,23 @@ const $loading = useLoading();
 const toast = useToast();
 const router = useRouter();
 const { axios } = useAxios();
+const toastInfo = reactive({
+  msg: "Cadastro de colaborador realizado com sucesso!",
+  buttonNew: "Cadastrar novo colaborador",
+  buttonList: "Listar colaboradores",
+});
 const content = {
   component: ToastNotification,
+  props: toastInfo,
   listeners: {
-    listItems: () => {
+    listCollabs: () => {
       toast.clear();
       router.push({ name: "listItems" });
     },
+    closeToast: () => {
+      toast.clear();
+    },
+
   },
 };
 const id = route.params.itemId ? Number(route.params.itemId.split('-')[0]) : null;
@@ -208,17 +225,20 @@ async function getInfoItemById(id) {
   } catch (error) {
     toast.error("Erro ao buscar item", content);
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
 
 async function onValidSubmit(values, actions) {
-  newForm.value = { ...form.value }
+  newForm.value = { ...values }
   if (id) {
     await editItem(actions);
-  } else {
+  } else { 
     await newItem(actions);
   }
+  actions.resetForm();
 }
 
 function onInvalidSubmit({ errors }) {
@@ -253,11 +273,13 @@ async function newItem() {
   } catch (error) {
     toast.error(error.message, { timeout: 1500 });
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
 
-async function editItem(actions) {
+async function editItem() {
   const loader = $loading.show();
   try {
     newForm.value.updatedAt = moment().format("llll");
@@ -272,7 +294,9 @@ async function editItem(actions) {
   } catch (error) {
     toast.error(error.message, { timeout: 1500 });
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
 
