@@ -11,6 +11,7 @@
     "release": "standard-version"
   },
   "dependencies": {
+    "@upload-io/vue-uploader": "^1.5.7",
     "@vee-validate/rules": "^4.5.11",
     "@vueuse/core": "^9.5.0",
     "animate.css": "^4.1.1",
@@ -23,6 +24,7 @@
     "uid": "^2.0.0",
     "vee-validate": "^4.5.11",
     "vue": "^3.2.33",
+    "vue-image-crop-upload": "^3.0.3",
     "vue-input-facade": "^2.0.1",
     "vue-loading-overlay": "5.0",
     "vue-m-dialog": "^3.0.0",

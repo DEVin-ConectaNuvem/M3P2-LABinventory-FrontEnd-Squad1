@@ -4,58 +4,65 @@
     <VeeForm @submit="onValidSubmit" v-slot="{ errors, actions }" @invalid-submit="onInvalidSubmit"
       class="formCadastro animate__animated animate__fadeIn">
       <div class="row mb-1">
-        <h3>Dados de endereço</h3>
+        <h3>Dados do colaborador</h3>
         <hr />
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Nome completo <span>*</span></label>
-          <Veefield type="text" name="name" class="form-control" placeholder="Nome completo" v-model.trim="form.name"
-            required :class="{ 'is-invalid': errors.name }" :rules="validateName" v-focus maxlength="25" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.name }}</div>
+        <div class="col-lg-2">
+          <avatar-user @uploadSuccess="saveImageUser" :imgDataUser="form.imageUser"></avatar-user>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Genero <span>*</span></label>
-          <Veefield as="select" name="gender" class="form-select" placeholder="Genero" v-model="form.gender"
-            :class="{ 'is-invalid': errors.gender }" :rules="required" required>
-            <option value="" disabled selectd>Escolha o gênero</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Feminino">Feminino</option>
-            <option value="Outro">Outro</option>
-          </Veefield>
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.gender }}</div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Data de nascimento <span>*</span></label>
-          <Veefield type="date" name="birthDay" class="form-control" placeholder="Data de nascimento"
-            v-model="form.birthDay" required :class="{ 'is-invalid': errors.birthDay }" :rules="validateDate" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.birthDay }}</div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Telefone <span>*</span></label>
-          <Veefield type="text" name="phone" class="form-control" placeholder="Fixo ou celular" v-model="form.phone"
-            v-mask="['(##) ####-####', '(##) #####-####']" :class="{ 'is-invalid': errors.phone }"
-            :rules="validatePhone" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.phone }}</div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">E-mail <span>*</span></label>
-          <Veefield type="email" name="email" class="form-control" placeholder="Ex: José@gmail.com" v-model="form.email"
-            required :class="{ 'is-invalid': errors.email }" :rules="validateEmail" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.email }}</div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Cargo <span>*</span></label>
-          <Veefield as="select" name="position" class="form-select" placeholder="Ex: desenvolvedor"
-            v-model="form.position" required :class="{ 'is-invalid': errors.position }" :rules="required">
-            <option value="" disabled>Escolha o cargo</option>
-            <option value="Desenvolvedor Backend">Desenvolvedor Backend</option>
-            <option value="Desenvolvedor Frontend">
-              Desenvolvedor Frontend
-            </option>
-            <option value="Desenvolvedor Fullstack">
-              Desenvolvedor Fullstack
-            </option>
-          </Veefield>
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.position }}</div>
+        <div class="col-lg-10">
+          <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-4">
+            <label class="form-label">Nome completo <span>*</span></label>
+            <Veefield type="text" name="name" class="form-control" placeholder="Nome completo" v-model.trim="form.name"
+              required :class="{ 'is-invalid': errors.name }" :rules="validateName" v-focus maxlength="25" />
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.name }}</div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label class="form-label">Genero <span>*</span></label>
+            <Veefield as="select" name="gender" class="form-select" placeholder="Genero" v-model="form.gender"
+              :class="{ 'is-invalid': errors.gender }" :rules="required" required>
+              <option value="" disabled selectd>Escolha o gênero</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Feminino">Feminino</option>
+              <option value="Outro">Outro</option>
+            </Veefield>
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.gender }}</div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label class="form-label">Data de nascimento <span>*</span></label>
+            <Veefield type="date" name="birthDay" class="form-control" placeholder="Data de nascimento"
+              v-model="form.birthDay" required :class="{ 'is-invalid': errors.birthDay }" :rules="validateDate" />
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.birthDay }}</div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label class="form-label">Telefone <span>*</span></label>
+            <Veefield type="text" name="phone" class="form-control" placeholder="Fixo ou celular" v-model="form.phone"
+              v-mask="['(##) ####-####', '(##) #####-####']" :class="{ 'is-invalid': errors.phone }"
+              :rules="validatePhone" />
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.phone }}</div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label class="form-label">E-mail <span>*</span></label>
+            <Veefield type="email" name="email" class="form-control" placeholder="Ex: José@gmail.com"
+              v-model="form.email" required :class="{ 'is-invalid': errors.email }" :rules="validateEmail" />
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.email }}</div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label class="form-label">Cargo <span>*</span></label>
+            <Veefield as="select" name="position" class="form-select" placeholder="Ex: desenvolvedor"
+              v-model="form.position" required :class="{ 'is-invalid': errors.position }" :rules="required">
+              <option value="" disabled>Escolha o cargo</option>
+              <option value="Desenvolvedor Backend">Desenvolvedor Backend</option>
+              <option value="Desenvolvedor Frontend">
+                Desenvolvedor Frontend
+              </option>
+              <option value="Desenvolvedor Fullstack">
+                Desenvolvedor Fullstack
+              </option>
+            </Veefield>
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.position }}</div>
+          </div>
+          </div>
         </div>
       </div>
 
@@ -130,6 +137,7 @@ import { ref, onMounted } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
 import ToastNotification from "./components/ToastNotification.vue";
+import AvatarUser from "../../components/shared/AvatarUser.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
 import { Form as VeeForm, Field as Veefield } from "vee-validate";
@@ -179,7 +187,10 @@ const form = ref({
   reference: null,
   createdAt: null,
   updatedAt: null,
+  imageUser: null
 });
+
+
 const newForm = ref({})
 
 onMounted(async () => {
@@ -320,6 +331,12 @@ function searchZipCode() {
       loader.hide();
       toast.error(error, { timeout: 1500 });
     });
+}
+
+function saveImageUser(imgBase64){
+  if(imgBase64){
+    form.value.imageUser = imgBase64
+  }
 }
 
 function clearAddress() {
