@@ -155,11 +155,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { useAxios } from "../../hooks"
 import { useToast } from "vue-toastification";
-import ToastNotification from "./components/ToastNotification.vue";
+import ToastNotification from "../../components/shared/ToastNotification.vue";
 import UploadBox from "../../components/shared/UploadBox.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
@@ -172,13 +172,23 @@ const $loading = useLoading();
 const toast = useToast();
 const router = useRouter();
 const { axios } = useAxios();
+const toastInfo = reactive({
+  msg: "Cadastro de colaborador realizado com sucesso!",
+  buttonNew: "Cadastrar novo colaborador",
+  buttonList: "Listar colaboradores",
+});
 const content = {
   component: ToastNotification,
+  props: toastInfo,
   listeners: {
-    listItems: () => {
+    listCollabs: () => {
       toast.clear();
       router.push({ name: "listItems" });
     },
+    closeToast: () => {
+      toast.clear();
+    },
+
   },
 };
 const id = route.params.itemId ? Number(route.params.itemId.split('-')[0]) : null;
@@ -220,17 +230,20 @@ async function getInfoItemById(id) {
   } catch (error) {
     toast.error("Erro ao buscar item", content);
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
 
 async function onValidSubmit(values, actions) {
-  newForm.value = { ...form.value }
+  newForm.value = { ...values }
   if (id) {
     await editItem(actions);
   } else { 
     await newItem(actions);
   }
+  actions.resetForm();
 }
 
 function onInvalidSubmit({ errors }) {
@@ -265,11 +278,13 @@ async function newItem() {
   } catch (error) {
     toast.error(error.message, { timeout: 1500 });
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
 
-async function editItem(actions) {
+async function editItem() {
   const loader = $loading.show();
   try {
     newForm.value.updatedAt = moment().format("llll");
@@ -284,7 +299,9 @@ async function editItem(actions) {
   } catch (error) {
     toast.error(error.message, { timeout: 1500 });
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
 
