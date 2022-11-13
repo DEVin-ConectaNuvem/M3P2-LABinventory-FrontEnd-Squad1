@@ -48,7 +48,7 @@
                         </div>
                       </transition>
                       <div class="text-center ">
-                        <button :class="register.register ? 'btn btn-success me-3' : 'btn btn-info text-dark me-3'"
+                        <button :class="register.register ? 'btn btn-success me-3' : 'btn btn-info text-white me-3 btnLogin'"
                           type="submit" v-text="register.button">
                         </button>
                         <button data-testid="login-google-button" class="btn btn-light" type="button" @click="alertUser"><i
@@ -214,11 +214,11 @@ function alertUser() {
 }
 
 .btnLogin {
-  background-color: var(--color-secondary);
+  background-color: #4aa1c7;
   color: #fff;
 
   &:hover {
-    background-color: var(--color-dark);
+    background-color: rgb(26, 63, 143);
   }
 }
 
@@ -252,10 +252,23 @@ p {
 .header {
   position: relative;
   text-align: center;
-  background: #0F2027;
-  background: -webkit-linear-gradient(to right, #2C5364, #203A43, #0F2027);
-  background: linear-gradient(to right, #2C5364, #203A43, #0F2027);
+  background: #ffffff;
+  background: -webkit-linear-gradient(to right, #9e6af2, #c852e5, #7d19e8);
+  background: linear-gradient(to right, #7c5dd8, #7633c3, #530598);
   color: white;
+}
+
+.invalid-feedback {
+  color: rgb(255, 186, 186);
+  text-shadow: rgb(255, 3, 3) 2px 1px 7px;
+}
+
+.is-invalid {
+  background: rgba(252, 196, 196, 0.817);
+}
+
+.btn-light {
+  --bs-btn-hover-bg: rgba(184, 183, 183, 0.817);
 }
 
 .logo {
@@ -361,6 +374,7 @@ p {
 @media (min-width: 900px) {
   .logo {
     width: 10rem;
+    margin-bottom: 10px;
   }
 
   .waves {
@@ -372,6 +386,7 @@ p {
     display: block;
     margin-right: 20px;
     margin-top: 10px;
+    margin-left: 10px;
   }
 
 }
