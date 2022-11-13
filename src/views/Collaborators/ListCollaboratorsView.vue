@@ -14,7 +14,8 @@
           <button class="accordion-button collapsed text-capitalize" type="button" data-bs-toggle="collapse"
             :data-bs-target="'#collapse' + collaborator.id" aria-expanded="true"
             :aria-controls="'collapseOne' + collaborator.id">
-            <vue-gravatar class="img-fluid imgAccordion" :email="collaborator.email" />
+            <img :src="collaborator.imageUser" class="img-fluid imgAccordion" alt="Avatar" v-if="collaborator.imageUser">
+            <vue-gravatar v-else class="img-fluid imgAccordion" :email="collaborator.email" />
             <p v-text="collaborator.name" class="ms-2 nameCollab"></p>
             <p class="ms-2 text-center" v-text="'#' + collaborator.position"></p>
           </button>

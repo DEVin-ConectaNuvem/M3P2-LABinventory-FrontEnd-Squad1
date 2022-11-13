@@ -9,7 +9,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, ref, defineEmits, onMounted, watch } from 'vue'
+import { computed, ref, onMounted, watch } from 'vue'
 import { watchDebounced } from '@vueuse/core'
 
 const props = defineProps({

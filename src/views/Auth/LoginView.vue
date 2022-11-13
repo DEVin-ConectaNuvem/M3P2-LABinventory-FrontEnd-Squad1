@@ -10,16 +10,14 @@
                   <div class="card-body mx-md-4 mt-5">
                     <div class="text-center animate__animated animate__backInLeft">
                       <img src="../../assets/icons/logoInventary.svg" class="img-fluid logo " alt="logo">
-                      <h4 class="mt-1 ">Nós somos o <strong>DEVInventary</strong></h4>
+                      <h4 class="mt-1 ">Nós somos o <strong>LABinventary</strong></h4>
                     </div>
-
                     <VeeForm data-testid="vue-toast-info" @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit"
                       class="animate__animated animate__backInLeft">
                       <div class="d-flex align-items-end justify-content-center mb-2 ">
                         <p class="mb-0 me-2 text-light " v-text="register.haveAccount"></p>
                         <a class="text-white" @click.stop="toggleRegister" v-text="register.createAccount"></a>
                       </div>
-
                       <div class="input-group mb-3">
                         <div class="input-group-prepend">
                           <span class="input-group-text">@</span>
@@ -29,7 +27,6 @@
                           :rules="validateEmail" />
                         <div class="invalid-feedback">{{ errors.email }}</div>
                       </div>
-
                       <div class="input-group mb-3">
                         <div class="input-group-prepend">
                           <span class="input-group-text">&#128273</span>
@@ -39,7 +36,6 @@
                           :rules="validatePassword" />
                         <div class="invalid-feedback">{{ errors.password }}</div>
                       </div>
-
                       <transition>
                         <div class="input-group mb-3" v-if="register.register">
                           <div class="input-group-prepend">
@@ -51,7 +47,6 @@
                           <div class="invalid-feedback">{{ errors.confirmPassword }}</div>
                         </div>
                       </transition>
-
                       <div class="text-center ">
                         <button :class="register.register ? 'btn btn-success me-3' : 'btn btn-info text-dark me-3'"
                           type="submit" v-text="register.button">
@@ -61,7 +56,6 @@
                         <hr>
                         <a class="ms-2 text-white" v-show="!register.register" @click="alertUser">Esqueceu a senha?</a>
                       </div>
-
                     </VeeForm>
                   </div>
                 </div>
@@ -108,7 +102,6 @@ const toast = useToast();
 const store = useStore();
 const router = useRouter();
 
-// Objeto para dados do formulário de Login/Registro
 const form = ref({
   id: '',
   email: '',
@@ -116,7 +109,6 @@ const form = ref({
   confirmPassword: '',
 });
 
-// Objeto para dados exibidos em tela conforme Login/Registro
 const register = ref({
   register: false,
   textMain: 'Faça o login ou cadastre-se',
@@ -125,7 +117,6 @@ const register = ref({
   createAccount: 'Cadastre-se',
 });
 
-// Objeto para validação do campo de confirmação de senha
 function validateConfirmPassword(value) {
   if (!value) {
     return 'A confirmação da senha é obrigatória';
@@ -135,7 +126,6 @@ function validateConfirmPassword(value) {
   return value === form.value.password ? true : 'As senhas não conferem';
 }
 
-// Função para alternar entre o formulário de login e o formulário de registro
 function toggleRegister() {
   register.value.register = !register.value.register;
   register.value.textMain = register.value.register ? 'Para prosseguir ao acesso, cadastre-se abaixo' : 'Por favor, faça o login na sua conta';
@@ -144,7 +134,7 @@ function toggleRegister() {
   register.value.createAccount = register.value.register ? 'Entrar' : 'Criar conta';
 }
 
-// função para registro e login de usuários
+
 function onValidSubmit(values, actions) {
   if (register.value.register) {
     let checkEmail = store.state.authModule.users.find(user => user.email === form.value.email);
@@ -159,7 +149,6 @@ function onValidSubmit(values, actions) {
   }
 }
 
-// função específica para registro de usuário
 function registerUser(actions) {
   const loader = $loading.show()
   store.dispatch('authModule/updateUsers');
@@ -178,7 +167,6 @@ function registerUser(actions) {
   }, 1000)
 }
 
-// função específica para login de usuário
 function loginUser(actions) {
   const loader = $loading.show();
   setTimeout(async () => {
@@ -195,14 +183,12 @@ function loginUser(actions) {
   }, 1000)
 }
 
-// função para tratamento de erros do formulário
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
     toast.error(errors[field], { timeout: 1500 });
   }
 }
 
-// função para aviso de funções em desenvolvimento
 function alertUser() {
   toast.warning('Função em desenvolvimento!', { timeout: 1500 });
 }
