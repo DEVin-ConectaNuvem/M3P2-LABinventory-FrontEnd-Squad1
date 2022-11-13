@@ -19,11 +19,6 @@ describe('Teste de Cadastro de item bem sucedido', () => {
         cy.get("[data-testid=item-brand]").type("marca teste")
 
         cy.get("[data-testid=item-model]").type("modelo teste") 
-        const files = []
-
-        for (var i = 1; i <= 10; i++) {
-        files.push(Cypress.Buffer.from(`Contents of file #${i}`))
-        }
 
         cy.get('[data-testid=item-upload]').click();
         cy.get('[data-testid=item-upload]').selectFile('cypress/fixtures/teste.jpeg', {action: 'drag-drop'})
