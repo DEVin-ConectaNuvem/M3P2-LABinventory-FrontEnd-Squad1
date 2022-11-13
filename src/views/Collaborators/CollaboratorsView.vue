@@ -1,7 +1,7 @@
 <template>
   <div class="container mt-3">
     <h4 class="mb-3">Preencha os campos para cadastrar/editar um colaborador</h4>
-    <VeeForm @submit="onValidSubmit" v-slot="{ errors, actions }" @invalid-submit="onInvalidSubmit"
+    <VeeForm @submit="onValidSubmit" data-testid="vue-toast-info" v-slot="{ errors, actions }" @invalid-submit="onInvalidSubmit"
       class="formCadastro animate__animated animate__fadeIn">
       <div class="row mb-1">
         <h3>Dados do colaborador</h3>
@@ -28,12 +28,14 @@
             </Veefield>
             <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.gender }}</div>
           </div>
+          
           <div class="col-sm-12 col-md-6 col-lg-4">
             <label class="form-label">Data de nascimento <span>*</span></label>
             <Veefield data-testid="colab-date" type="date" name="birthDay" class="form-control" placeholder="Data de nascimento"
               v-model="form.birthDay" required :class="{ 'is-invalid': errors.birthDay }" :rules="validateDate" />
             <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.birthDay }}</div>
           </div>
+          
           <div class="col-sm-12 col-md-6 col-lg-4">
             <label class="form-label">Telefone <span>*</span></label>
             <Veefield data-testid="colab-phone" type="text" name="phone" class="form-control" placeholder="Fixo ou celular" v-model="form.phone"
@@ -41,12 +43,14 @@
               :rules="validatePhone" />
             <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.phone }}</div>
           </div>
+          
           <div class="col-sm-12 col-md-6 col-lg-4">
             <label class="form-label">E-mail <span>*</span></label>
             <Veefield data-testid="colab-email" type="email" name="email" class="form-control" placeholder="Ex: José@gmail.com"
               v-model="form.email" required :class="{ 'is-invalid': errors.email }" :rules="validateEmail" />
             <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.email }}</div>
           </div>
+          
           <div class="col-sm-12 col-md-6 col-lg-4">
             <label class="form-label">Cargo <span>*</span></label>
             <Veefield data-testid="colab-position" as="select" name="position" class="form-select" placeholder="Ex: desenvolvedor"
@@ -152,7 +156,6 @@ import {
 } from "../../validators/validators";
 import { useAxios } from "../../hooks";
 import moment from "moment";
-
 const { axios } = useAxios();
 const $loading = useLoading();
 const toast = useToast();
@@ -175,7 +178,6 @@ const content = {
     closeToast: () => {
       toast.clear();
     },
-
   },
 };
 const id = route.params.userId;
@@ -202,7 +204,6 @@ const form = ref({
 
 
 const newForm = ref({})
-
 onMounted(async () => {
   store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de colaboradores');
   if (id) {
@@ -212,7 +213,6 @@ onMounted(async () => {
     }
   }
 });
-
 async function getCollaboratorById(id) {
   const loader = $loading.show();
   try {
@@ -251,12 +251,12 @@ async function onValidSubmit(values, actions) {
 async function checkEmailExists(email) {
   const res = await axios.get(`/collaborators?email=${email}`);
   if (id) {
-    const result = res.data.filter((item) => item.id !== id);
+    const result = res.data.filter((collab) => collab.id !== id);
     return result
+  } else {
+    return res.data
   }
-  return res
 }
-
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
     toast.error(errors[field], { timeout: 1500 });
@@ -315,19 +315,15 @@ async function editCollaborator() {
     }, 500);
   }
 }
-
 function cancelEdit() {
   toast.warning("Edição cancelada!", { timeout: 1000 });
   router.push({ name: "ListCollaborators" });
 }
-
 function searchZipCode() {
   clearAddress();
-
   if (!form.value.zipcode || form.value.zipcode.length <= 8) {
     return;
   }
-
   const loader = $loading.show();
   axios
     .get(`https://viacep.com.br/ws/${form.value.zipcode}/json/`)
@@ -346,7 +342,6 @@ function searchZipCode() {
       form.value.state = response.data.uf;
       form.value.neighborhood = response.data.bairro;
       form.value.street = response.data.logradouro;
-
     })
     .catch((error) => {
       loader.hide();
@@ -375,13 +370,11 @@ function clearAddress() {
   border-radius: 5px;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-
   .form-label {
     font-size: 1.1rem;
     font-weight: bold;
     color: var(--color-dark);
   }
-
   span {
     color: var(--color-danger);
     font-size: 1rem;
