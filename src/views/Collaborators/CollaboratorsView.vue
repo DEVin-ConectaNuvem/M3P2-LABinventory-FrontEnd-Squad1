@@ -251,10 +251,11 @@ async function onValidSubmit(values, actions) {
 async function checkEmailExists(email) {
   const res = await axios.get(`/collaborators?email=${email}`);
   if (id) {
-    const result = res.data.filter((item) => item.id !== id);
+    const result = res.data.filter((collab) => collab.id !== id);
     return result
+  } else {
+    return res.data
   }
-  return res
 }
 
 function onInvalidSubmit({ errors }) {
