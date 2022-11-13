@@ -1,5 +1,3 @@
-import { assert } from "@vue/compiler-core";
-
 describe("Realiza os testes de registro de colaborador", () => {
   let cep = [];
   beforeEach(() => {
