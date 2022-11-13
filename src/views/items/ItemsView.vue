@@ -29,7 +29,6 @@
             :class="{ 'is-invalid': errors.title }"
             :rules="required"
             maxlength="30"
-            data-testid="item-title"
           />
           <div class="invalid-feedback animate__animated animate__shakeX">
             {{ errors.title }}
@@ -46,7 +45,6 @@
             required
             :class="{ 'is-invalid': errors.category }"
             :rules="required"
-            data-testid="item-category"
           >
             <option value="" disabled>Escolha a categoria</option>
             <option value="Computador">Computador</option>
@@ -75,7 +73,6 @@
             required
             :class="{ 'is-invalid': errors.value }"
             :rules="validateNumber"
-            data-testid="item-value"
           />
           <div class="invalid-feedback animate__animated animate__shakeX">
             {{ errors.value }}
@@ -91,7 +88,6 @@
             class="form-control"
             placeholder="Marca do item"
             v-model.trim="form.brand"
-            data-testid="item-brand"
             required
             :class="{ 'is-invalid': errors.brand }"
             :rules="required"
@@ -109,7 +105,6 @@
             name="model"
             class="form-control"
             placeholder="Modelo do item"
-            data-testid="item-model"
             v-model.trim="form.model"
             required
             :class="{ 'is-invalid': errors.model }"
