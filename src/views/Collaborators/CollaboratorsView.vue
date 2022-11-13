@@ -4,58 +4,65 @@
     <VeeForm @submit="onValidSubmit" data-testid="vue-toast-info" v-slot="{ errors, actions }" @invalid-submit="onInvalidSubmit"
       class="formCadastro animate__animated animate__fadeIn">
       <div class="row mb-1">
-        <h3>Dados de endereço</h3>
+        <h3>Dados do colaborador</h3>
         <hr />
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Nome completo <span>*</span></label>
-          <Veefield data-testid="input-name" type="text" name="name" class="form-control" placeholder="Nome completo" v-model.trim="form.name"
-            required :class="{ 'is-invalid': errors.name }" :rules="validateName" v-focus maxlength="25" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.name }}</div>
+        <div class="col-lg-2">
+          <avatar-user @uploadSuccess="saveImageUser" :imgDataUser="form.imageUser"></avatar-user>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Genero <span>*</span></label>
-          <Veefield data-testid="input-gender" as="select" name="gender" class="form-select" placeholder="Genero" v-model="form.gender"
-            :class="{ 'is-invalid': errors.gender }" :rules="required" required>
-            <option value="" disabled selectd>Escolha o gênero</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Feminino">Feminino</option>
-            <option value="Outro">Outro</option>
-          </Veefield>
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.gender }}</div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Data de nascimento <span>*</span></label>
-          <Veefield data-testid="input-birthday" type="date" name="birthDay" class="form-control" placeholder="Data de nascimento"
-            v-model="form.birthDay" required :class="{ 'is-invalid': errors.birthDay }" :rules="validateDate" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.birthDay }}</div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Telefone <span>*</span></label>
-          <Veefield data-testid="input-phone" type="text" name="phone" class="form-control" placeholder="Fixo ou celular" v-model="form.phone"
-            v-mask="['(##) ####-####', '(##) #####-####']" :class="{ 'is-invalid': errors.phone }"
-            :rules="validatePhone" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.phone }}</div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">E-mail <span>*</span></label>
-          <Veefield data-testid="input-email" type="email" name="email" class="form-control" placeholder="Ex: José@gmail.com" v-model="form.email"
-            required :class="{ 'is-invalid': errors.email }" :rules="validateEmail" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.email }}</div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Cargo <span>*</span></label>
-          <Veefield data-testid="input-position" as="select" name="position" class="form-select" placeholder="Ex: desenvolvedor"
-            v-model="form.position" required :class="{ 'is-invalid': errors.position }" :rules="required">
-            <option value="" disabled>Escolha o cargo</option>
-            <option value="Desenvolvedor Backend">Desenvolvedor Backend</option>
-            <option value="Desenvolvedor Frontend">
-              Desenvolvedor Frontend
-            </option>
-            <option value="Desenvolvedor Fullstack">
-              Desenvolvedor Fullstack
-            </option>
-          </Veefield>
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.position }}</div>
+        <div class="col-lg-10">
+          <div class="row">
+          <div class="col-sm-12 col-md-12 col-lg-4">
+            <label class="form-label">Nome completo <span>*</span></label>
+            <Veefield type="text" data-testid="input-name" name="name" class="form-control" placeholder="Nome completo" v-model.trim="form.name"
+              required :class="{ 'is-invalid': errors.name }" :rules="validateName" v-focus maxlength="25" />
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.name }}</div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label class="form-label">Genero <span>*</span></label>
+            <Veefield as="select" data-testid="input-gender" name="gender" class="form-select" placeholder="Genero" v-model="form.gender"
+              :class="{ 'is-invalid': errors.gender }" :rules="required" required>
+              <option value="" disabled selectd>Escolha o gênero</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Feminino">Feminino</option>
+              <option value="Outro">Outro</option>
+            </Veefield>
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.gender }}</div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label class="form-label">Data de nascimento <span>*</span></label>
+            <Veefield type="date" data-testid="input-birthday" name="birthDay" class="form-control" placeholder="Data de nascimento"
+              v-model="form.birthDay" required :class="{ 'is-invalid': errors.birthDay }" :rules="validateDate" />
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.birthDay }}</div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label class="form-label">Telefone <span>*</span></label>
+            <Veefield type="text" data-testid="input-phone" name="phone" class="form-control" placeholder="Fixo ou celular" v-model="form.phone"
+              v-mask="['(##) ####-####', '(##) #####-####']" :class="{ 'is-invalid': errors.phone }"
+              :rules="validatePhone" />
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.phone }}</div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label class="form-label">E-mail <span>*</span></label>
+            <Veefield type="email" data-testid="input-email" name="email" class="form-control" placeholder="Ex: José@gmail.com"
+              v-model="form.email" required :class="{ 'is-invalid': errors.email }" :rules="validateEmail" />
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.email }}</div>
+          </div>
+          <div class="col-sm-12 col-md-6 col-lg-4">
+            <label class="form-label">Cargo <span>*</span></label>
+            <Veefield as="select" data-testid="input-position" name="position" class="form-select" placeholder="Ex: desenvolvedor"
+              v-model="form.position" required :class="{ 'is-invalid': errors.position }" :rules="required">
+              <option value="" disabled>Escolha o cargo</option>
+              <option value="Desenvolvedor Backend">Desenvolvedor Backend</option>
+              <option value="Desenvolvedor Frontend">
+                Desenvolvedor Frontend
+              </option>
+              <option value="Desenvolvedor Fullstack">
+                Desenvolvedor Fullstack
+              </option>
+            </Veefield>
+            <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.position }}</div>
+          </div>
+          </div>
         </div>
       </div>
 
@@ -64,52 +71,52 @@
         <hr />
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">CEP <span>*</span></label>
-          <Veefield data-testid="input-zipcode" type="text" name="zipcode" class="form-control" placeholder="CEP" v-model="form.zipcode"
+          <Veefield type="text" data-testid="input-zipcode" name="zipcode" class="form-control" placeholder="CEP" v-model="form.zipcode"
             @focusout="searchZipCode" required v-mask="'#####-###'" ref="zipcode"
             :class="{ 'is-invalid': errors.zipcode }" :rules="validateCEP" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.zipcode }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Cidade <span>*</span></label>
-          <Veefield data-testid="input-city" type="text" name="city" class="form-control" placeholder="Cidade" v-model="form.city" required
+          <Veefield type="text" data-testid="input-city" name="city" class="form-control" placeholder="Cidade" v-model="form.city" required
             :class="{ 'is-invalid': errors.city }" disabled :rules="required" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.city }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Estado <span>*</span></label>
-          <Veefield data-testid="input-state" type="text" name="state" class="form-control" placeholder="Estado" v-model="form.state" required
+          <Veefield type="text" data-testid="input-state" name="state" class="form-control" placeholder="Estado" v-model="form.state" required
             :class="{ 'is-invalid': errors.state }" disabled :rules="required" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.state }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Bairro <span>*</span></label>
-          <Veefield data-testid="input-neighborhood" type="text" name="neighborhood" class="form-control" placeholder="Bairro"
+          <Veefield type="text" data-testid="input-neighborhood" name="neighborhood" class="form-control" placeholder="Bairro"
             v-model="form.neighborhood" required :class="{ 'is-invalid': errors.neighborhood }" :rules="required" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.neighborhood }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Logradouro <span>*</span></label>
-          <Veefield data-testid="input-street" type="text" name="street" class="form-control" placeholder="Rua/Avenida" v-model="form.street"
+          <Veefield type="text" data-testid="input-stree" name="street" class="form-control" placeholder="Rua/Avenida" v-model="form.street"
             required :class="{ 'is-invalid': errors.street }" :rules="required" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.street }}</div>
         </div>
 
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Número <span>*</span></label>
-          <Veefield data-testid="input-number" type="number" name="houseNumber" class="form-control" placeholder="Número da residência"
+          <Veefield type="number" data-testid="input-number" name="houseNumber" class="form-control" placeholder="Número da residência"
             :rules="validateNumber" v-model.number="form.houseNumber" required
             :class="{ 'is-invalid': errors.houseNumber }" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.houseNumber }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Complemento <span>*</span></label>
-          <Veefield data-testid="input-complement" type="text" name="complement" class="form-control" placeholder="Complemento" :rules="required"
+          <Veefield type="text" data-testid="input-complement" name="complement" class="form-control" placeholder="Complemento" :rules="required"
             v-model="form.complement" required :class="{ 'is-invalid': errors.complement }" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.complement }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Referência <span>*</span></label>
-          <Veefield data-testid="input-reference" type="text" name="reference" class="form-control" placeholder="Ponto de referência"
+          <Veefield type="text" data-testid="input-reference" name="reference" class="form-control" placeholder="Ponto de referência"
             :rules="required" v-model="form.reference" required :class="{ 'is-invalid': errors.reference }" />
           <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.reference }}</div>
         </div>
@@ -126,10 +133,11 @@
 
 <script setup>
 import { uid } from "uid";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
-import ToastNotification from "./components/ToastNotification.vue";
+import ToastNotification from "../../components/shared/ToastNotification.vue";
+import AvatarUser from "../../components/shared/AvatarUser.vue";
 import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
 import { Form as VeeForm, Field as Veefield } from "vee-validate";
@@ -144,19 +152,27 @@ import {
 } from "../../validators/validators";
 import { useAxios } from "../../hooks";
 import moment from "moment";
-
 const { axios } = useAxios();
 const $loading = useLoading();
 const toast = useToast();
 const store = useStore();
 const route = useRoute();
 const router = useRouter();
+const toastInfo = reactive({
+  msg: "Cadastro de colaborador realizado com sucesso!",
+  buttonNew: "Cadastrar novo colaborador",
+  buttonList: "Listar colaboradores",
+});
 const content = {
   component: ToastNotification,
+  props: toastInfo,
   listeners: {
     listCollabs: () => {
       toast.clear();
       router.push({ name: "ListCollaborators" });
+    },
+    closeToast: () => {
+      toast.clear();
     },
   },
 };
@@ -179,9 +195,9 @@ const form = ref({
   reference: null,
   createdAt: null,
   updatedAt: null,
+  imageUser: null
 });
 const newForm = ref({})
-
 onMounted(async () => {
   store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de colaboradores');
   if (id) {
@@ -191,7 +207,6 @@ onMounted(async () => {
     }
   }
 });
-
 async function getCollaboratorById(id) {
   const loader = $loading.show();
   try {
@@ -202,28 +217,29 @@ async function getCollaboratorById(id) {
   } catch (error) {
     toast.error("Erro ao buscar colaborador", content);
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
-
-async function onValidSubmit(actions) {
+async function onValidSubmit(values, actions) {
   try {
-    newForm.value = { ...form.value }
+    newForm.value = { ...values }
     const checkEmail = await checkEmailExists(newForm.value.email);
     if (Array.isArray(checkEmail) && checkEmail.length > 0) {
       toast.error("Email já cadastrado", content);
       return;
     }
     if (id) {
-      await editCollaborator(actions);
+      await editCollaborator();
     } else {
-      await newCollaborator(actions);
+      await newCollaborator();
     }
+    actions.resetForm();
   } catch (error) {
     toast.error("Erro ao cadastrar colaborador", content);
   }
 }
-
 async function checkEmailExists(email) {
   const res = await axios.get(`/collaborators?email=${email}`);
   if (id) {
@@ -232,14 +248,12 @@ async function checkEmailExists(email) {
   }
   return res
 }
-
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
     toast.error(errors[field], { timeout: 1500 });
   }
 }
-
-async function newCollaborator(actions) {
+async function newCollaborator() {
   const loader = $loading.show();
   try {
     !id ? (newForm.value.id = "c" + uid()) : "";
@@ -250,17 +264,28 @@ async function newCollaborator(actions) {
       newForm.value
     );
     if (res.status === 201) {
-      toast.success("Colaborador cadastrado com sucesso", content);
-      router.push({ name: "ListCollaborators" });
+        toast(content, {
+          position: "top-right",
+          closeOnClick: false,
+          pauseOnFocusLoss: false,
+          pauseOnHover: false,
+          draggable: false,
+          draggablePercent: 0.6,
+          showCloseButtonOnHover: true,
+          closeButton: "button",
+          icon: "fas fa-rocket",
+          rtl: false,
+        });
     }
   } catch (error) {
-    toast.error("Erro ao cadastrar colaborador", content);
+    toast.error("Erro ao cadastrar colaborador");
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
-
-async function editCollaborator(actions) {
+async function editCollaborator() {
   const loader = $loading.show();
   try {
     const res = await axios.put(
@@ -274,22 +299,20 @@ async function editCollaborator(actions) {
   } catch (error) {
     toast.error("Erro ao editar colaborador", content);
   } finally {
-    loader.hide();
+    setTimeout(() => {
+      loader.hide()
+    }, 500);
   }
 }
-
 function cancelEdit() {
   toast.warning("Edição cancelada!", { timeout: 1000 });
   router.push({ name: "ListCollaborators" });
 }
-
 function searchZipCode() {
   clearAddress();
-
   if (!form.value.zipcode || form.value.zipcode.length <= 8) {
     return;
   }
-
   const loader = $loading.show();
   axios
     .get(`https://viacep.com.br/ws/${form.value.zipcode}/json/`)
@@ -308,13 +331,17 @@ function searchZipCode() {
       form.value.state = response.data.uf;
       form.value.neighborhood = response.data.bairro;
       form.value.street = response.data.logradouro;
-
     })
     .catch((error) => {
+      loader.hide();
       toast.error(error, { timeout: 1500 });
     });
 }
-
+function saveImageUser(imgBase64){
+  if(imgBase64){
+    form.value.imageUser = imgBase64
+  }
+}
 function clearAddress() {
   form.value.city = "";
   form.value.state = "";
@@ -330,13 +357,11 @@ function clearAddress() {
   border-radius: 5px;
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-
   .form-label {
     font-size: 1.1rem;
     font-weight: bold;
     color: var(--color-dark);
   }
-
   span {
     color: var(--color-danger);
     font-size: 1rem;
