@@ -10,26 +10,21 @@ describe('Dashboard', () => {
 
         cy.wait(1000)
 
-        cy.contains("Ainda não há itens cadastrados com este termo de pesquisa");
-
+        cy.contains("Ainda não há itens cadastrados com este termo de pesquisa").should('be.visible');
         cy.get('a:contains("Realizar novo cadastro")').first().click();
-
         cy.wait(1000)
-        
-        cy.contains("Criação e edição de itens");
+        cy.url().should('include', '/itens');
+        cy.contains("Criação e edição de itens").should('be.visible');
 
     }),
     it('Visita a pagina dashboard e valida se os cards com informações totais de colaboradores está sendo exibida e ao clicar no card, abre um modal que nós redireciona para listagem de colaboradores', () => {
 
         cy.get('h4[class="my-1"]');
-
         cy.get('p:contains("Colaboradores")').click();
-
-        cy.contains("Gostaria de ver mais informações sobre colaboradores ?")
-
+        cy.contains("Gostaria de ver mais informações sobre colaboradores ?").should('be.visible');
         cy.get('button:contains("Verificar!")').click();
-
-        cy.contains("Listagem de colaboradores")
+        cy.url().should('include', '/lista-colaboradores');
+        cy.contains("Listagem de colaboradores").should('be.visible');
 
     }),
     it('Visita a pagina dashboard e valida se os cards com informações totais de itens, valores e empréstimos está sendo exibida e ao clicar no card, abre um modal que nós redireciona para listagem de itens', () => {
@@ -37,27 +32,38 @@ describe('Dashboard', () => {
         cy.get('h4[class="my-1"]');
 
         cy.get('p:contains("Itens")').click();
-        cy.contains("Gostaria de ver mais informações sobre itens ?");
+        cy.contains("Gostaria de ver mais informações sobre itens ?").should('be.visible');
         cy.get('button:contains("Verificar!")').click();
-        cy.contains("Listagem de itens");
+        cy.wait(1000);
+        cy.url().should('include', '/lista-itens');
+        cy.contains("Listagem de itens").should('be.visible');
 
         cy.openSidebar();
         cy.get('span:contains("Inventário")').click();
 
+        cy.wait(1000);
+
         cy.get('p:contains("Valores")').click();
-        cy.contains("Gostaria de ver mais informações sobre itens ?");
+        cy.contains("Gostaria de ver mais informações sobre itens ?").should('be.visible');
         cy.get('button:contains("Verificar!")').click();
-        cy.contains("Listagem de itens");
+        cy.wait(1000);
+        cy.url().should('include', '/lista-itens');
+        cy.contains("Listagem de itens").should('be.visible');
+        
         
         cy.get('span:contains("Inventário")').click();
 
+        cy.wait(1000);
+
         cy.get('p:contains("Empréstimos")').click();
-        cy.contains("Gostaria de ver mais informações sobre itens ?");
+        cy.contains("Gostaria de ver mais informações sobre itens ?").should('be.visible');
         cy.get('button:contains("Verificar!")').click();
-        cy.contains("Listagem de itens");
+        cy.wait(1000);
+        cy.url().should('include', '/lista-itens');
+        cy.contains("Listagem de itens").should('be.visible');
 
         cy.get('span:contains("Inventário")').click();
-
-        cy.contains("Dashboard");
+        cy.wait(1000);
+        cy.contains("Dashboard").should('be.visible');
     })
   })

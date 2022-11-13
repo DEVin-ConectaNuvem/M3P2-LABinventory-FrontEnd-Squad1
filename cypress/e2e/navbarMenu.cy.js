@@ -18,39 +18,32 @@ describe('Navbar e Sidebar', () => {
         cy.openSidebar();
 
         cy.get('a[href="#/colaboradores"]').click();
-        
+        cy.wait(1000);
         cy.url().should('include', '/colaboradores');
-
         cy.contains('Criação e edição de colaboradores').should('be.visible');
 
         cy.get('a[href="#/lista-colaboradores"]').click();
-
+        cy.wait(1000);
         cy.url().should('include', '/lista-colaboradores');
-
         cy.contains('Listagem de colaboradores').should('be.visible');
 
         cy.get('a[href="#/itens"]').click();
-
+        cy.wait(1000);
         cy.url().should('include', '/itens');
-
         cy.contains('Criação e edição de itens').should('be.visible');
 
         cy.get('a[href="#/lista-itens"]').click();
-
+        cy.wait(1000);
         cy.url().should('include', '/lista-itens');
-
         cy.contains('Listagem de itens').should('be.visible');
 
         cy.get('a[href="#/"]').click();
-
+        cy.wait(1000);
         cy.url().should('eq', 'http://localhost:3000/#/');
-
         cy.contains('Dashboard').should('be.visible');
 
         cy.get('#dropdownUser1').click();
-
         cy.get('a:contains("Sair")').click();
-
         cy.url().should('include', '/login');
 
     })
