@@ -110,4 +110,16 @@ describe("Realiza os testes de registro de colaborador", () => {
     cy.get("[data-testid=colab-name]").type("Zé").blur();
     cy.contains("O nome deve ter no mínimo 3 caracteres");
   });
+
+  it("Teste de criação de Colaborador com sucesso! Sem Upload de Foto", () => {
+    cy.registerColab("Teste", "1998-01-01", "testeeee@teste.com.br", "59140023", "Teste bairro", "Teste Cidade", "123", "Teste Complem", "Teste Ref", "1234567890", false);
+    cy.get("[data-testid='colab-submit-button']").click();
+    cy.contains("Cadastro de colaborador realizado com sucesso!");
+  });
+
+  it("Teste de criação de Colaborador com sucesso! Com Upload de Foto", () => {
+    cy.registerColab("Teste", "1998-01-01", "testeeee@teste.com.br", "59140023", "Teste bairro", "Teste Cidade", "123", "Teste Complem", "Teste Ref", "1234567890", true);
+    cy.get("[data-testid='colab-submit-button']").click();
+    cy.contains("Cadastro de colaborador realizado com sucesso!");
+  });
 });

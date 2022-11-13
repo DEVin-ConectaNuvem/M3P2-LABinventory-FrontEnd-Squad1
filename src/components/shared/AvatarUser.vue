@@ -2,7 +2,7 @@
     <div>
         <img v-if="imgData" :src="imgData" alt="Avatar" />
         <img v-else src="../../assets/icons/user-default.svg" alt="Avatar">
-        <a class="btn btn-primary" @click="toggleShow">Upload foto</a>
+        <a data-testid="colab-upload-file" class="btn btn-primary" @click="toggleShow">Upload foto</a>
         <my-upload field="img" @crop-success="cropSuccess" langType="pt-br" v-model="show" :width="150" :height="150"
             img-format="png">
         </my-upload>
