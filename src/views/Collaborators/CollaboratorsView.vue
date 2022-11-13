@@ -126,7 +126,7 @@
         </div>
       </div>
       <div class="text-end">
-        <button data-testid="reset-button" :type="id ? 'button' : 'reset'" @click="cancelEdit()" class="btn btn-secondary me-2 mt-2"
+        <button data-testid="reset-button" :type="id ? 'button' : 'reset'" @click="id ? cancelEdit() : ''" class="btn btn-secondary me-2 mt-2"
           v-text="id ? 'Cancelar' : 'Limpar'"></button>
         <button data-testid="submit-button" type="submit" class="mt-2" :class="id ? 'btn btn-primary' : 'btn btn-success'"
           v-text="id ? 'Editar' : 'Cadastrar'"></button>
