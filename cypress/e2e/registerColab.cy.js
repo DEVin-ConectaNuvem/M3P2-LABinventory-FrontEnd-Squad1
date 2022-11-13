@@ -50,7 +50,7 @@ describe("Realiza os testes de registro de colaborador", () => {
 
   it("Número vazio, ao perder o foco deve retornar mensagem 'campo obrigatório'", () => {
     cy.get("[data-testid=colab-number]").clear().blur();
-    cy.contains("div", "O número deve igual ou maior que zero");
+    cy.contains("div", "O número deve ser igual ou maior que zero");
   });
 
   it("CEP deve conter 8 dígitos'", () => {
