@@ -65,7 +65,8 @@ function logOut() {
 <style lang="scss" scoped>
 header {
     width: 100%;
-    background-color: var(--color-dark);
+    background: -webkit-linear-gradient(to right, rgb(47, 0, 96), rgb(141, 77, 171));
+    background: linear-gradient(to right, rgb(47, 0, 96), rgb(141, 77, 171));
 }
 
 .namePage {
@@ -89,9 +90,7 @@ i {
 }
 
 i {
-    background: var(--color-dark);
-    background: -webkit-linear-gradient(to right, var(--color-primary), var(--color-dark));
-    background: linear-gradient(to right, var(--color-primary), var(--color-dark));
+    background: white;
     -webkit-background-clip: text;
     -moz-background-clip: text;
     background-clip: text;

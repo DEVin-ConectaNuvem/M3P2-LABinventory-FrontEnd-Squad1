@@ -20,7 +20,7 @@
                       </div>
                       <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                          <span class="input-group-text">@</span>
+                          <span class="input-group-text">🔒</span>
                         </div>
                         <Veefield data-testid="login-input-email" type="text" class="form-control" name="email" placeholder="Digite o e-mail"
                           aria-label="Email" v-model="form.email" required :class="{ 'is-invalid': errors.email }"
