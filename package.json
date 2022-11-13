@@ -51,6 +51,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^27.5.1",
     "cypress": "^11.0.0",
+    "cypress-file-upload": "^5.0.8",
     "cz-conventional-changelog": "^3.3.0",
     "git-cz": "^4.7.6",
     "husky": "^8.0.1",
