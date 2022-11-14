@@ -328,6 +328,7 @@ function teste(objeto){
     font-size: 1.1rem;
     font-weight: bold;
     color: var(--color-dark);
+    margin-top: 5px;
   }
 
   span {
