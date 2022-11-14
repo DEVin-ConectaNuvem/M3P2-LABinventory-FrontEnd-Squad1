@@ -3,24 +3,20 @@
 </h1>
 
 <p align="center">
-  <a href="https://devinventary.netlify.app">
-    <img alt="website" src="https://img.shields.io/website?up_message=online&url=https%3A%2F%2Fdevinventary.netlify.app%2F">
-  </a>
  <img alt="Licença" src="https://img.shields.io/badge/license-MIT-brightgreen">
-
 </p>
 
 # 💻 Sobre o projeto
-<p align="left">Este projeto foi criado para avaliação final do Módulo 01 do curso DEVInHouse em parceria com ACATE e ConectaNuvem. Foram utilizados os conhecimentos adquiridos nas primeiras doze semanas do curso. 
+<p align="left">Este projeto foi criado para avaliação final do curso DEVInHouse em parceria com ACATE e ConectaNuvem. Foram utilizados vários dos conhecimentos adquiridos ao longo do curso. 
 
-A ideia do projeto consiste na construção de uma aplicação com o framework Vue JS para uma ** Single Page Application** de Inventário com a finalidade de controlar o empréstimo de itens aos colaboradores. Para alcançar o resultado almejado, os seguintes aprendizados foram aplicados na confecção do projeto:
+A ideia do projeto consiste na construção de uma aplicação com o framework Vue JS no Front-end e Python + Flask no BackEnd para uma **Single Page Application** de Inventário com a finalidade de controlar o empréstimo de itens aos colaboradores. Para alcançar o resultado almejado, os seguintes aprendizados foram aplicados na confecção do projeto:
 
 - HTML: uso das principais tags como head, meta, title, body, div, h1, form, input, button, ul, li. Atributos de tags como class, id, type. Inclusão de arquivos de estilos (css) e de script (js) na página.
 - CSS/SASS: estilização da página, botões, inputs, alteração de atributos dos elementos da tela de acordo com a interação do usuário, (UX), responsividade a diferentes tamanhos de telas (mobile📱/web💻)
 - Vue JS / Javascript: vue router, vuex, axios, variáveis, arrays, funções síncronas e assíncronas, manipulação do DOM (eventos, elementos e seus atributos), manipulação de objetos (JSON), utilização do localStorage, uso de bibliotecas Javascript.
+- Cypress: para utilização nos testes de componentes e E2E no frotend.
+- Flask + Python: funções sincronas e assíncronas, classes, testes unitarios, construção de uma API em MongoDB.
 - Versionamento: utilização do github como ferramenta de versionamento, utilizando os conceitos de gitflow.
-
-O projeto finalizado pode ser conferido no link: <a href>https://devinventary.netlify.app/
 </p>
 
 
@@ -34,7 +30,7 @@ O projeto finalizado pode ser conferido no link: <a href>https://devinventary.ne
 ## Setup do Projeto
 ```bash
 # Clone este repositório
-$ git clone https://github.com/edumartinsrib/DEVInventary.git
+$ git clone https://github.com/DEVin-ConectaNuvem/M3P2-LABinventory-FrontEnd-Squad1
 ```
 ### Instale as dependências
 ```sh
@@ -65,13 +61,13 @@ As seguintes funcionalidades foram implementadas:
 <p> O aplicativo foi criado sob o conceito de design responsivo mobile first, de modo a atender diversos tamanhos de telas.</p>
 
 ## Mobile 📱
-<p align="left">
+<p align="center">
   <img alt="home-mobile" title="#home-mobile" src="./src/assets/readme/mobile-logon.png" heigth="250px" >
 </p>
 
 ## Web 💻
 
-<p align="left">
+<p align="center">
   <img alt="home-web" title="#home-web" src="./src/assets/readme/web-login.png" width="900px">
 </p>
 
@@ -83,6 +79,9 @@ As seguintes funcionalidades foram implementadas:
 - CSS;
 - SASS;
 - Bootstrap.
+- Cypress.
+- Python.
+- Flask.
 
 
 # 🧑‍💻 Autor:
