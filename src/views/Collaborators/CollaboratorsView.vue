@@ -375,7 +375,9 @@ function clearAddress() {
     font-size: 1.1rem;
     font-weight: bold;
     color: var(--color-dark);
+    margin-top: 5px;
   }
+
   span {
     color: var(--color-danger);
     font-size: 1rem;
