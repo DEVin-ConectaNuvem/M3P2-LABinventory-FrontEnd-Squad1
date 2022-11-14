@@ -221,7 +221,7 @@ async function getCollaboratorById(id) {
     );
     return res.data;
   } catch (error) {
-    toast.error("Erro ao buscar colaborador", content);
+    toast.error("Erro ao buscar colaborador");
   } finally {
     setTimeout(() => {
       loader.hide()
@@ -234,7 +234,7 @@ async function onValidSubmit(values, actions) {
     newForm.value = { ...values }
     const checkEmail = await checkEmailExists(newForm.value.email);
     if (Array.isArray(checkEmail) && checkEmail.length > 0) {
-      toast.error("Email já cadastrado", content);
+      toast.error("Email já cadastrado");
       return;
     }
     if (id) {
@@ -244,7 +244,7 @@ async function onValidSubmit(values, actions) {
     }
     actions.resetForm();
   } catch (error) {
-    toast.error("Erro ao cadastrar colaborador", content);
+    toast.error("Erro ao cadastrar colaborador");
   }
 }
 
@@ -257,6 +257,7 @@ async function checkEmailExists(email) {
     return res.data
   }
 }
+
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
     toast.error(errors[field], { timeout: 1500 });
