@@ -3,7 +3,7 @@
         <input data-testid="search-input-item" type="text" class="w-75 form-control animate__animated animate__flipInX"
             placeholder="✍️ Buscar item..." v-model="inputSearch" />
         <select class="badge bg-dark text-white text-center" v-model="selectedOption">
-            <option v-for="opt in options" :value="opt.value" v-text="opt.text"></option>
+            <option v-for="opt in options" :value="opt.value" v-text="opt.text" data-testid="search-opt"></option>
         </select>
     </div>
 </template>
