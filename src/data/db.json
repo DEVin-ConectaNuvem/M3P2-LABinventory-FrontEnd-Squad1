@@ -279,6 +279,15 @@
       "createdAt": "Mon, Nov 8, 2022 4:54 PM",
       "updatedAt": "Mon, Nov 8, 2022 11:10 PM",
       "loanAt": null
+    },
+    {
+      "title": "teste12",
+      "category": "Periférico",
+      "value": "50",
+      "brand": "marca teste",
+      "model": "modelo teste",
+      "updatedAt": "Sun, Nov 13, 2022 8:14 PM",
+      "id": 21
     }
   ],
   "collaborators": [

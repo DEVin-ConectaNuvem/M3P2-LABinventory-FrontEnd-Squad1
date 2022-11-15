@@ -18,7 +18,7 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Título do item <span>*</span></label>
           <Veefield
-            data-testid="input-title"
+            data-testid="item-title"
             type="text"
             name="title"
             class="form-control"
@@ -37,7 +37,7 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Categoria <span>*</span></label>
           <Veefield
-            data-testid="input-category"
+            data-testid="item-category"
             as="select"
             name="category"
             class="form-select"
@@ -64,7 +64,7 @@
         <div class="col-sm-6 col-md-4 col-lg-3">
           <label class="form-label">Valor <span>*</span></label>
           <Veefield
-            data-testid="input-value"
+            data-testid="item-value"
             type="number"
             name="value"
             class="form-control"
@@ -82,7 +82,7 @@
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Marca <span>*</span></label>
           <Veefield
-            data-testid="input-brand"
+            data-testid="item-brand"
             type="text"
             name="brand"
             class="form-control"
@@ -100,7 +100,7 @@
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Modelo <span>*</span></label>
           <Veefield
-            data-testid="input-model"
+            data-testid="item-model"
             type="text"
             name="model"
             class="form-control"
@@ -122,7 +122,7 @@
           <label class="form-label"
             >Selecione uma imagem <span>*</span></label
           >
-          <upload-box fileProps='image' @file-ready="teste"></upload-box>
+          <upload-box fileProps='image' @file-ready="teste" data-testid="item-upload"></upload-box>
         </div>
         <div class="col-sm-12 col-md-6">
           <label class="form-label">Descrição do item<span>*</span></label>
@@ -237,6 +237,7 @@ async function onValidSubmit(values, actions) {
     await editItem(actions);
   } else { 
     await newItem(actions);
+    toast.success("Cadastro realizado com sucesso!", { timeout: 1500 });
   }
   actions.resetForm();
 }
