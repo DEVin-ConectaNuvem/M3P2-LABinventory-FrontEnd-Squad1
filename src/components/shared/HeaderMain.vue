@@ -6,7 +6,7 @@
             </div>
             <div>
                 <img src="../../assets/icons/logoInventary.svg" class="ms-3 imgLogo animate__animated animate__bounceIn"
-                    alt="DEVInventary" :class="isVisible ? 'd-none' : 'd-block'">
+                    alt="LABInventary" :class="isVisible ? 'd-none' : 'd-block'">
             </div>
             <div class=" d-flex align-items-center text-white flex-grow-1 ">
             <div class="text-white text-center namePage">
@@ -60,14 +60,13 @@ function logOut() {
     store.dispatch('authModule/logOut')
     router.push({ name: 'login' })
 }
-
-
 </script>
 
 <style lang="scss" scoped>
 header {
     width: 100%;
-    background-color: var(--color-dark);
+    background: -webkit-linear-gradient(to right, rgb(47, 0, 96), rgb(141, 77, 171));
+    background: linear-gradient(to right, rgb(47, 0, 96), rgb(141, 77, 171));
 }
 
 .namePage {
@@ -91,9 +90,7 @@ i {
 }
 
 i {
-    background: var(--color-dark);
-    background: -webkit-linear-gradient(to right, var(--color-primary), var(--color-dark));
-    background: linear-gradient(to right, var(--color-primary), var(--color-dark));
+    background: white;
     -webkit-background-clip: text;
     -moz-background-clip: text;
     background-clip: text;

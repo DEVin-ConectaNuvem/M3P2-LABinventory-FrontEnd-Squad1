@@ -7,30 +7,20 @@ import { computed } from 'vue'
 
 
 const store = useStore();
-
-// verifica a visibilidade da sideBar
 const isVisible = computed(() => {
   return store.state.configModule.configs.sidebarVisible;
 })
-
-// define estado inicial de login via tokenconfirmPassword
 store.dispatch('authModule/updateToken');
-
-// verifica alterações no login
 const statusLogin = computed(() => {
   return store.state.authModule.isLogged
 })
-
-
 </script>
 
 <template>
   <div class="box">
-
     <div v-if="statusLogin">
       <HeaderMain></HeaderMain>
     </div>
-    
     <main>
       <transition>
         <div id="left" class="bottom" v-if="isVisible">

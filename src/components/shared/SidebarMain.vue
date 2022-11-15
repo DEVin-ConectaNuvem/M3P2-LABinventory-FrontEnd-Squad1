@@ -2,9 +2,9 @@
   <aside>
     <div class="d-flex flex-column flex-shrink-0 text-white ">
       <div class="brand mx-auto mb-1">
-        <img src="../../assets/icons/logoInventary.svg" class="mx-auto " alt="DEVInventary">
+        <img src="../../assets/icons/logoInventary.svg" height="120" width="120" class="mx-auto mainIcon" alt="LABinventary">
       </div>
-      <span class="fs-4 text-white mx-auto mt-2">DEVInventary</span>
+      <span class="fs-4 text-white mx-auto mt-2 mainTitle">LabInventary</span>
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <span>Geral</span>
@@ -67,6 +67,7 @@ function toggleVisibility() {
 </script>
 
 <style lang="scss" scoped>
+
 aside {
   top: 0;
   left: 0;
@@ -76,7 +77,7 @@ aside {
   overflow-y: none;
   z-index: 500;
   width: 200px;
-  background-color: var(--color-dark);
+  background: linear-gradient(to right,  rgb(47, 0, 96), rgb(60, 10, 113));
   
   span{
     padding-left: 10px ;
@@ -88,6 +89,12 @@ aside {
   }
 }
 
+.mainTitle {
+  padding-left: 0px;
+}
+.mainIcon {
+  margin-top: 15px
+}
 .form-check {
   margin: 0 auto;
 }
