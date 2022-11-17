@@ -9,7 +9,7 @@ import axios from "axios";
 export function useAxios() {
   return {
     axios: axios.create({
-      baseURL: "http://localhost:3004",
+      baseURL: "http://localhost:5000",
       timeout: 8000,
     }),
   };

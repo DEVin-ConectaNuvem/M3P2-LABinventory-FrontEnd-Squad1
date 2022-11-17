@@ -10,7 +10,7 @@ const store = useStore();
 const isVisible = computed(() => {
   return store.state.configModule.configs.sidebarVisible;
 })
-store.dispatch('authModule/updateToken');
+
 const statusLogin = computed(() => {
   return store.state.authModule.isLogged
 })
