@@ -13,11 +13,11 @@ describe("Verifica se é possível emprestar um item", () => {
 
 		cy.contains("Empréstimo").click();
 
-		cy.request("GET", "/collaborators").as("getCollaborators").then((interception) => {
+		cy.request("GET", "/employers").as("getCollaborators").then((interception) => {
 			collaborators = interception.body;
 		});
 
-		cy.request("GET", "/items").as("getItems").then((interception) => {
+		cy.request("GET", "/inventory").as("getItems").then((interception) => {
 			items = interception.body;
 		});
 	})

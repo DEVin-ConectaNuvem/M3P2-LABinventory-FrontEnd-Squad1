@@ -219,7 +219,7 @@ async function getInfoItemById(id) {
   const loader = $loading.show();
   try {
     const res = await axios.get(
-      `/items/${id}`
+      `/inventory/${id}`
     );
     return res.data;
   } catch (error) {
@@ -285,7 +285,7 @@ async function editItem() {
   try {
     newForm.value.updatedAt = moment().format("llll");
     const res = await axios.put(
-      `/items/${id}`,
+      `/inventory/${id}`,
       newForm.value
     );
     if (res.status === 200) {

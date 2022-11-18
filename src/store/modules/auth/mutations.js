@@ -7,7 +7,7 @@ const SET_LOGIN_IN = (state, payload) => {
     state.userLogged = payload['email'].split('@')[0]
     state.isLogged = true;
     state.token = payload["exp"];
-    localStorage.setItem('token', JSON.stringify(state.token))
+    localStorage.setItem('token', JSON.stringify(payload))
 }
 
 const SET_LOG_OUT = (state) => {
@@ -22,7 +22,6 @@ const REGISTER_USER = async (state, payload) => {
         "/users",
         payload
       );
-      state.users = [...state.users, res.data];
     } catch (error) {
         throw new Error("Erro ao registrar usuário");
     }

@@ -6,7 +6,7 @@ describe('Verifica se é possível emprestar um item', () => {
     cy.wait(1000)
     cy.openSidebar()
     cy.contains('Listar').click()
-    cy.request('GET', '/collaborators?_limit=5&_page=1')
+    cy.request('GET', '/employers?limit=5&page=1')
       .as('getCollaborators')
       .then((interception) => {
         collaborators = interception.body
