@@ -122,7 +122,7 @@
           <label class="form-label"
             >Selecione uma imagem <span>*</span></label
           >
-          <upload-box fileProps='image' @file-ready="teste"></upload-box>
+          <upload-box fileProps='image' @file-ready="teste" data-testid="item-upload"></upload-box>
         </div>
         <div class="col-sm-12 col-md-6">
           <label class="form-label">Descrição do item<span>*</span></label>
@@ -237,6 +237,7 @@ async function onValidSubmit(values, actions) {
     await editItem(actions);
   } else { 
     await newItem(actions);
+    toast.success("Cadastro realizado com sucesso!", { timeout: 1500 });
   }
   actions.resetForm();
 }
@@ -328,6 +329,7 @@ function teste(objeto){
     font-size: 1.1rem;
     font-weight: bold;
     color: var(--color-dark);
+    margin-top: 5px;
   }
 
   span {

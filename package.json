@@ -11,7 +11,6 @@
     "release": "standard-version"
   },
   "dependencies": {
-    "@upload-io/vue-uploader": "^1.5.7",
     "@vee-validate/rules": "^4.5.11",
     "@vueuse/core": "^9.5.0",
     "animate.css": "^4.1.1",
@@ -19,6 +18,7 @@
     "core-js": "^3.8.3",
     "gsap": "^3.10.4",
     "json-server": "^0.17.1",
+    "jwt-decode": "^3.1.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.3",
     "uid": "^2.0.0",
@@ -51,6 +51,7 @@
     "babel-core": "^7.0.0-bridge.0",
     "babel-jest": "^27.5.1",
     "cypress": "^11.0.0",
+    "cypress-file-upload": "^5.0.8",
     "cz-conventional-changelog": "^3.3.0",
     "git-cz": "^4.7.6",
     "husky": "^8.0.1",

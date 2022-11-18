@@ -1,11 +1,13 @@
 <template>
   <div class="container mt-3 ">
-    <search-input :options="parameterSearch.options" @returnData="loadDataSearch">
+    <search-input :options="parameterSearch.options" @returnData="loadDataSearch"
+    data-testid="colab-list-inputSearch"
+    >
     </search-input>
     <hr />
     <h4>Lista de colaboradores</h4>
     <paginate v-model="page" :page-count="totalPages" :page-range="3" :margin-pages="2" :prev-text="'Voltar'"
-      :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">
+      :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'" v-show="collabsPaginateComputed.length > 0">
     </paginate>
     <div class="accordion animate__animated animate__fadeIn" v-for="collaborator in collabsPaginateComputed"
       :key="collaborator.id">
@@ -14,9 +16,10 @@
           <button class="accordion-button collapsed text-capitalize" type="button" data-bs-toggle="collapse"
             :data-bs-target="'#collapse' + collaborator.id" aria-expanded="true"
             :aria-controls="'collapseOne' + collaborator.id">
-            <img :src="collaborator.imageUser" class="img-fluid imgAccordion" alt="Avatar" v-if="collaborator.imageUser">
-            <vue-gravatar v-else class="img-fluid imgAccordion" :email="collaborator.email" />
-            <p v-text="collaborator.name" class="ms-2 nameCollab"></p>
+            <img v-if="collaborator.imageUser" :src="collaborator.imageUser" class="img-fluid imgAccordion"  
+            :data-testid="`colab-list-imageUser-${collaborator.id}`">
+            <vue-gravatar v-else class="img-fluid imgAccordion" :email="collaborator.email"/>
+            <p v-text="collaborator.name" class="ms-2 nameCollab" :data-testid="`colab-list-name-${collaborator.id}`"></p>
             <p class="ms-2 text-center" v-text="'#' + collaborator.position"></p>
           </button>
         </h2>
@@ -24,22 +27,22 @@
           <div class="accordion-body">
             <div class="row">
               <div class="col-sm-12 col-md-6">
-                <strong>Email:</strong> {{ collaborator.email }}
+                <strong>Email:</strong> <span :data-testid="`colab-list-email-${collaborator.id}`"> {{ collaborator.email }} </span>
                 <br />
-                <strong>Telefone:</strong> {{ collaborator.phone }}
+                <strong>Telefone:</strong><span :data-testid="`colab-list-phone-${collaborator.id}`"> {{ collaborator.phone }} </span>
                 <br />
-                <strong>Cargo:</strong> {{ collaborator.position }}
+                <strong>Cargo:</strong><span :data-testid="`colab-list-position-${collaborator.id}`"> {{ collaborator.position }} </span>
                 <br />
               </div>
               <div class="col-sm-12 col-md-6">
-                <strong>Criado em:</strong> {{ collaborator.createdAt }}
+                <strong>Criado em:</strong><span :data-testid="`colab-list-createdAt-${collaborator.id}`"> {{ collaborator.createdAt }} </span>
                 <br />
-                <strong>última modificação:</strong> {{ collaborator.updatedAt }}
+                <strong>última modificação:</strong><span data-testid="colab-list-updateAt"> {{ collaborator.updatedAt }} </span>
                 <br />
               </div>
             </div>
             <div class="text-end">
-              <button class="btn btn-primary mt-2" @click="editCollab(collaborator.id)">
+              <button class="btn btn-primary mt-2" @click="editCollab(collaborator.id)" data-testid="colab-list-buttonEdit">
                 <i class="fa-solid fa-user-pen"></i> Editar Colaborador
               </button>
             </div>
@@ -47,8 +50,10 @@
         </div>
       </div>
     </div>
-    <p class="text-danger" v-show="collabsPaginateComputed.length === 0 && inputSearch">
+    <p class="text-danger" v-show="collabsPaginateComputed.length === 0 && inputConfig.searchText" 
+    data-testid="colab-list-not-found">
       Não há colaboradores cadastrados com este <strong>termo de pesquisa</strong> - <router-link
+        data-testid="colab-list-router-link-new"
         :to="{ name: 'colaboradores' }">
         Realizar novo cadastro</router-link>
     </p>
