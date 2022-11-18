@@ -84,6 +84,31 @@ Cypress.Commands.add("registerColab", (nome, date, email, cep, neighborhood, cit
       cy.contains("Cadastrar").click();
    };
 });
+
+Cypress.Commands.add("registerItem", (title, value, brand, model, description, fileUpload) => {
+   if(fileUpload) {
+      cy.openSidebar();
+      cy.get('a[href="#/itens"]').click();
+      cy.get("[data-testid=itemView-input-title]").type(title);
+      cy.get("[data-testid=itemView-input-category]").focus().select("Outros");
+      cy.get("[data-testid=itemView-input-value]").type(value);
+      cy.get("[data-testid=itemView-input-brand]").type(brand);
+      cy.get("[data-testid=itemView-input-model]").type(model);
+      cy.get("[data-testid=itemView-input-description]").type(description);
+      cy.get("input[type=file]").selectFile("src/data/imgTest.png", {force: true});
+      cy.get("[data-testid='button-reg']").click();
+   } else {
+      cy.openSidebar();
+      cy.get('a[href="#/itens"]').click();
+      cy.get("[data-testid=itemView-input-title]").type(title);
+      cy.get("[data-testid=itemView-input-category]").focus().select("Outros");
+      cy.get("[data-testid=itemView-input-value]").type(value);
+      cy.get("[data-testid=itemView-input-brand]").type(brand);
+      cy.get("[data-testid=itemView-input-model]").type(model);
+      cy.get("[data-testid=itemView-input-description]").type(description);
+      cy.get("[data-testid='button-reg']").click();
+   };
+});
 //
 //
 // -- This is a child command --

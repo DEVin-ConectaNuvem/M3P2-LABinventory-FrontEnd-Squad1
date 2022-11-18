@@ -18,7 +18,7 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Título do item <span>*</span></label>
           <Veefield
-            data-testid="item-title"
+            data-testid="itemView-input-title"
             type="text"
             name="title"
             class="form-control"
@@ -37,7 +37,7 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Categoria <span>*</span></label>
           <Veefield
-            data-testid="item-category"
+            data-testid="itemView-input-category"
             as="select"
             name="category"
             class="form-select"
@@ -64,7 +64,7 @@
         <div class="col-sm-6 col-md-4 col-lg-3">
           <label class="form-label">Valor <span>*</span></label>
           <Veefield
-            data-testid="item-value"
+            data-testid="itemView-input-value"
             type="number"
             name="value"
             class="form-control"
@@ -82,7 +82,7 @@
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Marca <span>*</span></label>
           <Veefield
-            data-testid="item-brand"
+            data-testid="itemView-input-brand"
             type="text"
             name="brand"
             class="form-control"
@@ -100,7 +100,7 @@
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Modelo <span>*</span></label>
           <Veefield
-            data-testid="item-model"
+            data-testid="itemView-input-model"
             type="text"
             name="model"
             class="form-control"
@@ -127,6 +127,7 @@
         <div class="col-sm-12 col-md-6">
           <label class="form-label">Descrição do item<span>*</span></label>
           <textarea
+            data-testid="itemView-input-description"
             name="description"
             rows="3"
             v-model="form.description"
@@ -134,7 +135,6 @@
             placeholder="Digite as especificações do item"
             class="form-control"
             maxlength="180"
-            data-testid="item-description"
           ></textarea>
         </div>
       </div>
