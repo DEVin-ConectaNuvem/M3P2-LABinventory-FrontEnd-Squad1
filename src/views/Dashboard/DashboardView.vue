@@ -161,8 +161,8 @@ onMounted(async () => {
 
 async function loadDataDashboard() {
     try {
-        const itemsCount = await axios.get('/items/');
-        const collabsCount = await axios.get('/collaborators/');
+        const itemsCount = await axios.get('/inventory');
+        const collabsCount = await axios.get('/employers');
         const itemsLoaned = itemsCount.data.filter(item => item.collaborator);
         const valueTotalItems = itemsCount.data.reduce((acc, item) => acc + parseFloat(item.value), 0);
         allItems.value = itemsCount.data;
@@ -183,9 +183,9 @@ async function loadDataPagination() {
         let url = ''
         if (inputConfig.searchText) {
             const operator = parameterSearch.options.find((opt) => opt.value === inputConfig.searchField).operatorSearch || '_like='
-            url = `/items?${inputConfig.searchField}${operator}${inputConfig.searchText}&_limit=${perPage.value}&_page=${page.value}`
+            url = `/inventory?${inputConfig.searchField}${operator}${inputConfig.searchText}&limit=${perPage.value}&page=${page.value}`
         } else {
-            url = `/items?_limit=${perPage.value}&_page=${page.value}`
+            url = `/inventory?limit=${perPage.value}&page=${page.value}`
         }
         const response = await axios.get(url);
         itemsPaginate.value = response.data;

@@ -189,7 +189,6 @@ async function loginUser(actions) {
     const res = await axios.post('/users/login', payload);
     if (res.status === 200) {
       const decodedJwt = decodeJwt(res.data.token);
-      console.log(decodedJwt)
       toast.success('Login realizado com sucesso!', { timeout: 1500 });
       store.dispatch('authModule/logIn', decodedJwt);
       router.push('/dashboard');

@@ -111,7 +111,7 @@ const totalPages = computed(() => {
 async function loadData() {
   const loader = $loading.show()
   try {
-    const res = await axios.get(`/collaborators`);
+    const res = await axios.get(`/employers`);
     allCollabs.value = res.data;
     allCollabsCount.value = res.data.length;
   } catch (error) {
@@ -130,9 +130,9 @@ async function loadDataPagination() {
     let url = ''
     if (inputConfig.searchText) {
       const operator = parameterSearch.options.find((opt) => opt.value === inputConfig.searchField).operatorSearch || '_like='
-      url = `/collaborators?${inputConfig.searchField}${operator}${inputConfig.searchText}&_limit=${perPage.value}&_page=${page.value}`
+      url = `/employers?${inputConfig.searchField}${operator}${inputConfig.searchText}&limit=${perPage.value}&page=${page.value}`
     } else {
-      url = `/collaborators?_limit=${perPage.value}&_page=${page.value}`
+      url = `/employers?limit=${perPage.value}&page=${page.value}`
     }
     const response = await axios.get(url);
     collabsPaginate.value = response.data;

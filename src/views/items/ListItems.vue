@@ -165,9 +165,9 @@ async function loadDataPagination() {
     let url = ''
     if (inputConfig.searchText) {
       const operator = parameterSearch.options.find((opt) => opt.value === inputConfig.searchField).operatorSearch || '_like='
-      url = `/items?${inputConfig.searchField}${operator}${inputConfig.searchText}&_limit=${perPage.value}&_page=${page.value}`
+      url = `/inventory?${inputConfig.searchField}${operator}${inputConfig.searchText}&_limit=${perPage.value}&page=${page.value}`
     } else {
-      url = `/items?_limit=${perPage.value}&_page=${page.value}`
+      url = `/inventory?limit=${perPage.value}&page=${page.value}`
     }
     const response = await axios.get(url);
     itemsPaginate.value = response.data;
@@ -183,7 +183,7 @@ async function loadDataPagination() {
 async function loadAllData() {
   const loader = $loading.show()
   try {
-    const response = await axios.get('/items/');
+    const response = await axios.get('/inventory/');
     allItems.value = response.data || null;
   } catch (error) {
     toast.error("Erro ao carregar os dados")
@@ -197,7 +197,7 @@ async function loadAllData() {
 async function loadCollaborators() {
   const loader = $loading.show()
   try {
-    const response = await axios.get('/collaborators');
+    const response = await axios.get('/employers');
     const collabsUniques = $_.uniqBy(response.data, 'id')
     collaborators.value = collabsUniques;
   } catch (error) {
@@ -269,7 +269,7 @@ async function setLoan(itemId, collaborator = null) {
       updatedAt: moment().format("DD/MM/YYYY hh:mm"),
     }
     const res = await axios.patch(
-      `/items/${itemId.id || itemId}`, {
+      `/inventory/${itemId.id || itemId}`, {
       collaborator: payload.collaborator,
       loanAt: payload.loanAt,
       updatedAt: payload.updatedAt,

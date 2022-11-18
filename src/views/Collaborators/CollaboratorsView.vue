@@ -217,7 +217,7 @@ async function getCollaboratorById(id) {
   const loader = $loading.show();
   try {
     const res = await axios.get(
-      `/collaborators/${id}`
+      `/employers/${id}`
     );
     return res.data;
   } catch (error) {
@@ -249,7 +249,7 @@ async function onValidSubmit(values, actions) {
 }
 
 async function checkEmailExists(email) {
-  const res = await axios.get(`/collaborators?email=${email}`);
+  const res = await axios.get(`/employers?email=${email}`);
   if (id) {
     const result = res.data.filter((collab) => collab.id !== id);
     return result
@@ -271,7 +271,7 @@ async function newCollaborator() {
     !id ? (newForm.value.createdAt = moment().format("DD/MM/YYYY")) : "";
     newForm.value.updatedAt = moment().format("llll");
     const res = await axios.post(
-      "/collaborators",
+      "/employers",
       newForm.value
     );
     if (res.status === 201) {
@@ -301,7 +301,7 @@ async function editCollaborator() {
   const loader = $loading.show();
   try {
     const res = await axios.put(
-      `/collaborators/${id}`,
+      `/employers/${id}`,
       newForm.value
     );
     if (res.status === 200) {
