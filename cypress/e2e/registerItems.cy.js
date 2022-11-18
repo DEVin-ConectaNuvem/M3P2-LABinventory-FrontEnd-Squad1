@@ -25,7 +25,7 @@ describe("Realiza os testes de registro de itens", () => {
 	})
     
     it("Testa botão de cancelar", () => {
-        cy.contains("Headset Gamer Teste").click();
+        cy.contains("Produto Caro").click();
         cy.contains("button", "Editar Item").click();
         cy.wait(1000)
         cy.get("[data-testid=itemView-input-title]").clear().type("Teste botão de cancelar");
@@ -42,7 +42,7 @@ describe("Realiza os testes de registro de itens", () => {
     it('Cadastro realizado com sucesso!', () => {
         cy.openSidebar();
         cy.get('a[href="#/itens"]').click();
-        cy.get("[data-testid=itemView-input-title]").type("Produto Teste");
+        cy.get("[data-testid=itemView-input-title]").type("Produto Criado");
         cy.get("[data-testid=itemView-input-category]").focus().select("Outros");
         cy.get("[data-testid=itemView-input-value]").type("600.00");
         cy.get("[data-testid=itemView-input-brand]").type("Made in Teste");
