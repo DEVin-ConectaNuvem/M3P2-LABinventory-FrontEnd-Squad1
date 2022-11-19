@@ -1,51 +1,32 @@
 <template>
   <div class="container mt-3">
     <h4 class="mb-3">Preencha os campos para cadastrar/editar um item</h4>
-    <VeeForm
-      data-testid="vue-toast-info"
-      @submit="onValidSubmit"
-      v-slot="{ errors }"
-      @invalid-submit="onInvalidSubmit"
-      class="formCadastro animate__animated animate__fadeIn"
-    >
+    <VeeForm data-testid="vue-toast-info" @submit="onValidSubmit" v-slot="{ errors }" @invalid-submit="onInvalidSubmit"
+      class="formCadastro animate__animated animate__fadeIn">
       <div class="row mb-1">
         <h3>Dados do item</h3>
         <hr />
         <div class="col-sm-12 col-md-6 col-lg-3">
           <label class="form-label">Cód. de Patrimônio <span>*</span></label>
-          <input type="text" name="id" class="form-control" placeholder="Cód. automatico" v-model="form.id" disabled />
+          <Veefield type="text" name="codPatrimonio" class="form-control" :class="{ 'is-invalid': errors.title }"
+            :rules="required" placeholder="Cód. de patrimônio" v-model="form.codPatrimonio" />
+          <div class="invalid-feedback animate__animated animate__shakeX">
+            {{ errors.codPatrimonio }}
+          </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Título do item <span>*</span></label>
-          <Veefield
-            data-testid="itemView-input-title"
-            type="text"
-            name="title"
-            class="form-control"
-            placeholder="Titulo do item"
-            v-model.trim="form.title"
-            required
-            v-focus
-            :class="{ 'is-invalid': errors.title }"
-            :rules="required"
-            maxlength="30"
-          />
+          <Veefield data-testid="itemView-input-title" type="text" name="title" class="form-control"
+            placeholder="Titulo do item" v-model.trim="form.title" required v-focus
+            :class="{ 'is-invalid': errors.title }" :rules="required" maxlength="30" />
           <div class="invalid-feedback animate__animated animate__shakeX">
             {{ errors.title }}
           </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Categoria <span>*</span></label>
-          <Veefield
-            data-testid="itemView-input-category"
-            as="select"
-            name="category"
-            class="form-select"
-            v-model="form.category"
-            required
-            :class="{ 'is-invalid': errors.category }"
-            :rules="required"
-          >
+          <Veefield data-testid="itemView-input-category" as="select" name="category" class="form-select"
+            v-model="form.category" required :class="{ 'is-invalid': errors.category }" :rules="required">
             <option value="" disabled>Escolha a categoria</option>
             <option value="Computador">Computador</option>
             <option value="Periférico">Periférico</option>
@@ -63,17 +44,9 @@
       <div class="row mb-1">
         <div class="col-sm-6 col-md-4 col-lg-3">
           <label class="form-label">Valor <span>*</span></label>
-          <Veefield
-            data-testid="itemView-input-value"
-            type="number"
-            name="value"
-            class="form-control"
-            placeholder="Valor do item"
-            v-model.trim="form.value"
-            required
-            :class="{ 'is-invalid': errors.value }"
-            :rules="validateNumber"
-          />
+          <Veefield data-testid="itemView-input-value" type="number" name="value" class="form-control"
+            placeholder="Valor do item" v-model.trim="form.value" required :class="{ 'is-invalid': errors.value }"
+            :rules="validateNumber" />
           <div class="invalid-feedback animate__animated animate__shakeX">
             {{ errors.value }}
           </div>
@@ -81,36 +54,18 @@
 
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Marca <span>*</span></label>
-          <Veefield
-            data-testid="itemView-input-brand"
-            type="text"
-            name="brand"
-            class="form-control"
-            placeholder="Marca do item"
-            v-model.trim="form.brand"
-            required
-            :class="{ 'is-invalid': errors.brand }"
-            :rules="required"
-            maxlength="30"
-          />
+          <Veefield data-testid="itemView-input-brand" type="text" name="brand" class="form-control"
+            placeholder="Marca do item" v-model.trim="form.brand" required :class="{ 'is-invalid': errors.brand }"
+            :rules="required" maxlength="30" />
           <div class="invalid-feedback animate__animated animate__shakeX">
             {{ errors.brand }}
           </div>
         </div>
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Modelo <span>*</span></label>
-          <Veefield
-            data-testid="itemView-input-model"
-            type="text"
-            name="model"
-            class="form-control"
-            placeholder="Modelo do item"
-            v-model.trim="form.model"
-            required
-            :class="{ 'is-invalid': errors.model }"
-            :rules="required"
-            maxlength="30"
-          />
+          <Veefield data-testid="itemView-input-model" type="text" name="model" class="form-control"
+            placeholder="Modelo do item" v-model.trim="form.model" required :class="{ 'is-invalid': errors.model }"
+            :rules="required" maxlength="30" />
           <div class="invalid-feedback animate__animated animate__shakeX">
             {{ errors.model }}
           </div>
@@ -119,23 +74,20 @@
 
       <div class="row mt-3">
         <div class="col-sm-12 col-md-6">
-          <label class="form-label"
-            >Selecione uma imagem <span>*</span></label
-          >
+          <label class="form-label">Selecione uma imagem <span>*</span></label>
           <upload-box fileProps='image' @file-ready="teste" data-testid="item-upload"></upload-box>
         </div>
         <div class="col-sm-12 col-md-6">
           <label class="form-label">Descrição do item<span>*</span></label>
-          <textarea
-            data-testid="itemView-input-description"
-            name="description"
-            rows="3"
-            v-model="form.description"
-            required
-            placeholder="Digite as especificações do item"
-            class="form-control"
-            maxlength="180"
-          ></textarea>
+          <Veefield name="description" v-model="form.description" 
+          data-testid="itemView-input-description" as="textarea" 
+          required placeholder="Digite as especificações do item" class="form-control"
+          maxlength="180" :rules="required" v-slot="{ field, errors }" rows="3">
+            <textarea v-bind="field"></textarea>
+            <div class="invalid-feedback animate__animated animate__shakeX">
+              {{ errors.model }}
+            </div>
+          </Veefield>
         </div>
       </div>
 
@@ -160,7 +112,7 @@ import { useRoute, useRouter } from "vue-router";
 import { useLoading } from "vue-loading-overlay";
 import { Form as VeeForm, Field as Veefield } from "vee-validate";
 import { required, validateNumber } from "../../validators/validators";
-import moment from "moment";
+
 const store = useStore();
 const route = useRoute();
 const $loading = useLoading();
@@ -186,10 +138,10 @@ const content = {
 
   },
 };
-const id = route.params.itemId ? Number(route.params.itemId.split('-')[0]) : null;
+const id = route.params.itemId ? route.params.itemId.split('-')[0] : null;
 const origin = id ? route.params.itemId.split('-')[1] : null;
 const form = ref({
-  id: null,
+  codPatrimonio: null,
   title: null,
   description: null,
   category: null,
@@ -235,7 +187,7 @@ async function onValidSubmit(values, actions) {
   newForm.value = { ...values }
   if (id) {
     await editItem(actions);
-  } else { 
+  } else {
     await newItem(actions);
     toast.success("Cadastro realizado com sucesso!", { timeout: 1500 });
   }
@@ -251,9 +203,8 @@ function onInvalidSubmit({ errors }) {
 async function newItem() {
   const loader = $loading.show();
   try {
-    newForm.value.updatedAt = moment().format("llll");
     const res = await axios.post(
-      "/items",
+      "/items/create",
       newForm.value
     );
     if (res.status === 201) {
@@ -283,10 +234,14 @@ async function newItem() {
 async function editItem() {
   const loader = $loading.show();
   try {
-    newForm.value.updatedAt = moment().format("llll");
-    const res = await axios.put(
-      `/inventory/${id}`,
-      newForm.value
+    const payload = {
+      "id": id,
+      "dataset": newForm.value
+    }
+    console.log(newForm.value)
+    const res = await axios.patch(
+      `/inventory/update`,
+      payload
     );
     if (res.status === 200) {
       toast.success("Item editado com sucesso", content);
@@ -312,7 +267,7 @@ function cancelEdit() {
   origin === 'list' ? router.push({ name: "listItems" }) : router.push({ name: "dashboard" });
 }
 
-function teste(objeto){
+function teste(objeto) {
   console.log(objeto)
 } 
 </script>
@@ -338,5 +293,4 @@ function teste(objeto){
     font-weight: bold;
   }
 }
-
 </style>

@@ -12,19 +12,20 @@
         <search-input :options="parameterSearch.options" @returnData="loadDataSearch">
         </search-input>
         <section class="row">
-            <cards-products
-                :data-testid="`item-${item.id}`" 
+            <cards-products :data-testid="`item-${item.id}`"
                 class="col-sm-12 col-md-6 col-lg-3 col-xxl-3 animate__animated animate__fadeIn"
                 v-for="item in itemsPaginateComputed" :key="item.id" @click="itemInfos(item.id)">
                 <template v-slot="card"></template>
                 <template v-slot:title>
-                    <p class="text-center" :class="item.collaborator ? 'loaned' : 'avaliable'" :data-testid="`item-${item.id}-title`">
-                        {{ item.id + ' - ' + item.title }}
+                    <p class="text-center" :class="item.collaborator ? 'loaned' : 'avaliable'"
+                        :data-testid="`item-${item.id}-title`">
+                        {{ item.codPatrimonio + ' - ' + item.title }}
                     </p>
                 </template>
                 <template v-slot:img><img :src="item.url" class="imageBg "></template>
                 <template v-slot:collab>
-                    <p :data-testid="`item-${item.id}-status`" :class="item.collaborator ? 'text-bg-primary' : 'text-bg-success'"
+                    <p :data-testid="`item-${item.id}-status`"
+                        :class="item.collaborator ? 'text-bg-primary' : 'text-bg-success'"
                         v-text="item.collaborator ? item.collaborator : 'Disponível'"></p>
                 </template>
 
@@ -92,20 +93,20 @@ const itemsPaginate = ref([]);
 const infoDashboard = ref([])
 const parameterSearch = reactive({
     options: [
-        { "text": "Código", "value": "id", "operatorSearch": "=" },
+        { "text": "Código", "value": "codPatrimonio", "operatorSearch": "=" },
         { "text": "Título", "value": "title" },
         { "text": "Categoria", "value": "category" },
         { "text": "Descrição", "value": "description" },
         { "text": "Marca", "value": "brand" },
         { "text": "Modelo", "value": "model" },
-        {"text" : "Colaborador", "value" : "collaborator"}
+        { "text": "Colaborador", "value": "collaborator" }
 
     ],
-    findBy: "id"
+    findBy: "codPatrimonio"
 })
 const inputConfig = reactive({
     searchText: '',
-    searchField: 'id',
+    searchField: 'codPatrimonio',
 })
 
 const totalPages = computed(() => {
@@ -120,7 +121,6 @@ store.commit('configModule/SET_PAGE_NAME', 'Dashboard')
 
 onMounted(async () => {
     await loadDataDashboard();
-    await loadDataPagination();
     nextTick(() => {
         infoDashboard.value.push(
             {
@@ -161,16 +161,16 @@ onMounted(async () => {
 
 async function loadDataDashboard() {
     try {
-        const itemsCount = await axios.get('/inventory');
-        const collabsCount = await axios.get('/employers');
-        const itemsLoaned = itemsCount.data.filter(item => item.collaborator);
-        const valueTotalItems = itemsCount.data.reduce((acc, item) => acc + parseFloat(item.value), 0);
-        allItems.value = itemsCount.data;
+        const resAnalytics = await axios.get('/inventory/analytics')
+        const resItems = await axios.get(`/inventory/?limit=${perPage.value}&page=${page.value}`)
+        const allAnalytics = resAnalytics.data;
+        allItems.value = resItems.data
+
         itemsDashboard.value = {
-            itemsCount: itemsCount.data.length,
-            collabsCount: collabsCount.data.length,
-            valueTotalItems: valueTotalItems.toFixed(2),
-            itemsLoaned: itemsLoaned.length
+            itemsCount: allAnalytics.total_items,
+            collabsCount: allAnalytics.total_collabs,
+            valueTotalItems: allAnalytics.total_value.toFixed(2),
+            itemsLoaned: allAnalytics.total_borrowed
         }
     } catch (error) {
         toast.error(error.message)
@@ -180,15 +180,23 @@ async function loadDataDashboard() {
 async function loadDataPagination() {
     const loader = $loading.show()
     try {
-        let url = ''
+        const url = `/inventory/?limit=${perPage.value}&page=${page.value}`;
+        let payload = {}
+        let response = []
+
         if (inputConfig.searchText) {
-            const operator = parameterSearch.options.find((opt) => opt.value === inputConfig.searchField).operatorSearch || '_like='
-            url = `/inventory?${inputConfig.searchField}${operator}${inputConfig.searchText}&limit=${perPage.value}&page=${page.value}`
+            payload = {
+                [inputConfig.searchField]: inputConfig.searchText
+            }
+            response = await axios.post(url, payload );
         } else {
-            url = `/inventory?limit=${perPage.value}&page=${page.value}`
+            response = await axios.get(url);
         }
-        const response = await axios.get(url);
-        itemsPaginate.value = response.data;
+        if (Array.isArray(response?.data)) {
+            allItems.value = response.data
+        } else {
+            allItems.value = []
+        }
     } catch (error) {
         toast.error(error.message)
     } finally {
@@ -199,7 +207,7 @@ async function loadDataPagination() {
 }
 
 const itemsPaginateComputed = computed(() => {
-    return itemsPaginate.value
+    return allItems.value
 })
 
 async function itemInfos(id) {
@@ -239,19 +247,25 @@ function infoDashRoute(destiny, route) {
     })
 }
 
-watch(page, async () => {
-    optionsPage.page = page.value;
-    await loadDataPagination()
+watch(page, async (newValue, oldValue) => {
+    if (oldValue && newValue !== oldValue) {
+        optionsPage.page = page.value;
+        await loadDataPagination()
+    }
 });
 
 async function loadDataSearch(searchText, searchField) {
     if (searchText && searchField) {
         inputConfig.searchText = searchText;
         inputConfig.searchField = searchField;
+        await loadDataPagination()
+    } else if (!searchText){
+        inputConfig.searchText = '';
+        inputConfig.searchField = '';
+        await loadDataPagination()
     } else {
         inputConfig.searchText = '';
-    }
-    await loadDataPagination()
+    } 
 }
 
 

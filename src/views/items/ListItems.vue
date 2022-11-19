@@ -14,7 +14,7 @@
             :data-bs-target="'#collapse' + item.id" aria-expanded="true" :aria-controls="'collapseOne' + item.id">
             <img class="img-fluid imgAccordion" :src="item.url" />
             <div class="flex-grow-1 ms-3 ">
-              #{{ item.id }} - <span :data-testid="`item-${item.id}-title`">{{ item.title }}</span>
+              #{{ item.codPatrimonio }} - <span :data-testid="`item-${item.id}-title`">{{ item.title }}</span>
             </div>
             <div class="me-2 statusBadge">
               <p :data-testid="`item-${item.id}-status`" class="fw-bold" :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"
