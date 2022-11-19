@@ -136,7 +136,6 @@
 </template>
 
 <script setup>
-import { uid } from "uid";
 import { ref, onMounted, reactive } from "vue";
 import { useStore } from "vuex";
 import { useToast } from "vue-toastification";
@@ -213,6 +212,8 @@ onMounted(async () => {
     }
   }
 });
+
+
 async function getCollaboratorById(id) {
   const loader = $loading.show();
   try {
@@ -267,7 +268,6 @@ function onInvalidSubmit({ errors }) {
 async function newCollaborator() {
   const loader = $loading.show();
   try {
-    !id ? (newForm.value.id = "c" + uid()) : "";
     !id ? (newForm.value.createdAt = moment().format("DD/MM/YYYY")) : "";
     newForm.value.updatedAt = moment().format("llll");
     const res = await axios.post(
