@@ -238,7 +238,6 @@ async function editItem() {
       "id": id,
       "dataset": newForm.value
     }
-    console.log(newForm.value)
     const res = await axios.patch(
       `/inventory/update`,
       payload
