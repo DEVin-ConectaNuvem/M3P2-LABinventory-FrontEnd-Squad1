@@ -1,13 +1,19 @@
 <template>
   <div class="container mt-3">
     <h4 class="mb-3">Preencha os campos para cadastrar/editar um colaborador</h4>
-    <VeeForm @submit="onValidSubmit" data-testid="vue-toast-info" v-slot="{ errors, actions }"
+    <VeeForm @submit="onValidSubmit" data-testid="vue-toast-info" v-slot="{ errors, actions, meta }"
       @invalid-submit="onInvalidSubmit" class="formCadastro animate__animated animate__fadeIn">
       <div class="row mb-1">
         <h3>Dados do colaborador</h3>
         <hr />
         <div class="col-lg-2">
-          <avatar-user @uploadSuccess="saveImageUser" :imgDataUser="form.imageUser"></avatar-user>
+          <Veefield name="imageUser" v-model="form.imageUser" data-testid="input-uploadImageUser"
+            v-slot="{ field, errors, meta }" >
+            <avatar-user v-bind="field" @uploadSuccess="saveImageUser"></avatar-user>
+            <div class="invalid-feedback animate__animated animate__shakeX">
+              {{ meta.touched ? errors.model : '' }}
+            </div>
+          </Veefield>
         </div>
         <div class="col-lg-10">
           <div class="row">
@@ -42,8 +48,8 @@
               <label class="form-label">Telefone <span>*</span></label>
               <Veefield data-testid="colab-phone" type="text" name="phone" class="form-control"
                 placeholder="Fixo ou celular" v-model="form.phone" v-mask="['(##) ####-####', '(##) #####-####']"
-                :class="{ 'is-invalid': errors.phone }" :rules="validatePhone" />
-              <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.phone }}</div>
+                :class="{ 'is-invalid': meta.dirty && meta.touched ? errors.phone : false }" :rules="validatePhone" />
+              <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.phone : '' }}</div>
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-4">
@@ -51,7 +57,7 @@
               <Veefield data-testid="colab-email" type="email" name="email" class="form-control"
                 placeholder="Ex: José@gmail.com" v-model="form.email" required :class="{ 'is-invalid': errors.email }"
                 :rules="validateEmail" />
-              <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.email }}</div>
+              <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.email : '' }}</div>
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-4">
@@ -237,14 +243,13 @@ async function getCollaboratorById(id) {
   }
 }
 
+function removeErrors() {
+  
+}
+
 async function onValidSubmit(values, actions) {
   try {
     newForm.value = { ...values }
-    const checkEmail = await checkEmailExists(newForm.value.email);
-    if (Array.isArray(checkEmail) && checkEmail.length > 0) {
-      toast.error("Email já cadastrado");
-      return;
-    }
     if (id) {
       await editCollaborator();
     } else {
@@ -256,15 +261,6 @@ async function onValidSubmit(values, actions) {
 }
 }
 
-async function checkEmailExists(email) {
-  const res = await axios.get(`/employees?email=${email}`);
-  if (id) {
-    const result = res.data.filter((collab) => collab.id !== id);
-    return result
-  } else {
-    return res.data
-  }
-}
 
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
@@ -275,10 +271,8 @@ function onInvalidSubmit({ errors }) {
 async function newCollaborator() {
   const loader = $loading.show();
   try {
-   !id ? (newForm.value.createdAt = moment().format("DD/MM/YYYY")) : "";
-    newForm.value.updatedAt = moment().format("llll");
     const res = await axios.post(
-      "/employees",
+      "/employees/create",
       newForm.value
     );
     if (res.status === 201) {
@@ -307,9 +301,13 @@ async function newCollaborator() {
 async function editCollaborator() {
   const loader = $loading.show();
   try {
-    const res = await axios.put(
-      `/employees/${id}`,
-      newForm.value
+    const payload = {
+      "id": id,
+      "dataset": newForm.value
+    }
+    const res = await axios.patch(
+      `/employees/update`,
+      payload
     );
     if (res.status === 200) {
       toast.success("Colaborador editado com sucesso", content);
