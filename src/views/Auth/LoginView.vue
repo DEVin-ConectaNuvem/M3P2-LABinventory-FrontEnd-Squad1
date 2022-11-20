@@ -145,12 +145,6 @@ function toggleRegister() {
 
 function onValidSubmit(values, actions) {
   if (register.value.register) {
-    let checkEmail = store.state.authModule.users.find(user => user.email === form.value.email);
-    if (checkEmail) {
-      toast.error('O e-mail informado já possui cadastro!', { timeout: 1500 });
-      actions.setFieldError('email', 'O e-mail informado já possui cadastro!')
-      return;
-    }
     registerUser(actions);
   } else {
     loginUser(actions);
@@ -165,14 +159,21 @@ async function registerUser(actions) {
       email: form.value.email.toLowerCase(),
       password: form.value.password
     }
+    
     const res = await axios.post('/users/create', payload);
-    if (res.status === 200) {
+    if (res.status === 201) {
       toast.success('Usuário cadastrado com sucesso!', { timeout: 1500 });
       toggleRegister();
       actions.resetForm();
-    }
+    } 
+    
   } catch (error) {
-    toast.error('Erro ao cadastrar usuário!', { timeout: 1500 });
+    if (error.response.data.error == 'Usuário já existente!') {
+      toast.error('O e-mail informado já possui cadastro!', { timeout: 1500 });
+      actions.setFieldError('email', 'O e-mail informado já possui cadastro!')
+    } else {
+      toast.error('Erro ao cadastrar usuário!', { timeout: 1500 });
+    }
   } finally {
     loader.hide()
   }
