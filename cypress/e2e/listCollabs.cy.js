@@ -6,7 +6,7 @@ describe('Verifica se é possível emprestar um item', () => {
     cy.wait(1000)
     cy.openSidebar()
     cy.contains('Listar').click()
-    cy.request('GET', '/employers?limit=5&page=1')
+    cy.request('GET', '/employees?limit=5&page=1')
       .as('getCollaborators')
       .then((interception) => {
         collaborators = interception.body
@@ -66,5 +66,4 @@ describe('Verifica se é possível emprestar um item', () => {
     cy.get("[data-testid='colab-reset-button']").click()
     cy.contains('Edição cancelada')
   })
-
 })

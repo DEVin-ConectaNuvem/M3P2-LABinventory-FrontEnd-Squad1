@@ -5,7 +5,8 @@
     <hr />
     <h4>Lista de Itens</h4>
     <paginate v-model="page" :page-count="totalPages" :page-range="3" :margin-pages="2" :prev-text="'Voltar'"
-      :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'" v-show="itemsPaginateComputed.length > 0">
+      :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'"
+      v-show="itemsPaginateComputed.length > 0">
     </paginate>
     <div class="accordion animate__animated animate__fadeIn" v-for="item in itemsPaginateComputed" :key="item.id">
       <div class="accordion-item ">
@@ -17,7 +18,8 @@
               #{{ item.codPatrimonio }} - <span :data-testid="`item-${item.id}-title`">{{ item.title }}</span>
             </div>
             <div class="me-2 statusBadge">
-              <p :data-testid="`item-${item.id}-status`" class="fw-bold" :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"
+              <p :data-testid="`item-${item.id}-status`" class="fw-bold"
+                :class="item.collaborator ? 'badge text-bg-primary' : 'badge text-bg-success'"
                 v-text="item.collaborator ? item.collaborator : 'Item disponível'"></p>
             </div>
           </button>
@@ -37,31 +39,28 @@
                 <strong>Criado em: </strong>
                 <span :data-testid="`item-${item.id}-created-at`">
                   {{ formatDate(item.createdAt, "DD/MM/yyyy hh:ss") }}
-                </span> 
+                </span>
                 <br />
                 <strong>Última modificação: </strong>
                 <span :data-testid="`item-${item.id}-updated-at`">
                   {{ formatDate(item.updatedAt, "DD/MM/yyyy hh:ss") }}
                 </span>
                 <br />
-                <strong v-show="item.loanAt">Emprestado desde: </strong> 
+                <strong v-show="item.loanAt">Emprestado desde: </strong>
                 <span :data-testid="`item-${item.id}-loan-at`">
                   {{ formatDate(item.loanAt, "DD/MM/yyyy hh:ss") }}
                 </span>
                 <hr>
               </div>
               <div class="text-md-end btn-group-sm ">
-                <button
-                  :data-testid="`item-${item.id}-borrow-or-return-button`"
-                  class="btn" :class="item.collaborator ? 'btn-primary' : 'btn-success'"
-                  @click="loanCollaborator(item.id, item.collaborator, item.codPatrimonio, item.title)"
-                >
+                <button :data-testid="`item-${item.id}-borrow-or-return-button`" class="btn"
+                  :class="item.collaborator ? 'btn-primary' : 'btn-success'"
+                  @click="loanCollaborator(item.id, item.collaborator, item.codPatrimonio, item.title)">
                   <i class="fa-solid" :class="item.collaborator ? 'fa-arrow-down' : 'fa-arrow-right-arrow-left'"></i>
                   <span v-text="item.collaborator ? ' Devolver Item' : ' Emprestar item '"> </span>
                 </button>
-                <button
-                  :data-testid="`item-${item.id}-edit-button`"
-                  class="btn btn-warning " @click="editItem(item.id)">
+                <button :data-testid="`item-${item.id}-edit-button`" class="btn btn-warning "
+                  @click="editItem(item.id)">
                   <i class="fa-solid fa-edit"></i> Editar item
                 </button>
               </div>
@@ -92,9 +91,7 @@
       <template v-slot:footer>
         <div class="d-flex">
           <button class="btn btn-secondary me-2" @click="cancelEditItem()">Cancelar</button>
-          <button
-            data-testid="save-button"
-            class="btn btn-success"
+          <button data-testid="save-button" class="btn btn-success"
             @click="setLoan(item.id, item.collaborator)">Salvar</button>
         </div>
       </template>
@@ -170,7 +167,7 @@ async function loadDataPagination() {
       : payload = {}
 
     response = await axios.get(url, { params: payload });
-    collaborators.value = response.data.employers;
+    collaborators.value = response.data.employees;
     allItemsCount.value = response.data.totalRows;
     if (Array.isArray(response?.data?.rows)) {
       itemsPaginate.value = response.data.rows
@@ -213,7 +210,7 @@ async function loadDataSearch(searchText, searchField) {
 }
 
 async function loanCollaborator(itemId, collaborator, codPatrimonio, title) {
-  
+
   try {
     if (collaborator) {
       const choose = await createMessageBox({
@@ -235,7 +232,7 @@ async function loanCollaborator(itemId, collaborator, codPatrimonio, title) {
     }
   } catch (error) {
     toast.error(error.message, 1500);
-  } 
+  }
 }
 
 async function setLoan(itemId, collaborator = null) {
