@@ -158,7 +158,7 @@ const totalPages = computed(() => {
 async function loadDataPagination() {
   const loader = $loading.show()
   try {
-    const url = `/inventory/?limit=${perPage.value}&page=${page.value}`;
+    const url = `/inventory/list?limit=${perPage.value}&page=${page.value}`;
     let payload = {}
     let response = []
 
