@@ -36,17 +36,17 @@
               <div class="col-sm-12 col-md-6">
                 <strong>Criado em: </strong>
                 <span :data-testid="`item-${item.id}-created-at`">
-                  {{ item.createdAt }}
+                  {{ formatDate(item.createdAt, "DD/MM/yyyy hh:ss") }}
                 </span> 
                 <br />
                 <strong>Última modificação: </strong>
                 <span :data-testid="`item-${item.id}-updated-at`">
-                  {{ item.updatedAt }}
+                  {{ formatDate(item.updatedAt, "DD/MM/yyyy hh:ss") }}
                 </span>
                 <br />
                 <strong v-show="item.loanAt">Emprestado desde: </strong> 
                 <span :data-testid="`item-${item.id}-loan-at`">
-                  {{ item.loanAt }}
+                  {{ formatDate(item.loanAt, "DD/MM/yyyy hh:ss") }}
                 </span>
                 <hr>
               </div>
@@ -112,6 +112,8 @@ import { useStore } from "vuex";
 import { useLoading } from "vue-loading-overlay";
 import { useToast } from "vue-toastification";
 import { useAxios } from "../../hooks";
+import { formatDate } from "../../utils";
+
 
 const toast = useToast();
 const $loading = useLoading();

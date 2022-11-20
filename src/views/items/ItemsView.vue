@@ -45,7 +45,7 @@
         <div class="col-sm-6 col-md-4 col-lg-3">
           <label class="form-label">Valor <span>*</span></label>
           <Veefield data-testid="itemView-input-value" type="number" name="value" class="form-control"
-            placeholder="Valor do item" v-model.trim="form.value" required :class="{ 'is-invalid': errors.value }"
+            placeholder="Valor do item" v-model="form.value" required :class="{ 'is-invalid': errors.value }"
             :rules="validateNumber" />
           <div class="invalid-feedback animate__animated animate__shakeX">
             {{ errors.value }}
@@ -185,6 +185,7 @@ async function getInfoItemById(id) {
 
 async function onValidSubmit(values, actions) {
   newForm.value = { ...values }
+  newForm.value["value"] = parseFloat(newForm.value["value"]);
   if (id) {
     await editItem(actions);
   } else {
@@ -204,7 +205,7 @@ async function newItem() {
   const loader = $loading.show();
   try {
     const res = await axios.post(
-      "/items/create",
+      "/inventory/create",
       newForm.value
     );
     if (res.status === 201) {

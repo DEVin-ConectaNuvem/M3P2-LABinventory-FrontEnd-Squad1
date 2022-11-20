@@ -68,6 +68,8 @@ import { createMessageBox } from 'vue-m-dialog'
 import { useAxios } from '../../hooks';
 import { useLoading } from "vue-loading-overlay";
 import { useToast } from "vue-toastification";
+import { formatValueMoney } from '../../utils';
+
 
 const toast = useToast();
 const $loading = useLoading();
@@ -139,7 +141,7 @@ onMounted(async () => {
             {
                 title: "Valor total de items",
                 icon: "widgets-icons-2 bg-gradient-ohhappiness  fa-solid fa-sack-dollar",
-                count: itemsDashboard.value.valueTotalItems,
+                count: formatValueMoney(itemsDashboard.value.valueTotalItems),
                 infos: "Valores",
                 link: () => infoDashRoute('itens', 'listItems'),
                 class: "col-sm-12 col-md-6 col-lg-3 border-success"
