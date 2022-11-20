@@ -167,7 +167,7 @@ import {
   validateCEP,
 } from "../../validators/validators";
 import { useAxios } from "../../hooks";
-import moment from "moment";
+
 const { axios } = useAxios();
 const $loading = useLoading();
 const toast = useToast();
@@ -271,9 +271,10 @@ function onInvalidSubmit({ errors }) {
 async function newCollaborator() {
   const loader = $loading.show();
   try {
+    const data = formatDataToBack(newForm.value);
     const res = await axios.post(
       "/employees/create",
-      newForm.value
+      data
     );
     if (res.status === 201) {
         toast(content, {
@@ -298,12 +299,20 @@ async function newCollaborator() {
   }
 }
 
+function formatDataToBack(data){
+  const regexRemoveMask = /[^0-9]/g;
+  data["phone"] ? data["phone"] = data["phone"].replace(regexRemoveMask, "") : '';
+  data["houseNumber"] ? data["houseNumber"] = parseInt(data["houseNumber"]) : '';
+  return data;
+}
+
 async function editCollaborator() {
   const loader = $loading.show();
   try {
+    const data = formatDataToBack(newForm.value);
     const payload = {
       "id": id,
-      "dataset": newForm.value
+      "dataset": data
     }
     const res = await axios.patch(
       `/employees/update`,
