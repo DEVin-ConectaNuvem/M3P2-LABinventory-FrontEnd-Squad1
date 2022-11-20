@@ -27,21 +27,21 @@
           <div class="accordion-body">
             <div class="row">
               <div class="col-sm-12 col-md-6">
-                <strong>Email:</strong> <span :data-testid="`colab-list-email-${collaborator.id}`"> {{
+                <strong>Email: </strong> <span :data-testid="`colab-list-email-${collaborator.id}`"> {{
                 collaborator.email }} </span>
                 <br />
-                <strong>Telefone:</strong><span :data-testid="`colab-list-phone-${collaborator.id}`"> {{
+                <strong>Telefone: </strong><span :data-testid="`colab-list-phone-${collaborator.id}`"> {{
                 collaborator.phone }} </span>
                 <br />
-                <strong>Cargo:</strong><span :data-testid="`colab-list-position-${collaborator.id}`"> {{
+                <strong>Cargo: </strong><span :data-testid="`colab-list-position-${collaborator.id}`"> {{
                 collaborator.position }} </span>
                 <br />
               </div>
               <div class="col-sm-12 col-md-6">
-                <strong>Criado em:</strong><span :data-testid="`colab-list-createdAt-${collaborator.id}`"> {{
-                collaborator.createdAt }} </span>
+                <strong>Criado em: </strong><span :data-testid="`colab-list-createdAt-${collaborator.id}`"> {{
+                formatDate(collaborator.createdAt, "DD/MM/yyyy hh:ss") }} </span>
                 <br />
-                <strong>última modificação:</strong><span data-testid="colab-list-updateAt"> {{ collaborator.updatedAt
+                <strong>última modificação: </strong><span data-testid="colab-list-updateAt"> {{ formatDate(collaborator.updatedAt, "DD/MM/yyyy hh:ss")
                 }} </span>
                 <br />
               </div>
@@ -78,6 +78,7 @@ import { RouterLink, useRouter } from "vue-router";
 import { useAxios } from "../../hooks";
 import { useLoading } from "vue-loading-overlay";
 import { useToast } from "vue-toastification";
+import { formatDate } from '../../utils';
 
 const $toast = useToast();
 const $loading = useLoading();
