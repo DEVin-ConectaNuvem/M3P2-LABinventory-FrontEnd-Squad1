@@ -5,7 +5,7 @@
     <hr />
     <h4>Lista de Itens</h4>
     <paginate v-model="page" :page-count="totalPages" :page-range="3" :margin-pages="2" :prev-text="'Voltar'"
-      :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'">
+      :next-text="'Avançar'" :container-class="'pagination'" :page-class="'page-item'" v-show="itemsPaginateComputed.length > 0">
     </paginate>
     <div class="accordion animate__animated animate__fadeIn" v-for="item in itemsPaginateComputed" :key="item.id">
       <div class="accordion-item ">
@@ -54,7 +54,7 @@
                 <button
                   :data-testid="`item-${item.id}-borrow-or-return-button`"
                   class="btn" :class="item.collaborator ? 'btn-primary' : 'btn-success'"
-                  @click="loanCollaborator(item.id, item.collaborator)"
+                  @click="loanCollaborator(item.id, item.collaborator, item.codPatrimonio, item.title)"
                 >
                   <i class="fa-solid" :class="item.collaborator ? 'fa-arrow-down' : 'fa-arrow-right-arrow-left'"></i>
                   <span v-text="item.collaborator ? ' Devolver Item' : ' Emprestar item '"> </span>
@@ -70,11 +70,11 @@
         </div>
       </div>
     </div>
-    <p class="text-danger" v-show="itemsPaginateComputed.length === 0 && inputSearch">
+    <p class="text-danger" v-show="itemsPaginateComputed.length === 0 && inputConfig.searchText">
       Não há itens cadastrados com este <strong>termo de pesquisa</strong> - <router-link :to="{ name: 'items' }">
         Realizar novo cadastro</router-link>
     </p>
-    <p class="text-danger" v-show="!allItems">
+    <p class="text-danger" v-show="itemsPaginateComputed.length === 0 && !inputConfig.searchText">
       Não há itens cadastrados - <router-link :to="{ name: 'items' }">Realizar novo cadastro</router-link>
     </p>
     <m-dialog v-model="show" title="Empréstimo de itens">
@@ -104,17 +104,15 @@
 
 <script setup>
 import SearchInput from '../../components/shared/SearchInput.vue';
-import moment from "moment";
-import { computed, onMounted, ref, watch, reactive } from "vue";
+import { computed, ref, watch, reactive } from "vue";
 import { createMessageBox } from 'vue-m-dialog';
 import { RouterLink, useRouter } from "vue-router";
 import Paginate from "vuejs-paginate-next";
 import { useStore } from "vuex";
 import { useLoading } from "vue-loading-overlay";
 import { useToast } from "vue-toastification";
-import { useAxios, useLodash } from "../../hooks";
+import { useAxios } from "../../hooks";
 
-const { $_ } = useLodash();
 const toast = useToast();
 const $loading = useLoading();
 const router = useRouter();
@@ -134,7 +132,7 @@ const perPage = ref(5);
 const itemsPaginate = ref([]);
 const parameterSearch = reactive({
   options: [
-    { "text": "Código", "value": "id", "operatorSearch": "=" },
+    { "text": "Código", "value": "codPatrimonio", "operator": "=" },
     { "text": "Título", "value": "title" },
     { "text": "Categoria", "value": "category" },
     { "text": "Descrição", "value": "description" },
@@ -152,56 +150,34 @@ const inputConfig = reactive({
 store.commit('configModule/SET_PAGE_NAME', 'Listagem de itens');
 
 const totalPages = computed(() => {
-  if (!inputConfig.searchText) {
-    return Math.ceil(allItems.value.length / perPage.value);
-  } else {
-    return Math.ceil(itemsPaginate.value.length / perPage.value);
-  }
+
+    return Math.ceil(allItems.value.length / perPage.value) || 1;
+
 })
 
 async function loadDataPagination() {
   const loader = $loading.show()
   try {
-    let url = ''
-    if (inputConfig.searchText) {
-      const operator = parameterSearch.options.find((opt) => opt.value === inputConfig.searchField).operatorSearch || '_like='
-      url = `/inventory?${inputConfig.searchField}${operator}${inputConfig.searchText}&_limit=${perPage.value}&page=${page.value}`
+    const url = `/inventory/?limit=${perPage.value}&page=${page.value}`;
+    let payload = {}
+    let response = []
+
+    inputConfig.searchText
+      ? payload = {
+        "searchField": inputConfig.searchField,
+        "searchValue": inputConfig.searchText
+      }
+      : payload = {}
+
+    response = await axios.get(url, { params: payload });
+    collaborators.value = response.data.employers;
+    if (Array.isArray(response?.data?.rows)) {
+      itemsPaginate.value = response.data.rows
     } else {
-      url = `/inventory?limit=${perPage.value}&page=${page.value}`
+      itemsPaginate.value = []
     }
-    const response = await axios.get(url);
-    itemsPaginate.value = response.data;
   } catch (error) {
     toast.error(error.message)
-  } finally {
-    setTimeout(() => {
-      loader.hide()
-    }, 500);
-  }
-}
-
-async function loadAllData() {
-  const loader = $loading.show()
-  try {
-    const response = await axios.get('/inventory/');
-    allItems.value = response.data || null;
-  } catch (error) {
-    toast.error("Erro ao carregar os dados")
-  } finally {
-    setTimeout(() => {
-      loader.hide()
-    }, 500);
-  }
-}
-
-async function loadCollaborators() {
-  const loader = $loading.show()
-  try {
-    const response = await axios.get('/employers');
-    const collabsUniques = $_.uniqBy(response.data, 'id')
-    collaborators.value = collabsUniques;
-  } catch (error) {
-    toast.error("Erro ao carregar os dados")
   } finally {
     setTimeout(() => {
       loader.hide()
@@ -213,34 +189,35 @@ const itemsPaginateComputed = computed(() => {
   return itemsPaginate.value
 })
 
-onMounted(async () => {
-  await loadAllData()
-  await loadDataPagination()
-  await loadCollaborators()
+watch(page, async (newValue, oldValue) => {
+  if(newValue !== oldValue && oldValue !== 1) {
+    optionsPage.page = page.value;
+    await loadDataPagination()
+  }
 });
 
-watch(page, async () => {
-  optionsPage.page = page.value;
-  await loadDataPagination()
-});
 
 async function loadDataSearch(searchText, searchField) {
   if (searchText && searchField) {
     inputConfig.searchText = searchText;
     inputConfig.searchField = searchField;
+    await loadDataPagination()
+  } else if (!searchText) {
+    inputConfig.searchText = '';
+    inputConfig.searchField = '';
+    await loadDataPagination()
   } else {
     inputConfig.searchText = '';
   }
-  await loadDataPagination()
 }
 
-async function loanCollaborator(itemId, collaborator) {
+async function loanCollaborator(itemId, collaborator, codPatrimonio, title) {
   
   try {
     if (collaborator) {
       const choose = await createMessageBox({
         title: 'Confirmação de devolução',
-        message: `Gostaria de confirmar a devolução do item código ${itemId} de ${collaborator} ?`,
+        message: `Gostaria de confirmar a devolução do item código '${title}' de ${collaborator} ?`,
         cancelButtonText: 'Cancelar',
         confirmButtonText: 'Confirmar',
         hasMask: true,
@@ -264,17 +241,12 @@ async function setLoan(itemId, collaborator = null) {
   const loader = $loading.show()
   try {
     const payload = {
-      collaborator: collaborator,
-      loanAt: collaborator ? moment().format("DD/MM/YYYY hh:mm") : null,
-      updatedAt: moment().format("DD/MM/YYYY hh:mm"),
+      "id": itemId,
+      "dataset": {
+        "collaborator": collaborator ? collaborator : null
+      }
     }
-    const res = await axios.patch(
-      `/inventory/${itemId.id || itemId}`, {
-      collaborator: payload.collaborator,
-      loanAt: payload.loanAt,
-      updatedAt: payload.updatedAt,
-    }
-    );
+    const res = await axios.patch(`/inventory/update`, payload);
 
     if (res.status === 200) {
       show.value = false

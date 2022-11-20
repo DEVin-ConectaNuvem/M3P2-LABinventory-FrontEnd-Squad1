@@ -135,7 +135,7 @@ async function loadDataPagination() {
       url = `/employers?limit=${perPage.value}&page=${page.value}`
     }
     const response = await axios.get(url);
-    collabsPaginate.value = response.data;
+    collabsPaginate.value = response.data.rows;
   } catch (error) {
     $toast.error(error.message)
   } finally {
@@ -149,7 +149,6 @@ const collabsPaginateComputed = computed(() => {
 })
 
 onMounted(async () => {
-  await loadData()
   await loadDataPagination()
 });
 

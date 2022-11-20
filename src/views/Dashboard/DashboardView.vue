@@ -22,7 +22,7 @@
                         {{ item.codPatrimonio + ' - ' + item.title }}
                     </p>
                 </template>
-                <template v-slot:img><img :src="item.url" class="imageBg "></template>
+                <template v-slot:img><img :src="item.url" class="imageBg"></template>
                 <template v-slot:collab>
                     <p :data-testid="`item-${item.id}-status`"
                         :class="item.collaborator ? 'text-bg-primary' : 'text-bg-success'"
@@ -38,7 +38,7 @@
             </paginate>
         </section>
         <div class="mt-3">
-            <p class="text-danger" v-if="itemsPaginateComputed.length === 0">
+            <p class="text-danger" v-if="itemsPaginateComputed.length === 0 && inputConfig.searchText">
                 Ainda não há itens cadastrados com este <strong>termo de pesquisa</strong> - <router-link
                     :to="{ name: 'items' }">
                     Realizar novo cadastro</router-link>
@@ -77,6 +77,7 @@ const store = useStore();
 const show = ref(false);
 const item = ref({});
 const allItems = ref([]);
+const totalRows = ref(0);
 const itemsDashboard = ref({
     itemsCount: 0,
     collabsCount: 0,
@@ -89,7 +90,7 @@ const optionsPage = reactive({
 })
 const page = ref(1);
 const perPage = ref(8);
-const itemsPaginate = ref([]);
+
 const infoDashboard = ref([])
 const parameterSearch = reactive({
     options: [
@@ -110,11 +111,7 @@ const inputConfig = reactive({
 })
 
 const totalPages = computed(() => {
-    if (!inputConfig.searchText) {
-        return Math.ceil(itemsDashboard.value.itemsCount / perPage.value);
-    } else {
-        return Math.ceil(itemsPaginate.value.length / perPage.value);
-    }
+    return Math.ceil(totalRows.value / perPage.value) || 1;
 })
 
 store.commit('configModule/SET_PAGE_NAME', 'Dashboard')
@@ -162,10 +159,8 @@ onMounted(async () => {
 async function loadDataDashboard() {
     try {
         const resAnalytics = await axios.get('/inventory/analytics')
-        const resItems = await axios.get(`/inventory/?limit=${perPage.value}&page=${page.value}`)
         const allAnalytics = resAnalytics.data;
-        allItems.value = resItems.data
-
+        
         itemsDashboard.value = {
             itemsCount: allAnalytics.total_items,
             collabsCount: allAnalytics.total_collabs,
@@ -184,16 +179,19 @@ async function loadDataPagination() {
         let payload = {}
         let response = []
 
-        if (inputConfig.searchText) {
-            payload = {
-                [inputConfig.searchField]: inputConfig.searchText
+        inputConfig.searchText
+            ? payload = {
+                "searchField": inputConfig.searchField,
+                "searchValue": inputConfig.searchText
             }
-            response = await axios.post(url, payload );
-        } else {
-            response = await axios.get(url);
-        }
-        if (Array.isArray(response?.data)) {
-            allItems.value = response.data
+            : payload = {}
+
+        response = await axios.get(url, { params: payload });
+
+        if (Array.isArray(response?.data?.rows)) {
+            console.log('teste')
+            allItems.value = response.data.rows
+            totalRows.value = response.totalRows
         } else {
             allItems.value = []
         }
@@ -248,7 +246,7 @@ function infoDashRoute(destiny, route) {
 }
 
 watch(page, async (newValue, oldValue) => {
-    if (oldValue && newValue !== oldValue) {
+    if (oldValue !== 1 && newValue !== oldValue) {
         optionsPage.page = page.value;
         await loadDataPagination()
     }
