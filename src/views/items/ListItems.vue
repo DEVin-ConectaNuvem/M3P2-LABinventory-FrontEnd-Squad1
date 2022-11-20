@@ -124,7 +124,7 @@ const show = ref(false)
 const item = ref({})
 const collaborators = ref([])
 const allItems = ref([])
-const inputSearch = ref(null);
+const allItemsCount = ref(0)
 const optionsPage = reactive({
   page: 1,
   limit: 5
@@ -152,9 +152,7 @@ const inputConfig = reactive({
 store.commit('configModule/SET_PAGE_NAME', 'Listagem de itens');
 
 const totalPages = computed(() => {
-
-    return Math.ceil(allItems.value.length / perPage.value) || 1;
-
+  return Math.ceil(allItemsCount.value / perPage.value) || 1;
 })
 
 async function loadDataPagination() {
@@ -173,6 +171,7 @@ async function loadDataPagination() {
 
     response = await axios.get(url, { params: payload });
     collaborators.value = response.data.employers;
+    allItemsCount.value = response.data.totalRows;
     if (Array.isArray(response?.data?.rows)) {
       itemsPaginate.value = response.data.rows
     } else {
@@ -192,7 +191,7 @@ const itemsPaginateComputed = computed(() => {
 })
 
 watch(page, async (newValue, oldValue) => {
-  if(newValue !== oldValue && oldValue !== 1) {
+  if (newValue !== oldValue) {
     optionsPage.page = page.value;
     await loadDataPagination()
   }

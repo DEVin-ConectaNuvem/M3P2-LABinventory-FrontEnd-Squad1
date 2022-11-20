@@ -191,9 +191,8 @@ async function loadDataPagination() {
         response = await axios.get(url, { params: payload });
 
         if (Array.isArray(response?.data?.rows)) {
-            console.log('teste')
             allItems.value = response.data.rows
-            totalRows.value = response.totalRows
+            totalRows.value = response.data.totalRows
         } else {
             allItems.value = []
         }
@@ -248,7 +247,7 @@ function infoDashRoute(destiny, route) {
 }
 
 watch(page, async (newValue, oldValue) => {
-    if (oldValue !== 1 && newValue !== oldValue) {
+    if (newValue !== oldValue) {
         optionsPage.page = page.value;
         await loadDataPagination()
     }
