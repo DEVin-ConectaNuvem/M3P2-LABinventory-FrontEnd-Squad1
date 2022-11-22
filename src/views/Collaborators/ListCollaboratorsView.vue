@@ -104,13 +104,13 @@ const inputConfig = reactive({
 store.commit('configModule/SET_PAGE_NAME', 'Listagem de colaboradores');
 
 const totalPages = computed(() => {
-    return Math.ceil(allCollabsCount / perPage.value);
+    return Math.ceil(allCollabsCount.value / perPage.value);
 })
 
 async function loadDataPagination() {
   const loader = $loading.show()
   try {
-    const url = `/employees?limit=${perPage.value}&page=${page.value}`;
+    const url = `/employees/?limit=${perPage.value}&page=${page.value}`;
     let payload = {}
     let response = []
 
@@ -139,11 +139,9 @@ const allCollabsPaginate = computed(() => {
 
 watch(page, async (newValue, oldValue) => {
   if (newValue !== oldValue) {
-    optionsPage.page = page.value;
     await loadDataPagination()
   }
 });
-
 async function loadDataSearch(searchText, searchField) {
   if (searchText && searchField) {
     inputConfig.searchText = searchText;
