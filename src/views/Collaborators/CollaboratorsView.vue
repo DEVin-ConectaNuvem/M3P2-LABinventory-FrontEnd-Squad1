@@ -8,10 +8,10 @@
         <hr />
         <div class="col-lg-2">
           <Veefield name="imageUser" v-model="form.imageUser" data-testid="input-uploadImageUser"
-            v-slot="{ field, errors, meta }" >
+            v-slot="{ field, errors, meta }">
             <avatar-user v-bind="field" @uploadSuccess="saveImageUser"></avatar-user>
             <div class="invalid-feedback animate__animated animate__shakeX">
-              {{ meta.touched ? errors.model : '' }}
+              {{ meta.dirty && meta.touched ? errors.imageUser : '' }}
             </div>
           </Veefield>
         </div>
@@ -20,51 +20,58 @@
             <div class="col-sm-12 col-md-12 col-lg-4">
               <label class="form-label">Nome completo <span>*</span></label>
               <Veefield data-testid="colab-name" type="text" name="name" class="form-control"
-                placeholder="Nome completo" v-model.trim="form.name" required :class="{ 'is-invalid': errors.name }"
+                placeholder="Nome completo" v-model.trim="form.name" required :class="{ 'is-invalid': meta.dirty && meta.touched && errors.name }"
                 :rules="validateName" v-focus maxlength="25" />
-              <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.name }}</div>
+              <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.name : '' }}</div>
             </div>
             <div class="col-sm-12 col-md-6 col-lg-4">
               <label class="form-label">Genero <span>*</span></label>
               <Veefield data-testid="colab-gender" as="select" name="gender" class="form-select" placeholder="Genero"
-                v-model="form.gender" :class="{ 'is-invalid': errors.gender }" :rules="required" required>
+                v-model="form.gender" :class="{ 'is-invalid': meta.dirty && meta.touched &&  errors.gender }" :rules="required"
+                required>
                 <option value="" disabled selectd>Escolha o gênero</option>
                 <option value="Masculino">Masculino</option>
                 <option value="Feminino">Feminino</option>
                 <option value="Outro">Outro</option>
               </Veefield>
-              <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.gender }}</div>
+              <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.gender : '' }}</div>
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-4">
               <label class="form-label">Data de nascimento <span>*</span></label>
               <Veefield data-testid="colab-date" type="date" name="birthDay" class="form-control"
                 placeholder="Data de nascimento" v-model="form.birthDay" required
-                :class="{ 'is-invalid': errors.birthDay }" :rules="validateDate" />
-              <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.birthDay }}</div>
+                :class="{ 'is-invalid': meta.dirty && meta.touched && errors.birthDay }" :rules="validateDate" />
+              <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ?
+                  errors.birthDay : ''
+              }}</div>
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-4">
               <label class="form-label">Telefone <span>*</span></label>
               <Veefield data-testid="colab-phone" type="text" name="phone" class="form-control"
                 placeholder="Fixo ou celular" v-model="form.phone" v-mask="['(##) ####-####', '(##) #####-####']"
-                :class="{ 'is-invalid': meta.dirty && meta.touched ? errors.phone : false }" :rules="validatePhone" />
-              <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.phone : '' }}</div>
+                :class="{ 'is-invalid': meta.dirty && meta.touched && errors.phone }" :rules="validatePhone" />
+              <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ?
+                  errors.phone : ''
+              }}</div>
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-4">
               <label class="form-label">E-mail <span>*</span></label>
               <Veefield data-testid="colab-email" type="email" name="email" class="form-control"
-                placeholder="Ex: José@gmail.com" v-model="form.email" required :class="{ 'is-invalid': errors.email }"
+                placeholder="Ex: José@gmail.com" v-model="form.email" required :class="{ 'is-invalid': meta.dirty && meta.touched && errors.email }"
                 :rules="validateEmail" />
-              <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.email : '' }}</div>
+              <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ?
+                  errors.email : ''
+              }}</div>
             </div>
 
             <div class="col-sm-12 col-md-6 col-lg-4">
               <label class="form-label">Cargo <span>*</span></label>
               <Veefield data-testid="colab-position" as="select" name="position" class="form-select"
                 placeholder="Ex: desenvolvedor" v-model="form.position" required
-                :class="{ 'is-invalid': errors.position }" :rules="required">
+                :class="{ 'is-invalid': meta.dirty && meta.touched && errors.position }" :rules="required">
                 <option value="" disabled>Escolha o cargo</option>
                 <option value="Desenvolvedor Backend">Desenvolvedor Backend</option>
                 <option value="Desenvolvedor Frontend">
@@ -74,7 +81,7 @@
                   Desenvolvedor Fullstack
                 </option>
               </Veefield>
-              <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.position }}</div>
+              <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.position : '' }}</div>
             </div>
           </div>
         </div>
@@ -87,55 +94,55 @@
           <label class="form-label">CEP <span>*</span></label>
           <Veefield data-testid="colab-zipcode" type="text" name="zipcode" class="form-control" placeholder="CEP"
             v-model="form.zipcode" @focusout="searchZipCode" required v-mask="'#####-###'" ref="zipcode"
-            :class="{ 'is-invalid': errors.zipcode }" :rules="validateCEP" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.zipcode }}</div>
+            :class="{ 'is-invalid': meta.dirty && meta.touched && errors.zipcode }" :rules="validateCEP" />
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.zipcode : '' }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Cidade <span>*</span></label>
           <Veefield data-testid="colab-city" type="text" name="city" class="form-control" placeholder="Cidade"
-            v-model="form.city" required :class="{ 'is-invalid': errors.city }" disabled :rules="required" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.city }}</div>
+            v-model="form.city" required :class="{ 'is-invalid': meta.dirty && meta.touched && errors.city }" disabled :rules="required" />
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.city : '' }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Estado <span>*</span></label>
           <Veefield data-testid="colab-state" type="text" name="state" class="form-control" placeholder="Estado"
-            v-model="form.state" required :class="{ 'is-invalid': errors.state }" disabled :rules="required" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.state }}</div>
+            v-model="form.state" required :class="{ 'is-invalid': meta.dirty && meta.touched && errors.state }" disabled :rules="required" />
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.state : '' }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Bairro <span>*</span></label>
           <Veefield data-testid="colab-neighborhood" type="text" name="neighborhood" class="form-control"
-            placeholder="Bairro" v-model="form.neighborhood" required :class="{ 'is-invalid': errors.neighborhood }"
+            placeholder="Bairro" v-model="form.neighborhood" required :class="{ 'is-invalid': meta.dirty && meta.touched && errors.neighborhood }"
             :rules="required" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.neighborhood }}</div>
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.neighborhood : '' }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Logradouro <span>*</span></label>
           <Veefield data-testid="colab-street" type="text" name="street" class="form-control" placeholder="Rua/Avenida"
-            v-model="form.street" required :class="{ 'is-invalid': errors.street }" :rules="required" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.street }}</div>
+            v-model="form.street" required :class="{ 'is-invalid': meta.dirty && meta.touched &&  errors.street }" :rules="required" />
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.street : '' }}</div>
         </div>
 
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Número <span>*</span></label>
           <Veefield data-testid="colab-number" type="number" name="houseNumber" class="form-control"
             placeholder="Número da residência" :rules="validateNumber" v-model.number="form.houseNumber" required
-            :class="{ 'is-invalid': errors.houseNumber }" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.houseNumber }}</div>
+            :class="{ 'is-invalid': meta.dirty && meta.touched &&  errors.houseNumber }" />
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.houseNumber : '' }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Complemento <span>*</span></label>
           <Veefield data-testid="colab-complement" type="text" name="complement" class="form-control"
             placeholder="Complemento" :rules="required" v-model="form.complement" required
-            :class="{ 'is-invalid': errors.complement }" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.complement }}</div>
+            :class="{ 'is-invalid': meta.dirty && meta.touched &&  errors.complement }" />
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.complement : '' }}</div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Referência <span>*</span></label>
           <Veefield data-testid="colab-reference" type="text" name="reference" class="form-control"
             placeholder="Ponto de referência" :rules="required" v-model="form.reference" required
-            :class="{ 'is-invalid': errors.reference }" />
-          <div class="invalid-feedback animate__animated animate__shakeX">{{ errors.reference }}</div>
+            :class="{ 'is-invalid': meta.dirty && meta.touched && errors.reference }" />
+          <div class="invalid-feedback animate__animated animate__shakeX">{{ meta.dirty && meta.touched ? errors.reference : '' }}</div>
         </div>
       </div>
       <div class="text-end">
@@ -179,6 +186,20 @@ const toastInfo = reactive({
   buttonNew: "Cadastrar novo colaborador",
   buttonList: "Listar colaboradores",
 });
+
+const configToastSuccess = {
+  position: "top-right",
+  closeOnClick: false,
+  pauseOnFocusLoss: false,
+  pauseOnHover: false,
+  draggable: false,
+  draggablePercent: 0.6,
+  showCloseButtonOnHover: true,
+  closeButton: "button",
+  icon: "fas fa-rocket",
+  rtl: false,
+}
+
 const content = {
   component: ToastNotification,
   props: toastInfo,
@@ -243,10 +264,6 @@ async function getCollaboratorById(id) {
   }
 }
 
-function removeErrors() {
-  
-}
-
 async function onValidSubmit(values, actions) {
   try {
     newForm.value = { ...values }
@@ -257,10 +274,10 @@ async function onValidSubmit(values, actions) {
     }
     actions.resetForm();
   } catch (error) {
-    toast.error("Erro ao cadastrar colaborador");
+    const errMsg = error.message || "Erro ao cadastrar colaborador"
+    toast.error(errMsg, { timeout: 1500 });
+  }
 }
-}
-
 
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
@@ -277,21 +294,11 @@ async function newCollaborator() {
       data
     );
     if (res.status === 201) {
-        toast(content, {
-          position: "top-right",
-          closeOnClick: false,
-          pauseOnFocusLoss: false,
-          pauseOnHover: false,
-          draggable: false,
-          draggablePercent: 0.6,
-          showCloseButtonOnHover: true,
-          closeButton: "button",
-          icon: "fas fa-rocket",
-          rtl: false,
-        });
+      toast(content, configToastSuccess);
     }
   } catch (error) {
-    toast.error("Erro ao cadastrar colaborador");
+    const errMsg = error.response?.status === 400 ? error.response.data.error : "Erro ao cadastrar colaborador";
+    throw new Error(errMsg);
   } finally {
     setTimeout(() => {
       loader.hide()
@@ -299,7 +306,7 @@ async function newCollaborator() {
   }
 }
 
-function formatDataToBack(data){
+function formatDataToBack(data) {
   const regexRemoveMask = /[^0-9]/g;
   data["phone"] ? data["phone"] = data["phone"].replace(regexRemoveMask, "") : '';
   data["houseNumber"] ? data["houseNumber"] = parseInt(data["houseNumber"]) : '';
@@ -323,17 +330,20 @@ async function editCollaborator() {
     }
     router.push({ name: "ListCollaborators" });
   } catch (error) {
-    toast.error("Erro ao editar colaborador", content);
+    const errMsg = error.response?.status === 400 ? error.response.data.error : "Erro ao editar colaborador";
+    throw new Error(errMsg);
   } finally {
     setTimeout(() => {
       loader.hide()
     }, 500);
   }
 }
+
 function cancelEdit() {
   toast.warning("Edição cancelada!", { timeout: 1000 });
   router.push({ name: "ListCollaborators" });
 }
+
 function searchZipCode() {
   clearAddress();
   if (!form.value.zipcode || form.value.zipcode.length <= 8) {
@@ -364,8 +374,8 @@ function searchZipCode() {
     });
 }
 
-function saveImageUser(imgBase64){
-  if(imgBase64){
+function saveImageUser(imgBase64) {
+  if (imgBase64) {
     form.value.imageUser = imgBase64
   }
 }
