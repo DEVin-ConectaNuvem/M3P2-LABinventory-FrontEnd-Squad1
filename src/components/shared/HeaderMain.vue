@@ -59,7 +59,11 @@ const isVisible = computed(() => {
   return store.state.configModule.configs.sidebarVisible
 })
 const logged = computed(() => {
-  return store.state.authModule.userLogged
+  const user = {
+    username: store.state.authModule.userLogged,
+    email: store.state.authModule.email
+  }
+  return user
 })
 
 function toggleVisibility() {
