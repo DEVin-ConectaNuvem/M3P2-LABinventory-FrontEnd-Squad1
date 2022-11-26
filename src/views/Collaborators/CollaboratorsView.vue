@@ -7,9 +7,9 @@
         <h3>Dados do colaborador</h3>
         <hr />
         <div class="col-lg-2">
-          <Veefield name="imageUser" v-model="form.imageUser" data-testid="input-uploadImageUser"
+          <Veefield name="imageUser" v-model="form.imageUser"
             v-slot="{ field, errors, meta }">
-            <avatar-user v-bind="field" @uploadSuccess="saveImageUser"></avatar-user>
+            <avatar-user v-bind="field" @uploadSuccess="saveImageUser" ></avatar-user>
             <div class="invalid-feedback animate__animated animate__shakeX">
               {{ meta.dirty && meta.touched ? errors.imageUser : '' }}
             </div>
