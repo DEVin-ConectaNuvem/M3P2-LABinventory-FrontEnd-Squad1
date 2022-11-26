@@ -87,4 +87,14 @@ describe('Verifica se é possível emprestar um item', () => {
     cy.get("[data-testid='colab-reset-button']").click()
     cy.contains('Edição cancelada')
   })
+
+  it('Teste de categoria de pesquisa de lista de colaboradores', () => {
+    cy.visit('http://localhost:3000/#/lista-colaboradores')
+
+    cy.wait(1500)
+
+    cy.get('select').select('Nome')
+    cy.get('select').select('Cargo')
+    cy.get('select').select('E-mail')
+  })
 })
