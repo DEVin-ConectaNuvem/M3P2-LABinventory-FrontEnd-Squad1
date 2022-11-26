@@ -37,7 +37,7 @@
             {{ item.codPatrimonio + ' - ' + item.title }}
           </p>
         </template>
-        <template v-slot:img><img :src="item.url" class="imageBg" /></template>
+        <template v-slot:img><img :src="item.url || item.imageItem" class="imageBg" /></template>
         <template v-slot:collab>
           <p
             :data-testid="`item-${item.id}-status`"

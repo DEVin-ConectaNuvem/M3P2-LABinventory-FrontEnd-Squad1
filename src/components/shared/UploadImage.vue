@@ -1,12 +1,13 @@
 <template>
   <div>
     <img v-if="imgData" :src="imgData" />
-    <img v-else src="../../assets/icons/user-default.svg" />
+    <img v-else-if="typeImage === 'Avatar'" src="@/assets/icons/user-default.svg" />
+    <img v-else src="@/assets/icons/image-svgrepo-com.svg" />
     <a
       class="btn btn-primary"
       @click="toggleShow"
       data-testid="colab-upload-file"
-      >Upload foto</a
+      >Upload</a
     >
     <my-upload
       field="img"
@@ -22,7 +23,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import myUpload from 'vue-image-crop-upload'
 
 const props = defineProps({
@@ -30,8 +31,15 @@ const props = defineProps({
     type: String,
     required: false,
     default: ''
+  },
+  type: {
+    type: String,
+    required: false,
+    default: ''
   }
 })
+
+const typeImage = computed(() => props.type)
 
 const emit = defineEmits(['uploadSuccess'])
 

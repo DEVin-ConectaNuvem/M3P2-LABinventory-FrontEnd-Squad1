@@ -38,7 +38,7 @@
             aria-expanded="true"
             :aria-controls="'collapseOne' + item.id"
           >
-            <img class="img-fluid imgAccordion" :src="item.url" />
+            <img class="img-fluid imgAccordion" :src="item.url || item.imageItem" />
             <div class="flex-grow-1 ms-3">
               #{{ item.codPatrimonio }} -
               <span :data-testid="`item-${item.id}-title`">{{
