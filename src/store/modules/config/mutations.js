@@ -17,9 +17,17 @@ const SET_PAGE_NAME = (state, payload) => {
   state.configs.pageName = payload
 }
 
+const TOGGLE_LOADING = (state, payload) => {
+  if (payload !== state.configs.loading) {
+    state.configs.loading = payload
+  }
+}
+
+
 export {
   UPDATE_CONFIGS_LOCAL_STORAGE,
   TOGGLE_SIDEBAR,
   SET_CONFIGS_LOCAL_STORAGE,
-  SET_PAGE_NAME
+  SET_PAGE_NAME,
+  TOGGLE_LOADING
 }

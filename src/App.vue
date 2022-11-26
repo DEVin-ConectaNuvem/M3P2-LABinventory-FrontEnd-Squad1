@@ -1,4 +1,24 @@
+<template>
+  <general-loading class="loading"></general-loading>
+  <div class="box">
+    <div v-if="statusLogin">
+      <HeaderMain></HeaderMain>
+    </div>
+    <main>
+      <transition>
+        <div id="left" class="bottom" v-if="isVisible">
+          <SidebarMain></SidebarMain>
+        </div>
+      </transition>
+      <div class="bottom">
+        <RouterView />
+      </div>
+    </main>
+  </div>
+</template>
+
 <script setup>
+import GeneralLoading from './components/shared/GeneralLoading.vue'
 import { RouterView } from 'vue-router'
 import SidebarMain from './components/shared/SidebarMain.vue'
 import HeaderMain from './components/shared/HeaderMain.vue'
@@ -37,24 +57,6 @@ const statusLogin = computed(() => {
   return store.state.authModule.isLogged
 })
 </script>
-
-<template>
-  <div class="box">
-    <div v-if="statusLogin">
-      <HeaderMain></HeaderMain>
-    </div>
-    <main>
-      <transition>
-        <div id="left" class="bottom" v-if="isVisible">
-          <SidebarMain></SidebarMain>
-        </div>
-      </transition>
-      <div class="bottom">
-        <RouterView />
-      </div>
-    </main>
-  </div>
-</template>
 
 <style lang="scss">
 @import url('./assets/css/base.css');
