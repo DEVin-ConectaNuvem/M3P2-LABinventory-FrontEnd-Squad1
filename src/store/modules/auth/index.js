@@ -1,6 +1,6 @@
-import { logIn, logOut, registerUser, updateToken, updateUsers } from "./actions";
-import { SET_LOG_OUT, SET_LOGIN_IN, UPDATE_USERS_LOCAL_STORAGE, REGISTER_USER, UPDATE_TOKEN} from "./mutations";
-import { checkEmailRegistered } from "./getters";
+import { logIn, logOut, registerUser } from './actions'
+import { SET_LOG_OUT, SET_LOGIN_IN, REGISTER_USER } from './mutations'
+import { checkEmailRegistered } from './getters'
 
 export default {
   namespaced: true,
@@ -8,24 +8,21 @@ export default {
     return {
       isLogged: false,
       userLogged: {},
-      users: [],
-    };
+      email: '',
+      token: {}
+    }
   },
   actions: {
     logIn,
     logOut,
-    registerUser,
-    updateToken,
-    updateUsers,
+    registerUser
   },
   mutations: {
     SET_LOG_OUT,
     SET_LOGIN_IN,
-    UPDATE_USERS_LOCAL_STORAGE,
-    REGISTER_USER,
-    UPDATE_TOKEN,
+    REGISTER_USER
   },
   getters: {
-    checkEmailRegistered,
+    checkEmailRegistered
   }
-};
+}

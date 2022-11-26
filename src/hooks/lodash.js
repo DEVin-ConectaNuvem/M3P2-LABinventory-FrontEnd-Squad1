@@ -1,4 +1,4 @@
-import lodash from "lodash";
+import lodash from 'lodash'
 
 /**
  * useLodash hook to use lodash in your components
@@ -9,6 +9,6 @@ import lodash from "lodash";
 
 export function useLodash() {
   return {
-    $_: lodash,
-  };
+    $_: lodash
+  }
 }

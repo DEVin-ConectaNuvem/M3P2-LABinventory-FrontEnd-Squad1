@@ -13,12 +13,24 @@
         <hr />
         <div class="col-sm-12 col-md-6 col-lg-3">
           <label class="form-label">Cód. de Patrimônio <span>*</span></label>
-          <input type="text" name="id" class="form-control" placeholder="Cód. automatico" v-model="form.id" disabled />
+          <Veefield
+            type="text"
+            name="codPatrimonio"
+            class="form-control"
+            :class="{ 'is-invalid': errors.title }"
+            :rules="required"
+            placeholder="Cód. de patrimônio"
+            v-model="form.codPatrimonio"
+            data-testid="itemView-input-codPatrimonio"
+          />
+          <div class="invalid-feedback animate__animated animate__shakeX">
+            {{ errors.codPatrimonio }}
+          </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Título do item <span>*</span></label>
           <Veefield
-            data-testid="input-title"
+            data-testid="itemView-input-title"
             type="text"
             name="title"
             class="form-control"
@@ -37,7 +49,7 @@
         <div class="col-sm-12 col-md-6 col-lg-4">
           <label class="form-label">Categoria <span>*</span></label>
           <Veefield
-            data-testid="input-category"
+            data-testid="itemView-input-category"
             as="select"
             name="category"
             class="form-select"
@@ -64,12 +76,12 @@
         <div class="col-sm-6 col-md-4 col-lg-3">
           <label class="form-label">Valor <span>*</span></label>
           <Veefield
-            data-testid="input-value"
+            data-testid="itemView-input-value"
             type="number"
             name="value"
             class="form-control"
             placeholder="Valor do item"
-            v-model.trim="form.value"
+            v-model="form.value"
             required
             :class="{ 'is-invalid': errors.value }"
             :rules="validateNumber"
@@ -82,7 +94,7 @@
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Marca <span>*</span></label>
           <Veefield
-            data-testid="input-brand"
+            data-testid="itemView-input-brand"
             type="text"
             name="brand"
             class="form-control"
@@ -100,7 +112,7 @@
         <div class="col-sm-12 col-md-4">
           <label class="form-label">Modelo <span>*</span></label>
           <Veefield
-            data-testid="input-model"
+            data-testid="itemView-input-model"
             type="text"
             name="model"
             class="form-control"
@@ -119,77 +131,95 @@
 
       <div class="row mt-3">
         <div class="col-sm-12 col-md-6">
-          <label class="form-label"
-            >Selecione uma imagem <span>*</span></label
-          >
-          <upload-box fileProps='image' @file-ready="teste"></upload-box>
+          <label class="form-label">Selecione uma imagem <span>*</span></label>
+          <upload-box
+            fileProps="image"
+            @file-ready="teste"
+            data-testid="item-upload"
+          ></upload-box>
         </div>
         <div class="col-sm-12 col-md-6">
           <label class="form-label">Descrição do item<span>*</span></label>
-          <textarea
+          <Veefield
             name="description"
-            rows="3"
             v-model="form.description"
+            data-testid="itemView-input-description"
+            as="textarea"
             required
             placeholder="Digite as especificações do item"
             class="form-control"
             maxlength="180"
-            data-testid="item-description"
-          ></textarea>
+            :rules="required"
+            v-slot="{ field, errors }"
+            rows="3"
+          >
+            <textarea v-bind="field"></textarea>
+            <div class="invalid-feedback animate__animated animate__shakeX">
+              {{ errors.model }}
+            </div>
+          </Veefield>
         </div>
       </div>
 
       <div class="text-end">
-        <button :type="id ? 'button' : 'reset'" @click="id ? cancelEdit() : ''" class="btn btn-secondary me-2 mt-2"
-          v-text="id ? 'Cancelar' : 'Limpar'"></button>
-        <button type="submit" class="mt-2 btn" :class="id ? 'btn-primary' : 'btn-success'"
-          v-text="id ? 'Editar' : 'Cadastrar'" data-testid='button-reg'></button>
+        <button
+          :type="id ? 'button' : 'reset'"
+          @click="id ? cancelEdit() : ''"
+          class="btn btn-secondary me-2 mt-2"
+          v-text="id ? 'Cancelar' : 'Limpar'"
+        ></button>
+        <button
+          type="submit"
+          class="mt-2 btn"
+          :class="id ? 'btn-primary' : 'btn-success'"
+          v-text="id ? 'Editar' : 'Cadastrar'"
+          data-testid="button-reg"
+        ></button>
       </div>
     </VeeForm>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, reactive } from "vue";
-import { useStore } from "vuex";
-import { useAxios } from "../../hooks"
-import { useToast } from "vue-toastification";
-import ToastNotification from "../../components/shared/ToastNotification.vue";
-import UploadBox from "../../components/shared/UploadBox.vue";
-import { useRoute, useRouter } from "vue-router";
-import { useLoading } from "vue-loading-overlay";
-import { Form as VeeForm, Field as Veefield } from "vee-validate";
-import { required, validateNumber } from "../../validators/validators";
-import moment from "moment";
-const store = useStore();
-const route = useRoute();
-const $loading = useLoading();
-const toast = useToast();
-const router = useRouter();
-const { axios } = useAxios();
+import { ref, onMounted, reactive } from 'vue'
+import { useStore } from 'vuex'
+import { useAxios } from '../../hooks'
+import { useToast } from 'vue-toastification'
+import ToastNotification from '../../components/shared/ToastNotification.vue'
+import UploadBox from '../../components/shared/UploadBox.vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useLoading } from 'vue-loading-overlay'
+import { Form as VeeForm, Field as Veefield } from 'vee-validate'
+import { required, validateNumber } from '../../validators/validators'
+
+const store = useStore()
+const route = useRoute()
+const $loading = useLoading()
+const toast = useToast()
+const router = useRouter()
+const { axios } = useAxios()
 const toastInfo = reactive({
-  msg: "Cadastro de colaborador realizado com sucesso!",
-  buttonNew: "Cadastrar novo colaborador",
-  buttonList: "Listar colaboradores",
-});
+  msg: 'Cadastro de colaborador realizado com sucesso!',
+  buttonNew: 'Cadastrar novo colaborador',
+  buttonList: 'Listar colaboradores'
+})
 const content = {
   component: ToastNotification,
   props: toastInfo,
   listeners: {
     listCollabs: () => {
-      toast.clear();
-      router.push({ name: "listItems" });
+      toast.clear()
+      router.push({ name: 'listItems' })
     },
     closeToast: () => {
-      toast.clear();
-    },
-
-  },
-};
-const id = route.params.itemId ? Number(route.params.itemId.split('-')[0]) : null;
-const origin = id ? route.params.itemId.split('-')[1] : null;
+      toast.clear()
+    }
+  }
+}
+const id = route.params.itemId ? route.params.itemId.split('-')[0] : null
+const origin = id ? route.params.itemId.split('-')[1] : null
 const form = ref({
-  id: null,
+  codPatrimonio: null,
   title: null,
   description: null,
   category: null,
@@ -200,120 +230,120 @@ const form = ref({
   collaborator: null,
   createdAt: null,
   updatedAt: null,
-  loanAt: null,
-});
-const newForm = ref({});
-const url = ref(null);
+  loanAt: null
+})
+const newForm = ref({})
+const url = ref(null)
 
 onMounted(async () => {
-  store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de itens');
+  store.commit('configModule/SET_PAGE_NAME', 'Criação e edição de itens')
   if (id) {
-    const dataForm = await getInfoItemById(id);
+    const dataForm = await getInfoItemById(id)
     if (dataForm) {
-      form.value = dataForm;
+      form.value = dataForm
     }
   }
-});
+})
 
 async function getInfoItemById(id) {
-  const loader = $loading.show();
+  const loader = $loading.show()
   try {
-    const res = await axios.get(
-      `/items/${id}`
-    );
-    return res.data;
+    const res = await axios.get(`/inventory/${id}`)
+    return res.data
   } catch (error) {
-    toast.error("Erro ao buscar item", content);
+    toast.error('Erro ao buscar item', content)
   } finally {
     setTimeout(() => {
       loader.hide()
-    }, 500);
+    }, 500)
   }
 }
 
 async function onValidSubmit(values, actions) {
   newForm.value = { ...values }
+  newForm.value['value'] = parseFloat(newForm.value['value'])
   if (id) {
-    await editItem(actions);
-  } else { 
-    await newItem(actions);
+    await editItem(actions)
+  } else {
+    await newItem(actions)
+    toast.success('Cadastro realizado com sucesso!', { timeout: 1500 })
   }
-  actions.resetForm();
+  actions.resetForm()
 }
 
 function onInvalidSubmit({ errors }) {
   for (let field in errors) {
-    toast.error(errors[field], { timeout: 1500 });
+    toast.error(errors[field], { timeout: 1500 })
   }
 }
 
 async function newItem() {
-  const loader = $loading.show();
+  const loader = $loading.show()
   try {
-    newForm.value.updatedAt = moment().format("llll");
-    const res = await axios.post(
-      "/items",
-      newForm.value
-    );
+    const res = await axios.post('/inventory/create', newForm.value)
     if (res.status === 201) {
       toast(content, {
-        position: "top-right",
+        position: 'top-right',
         closeOnClick: false,
         pauseOnFocusLoss: false,
         pauseOnHover: false,
         draggable: false,
         draggablePercent: 0.6,
         showCloseButtonOnHover: true,
-        closeButton: "button",
-        icon: "fas fa-rocket",
-        rtl: false,
-      });
+        closeButton: 'button',
+        icon: 'fas fa-rocket',
+        rtl: false
+      })
     }
     clearForm()
   } catch (error) {
-    toast.error(error.message, { timeout: 1500 });
+    toast.error(error.message, { timeout: 1500 })
   } finally {
     setTimeout(() => {
       loader.hide()
-    }, 500);
+    }, 500)
   }
 }
 
 async function editItem() {
-  const loader = $loading.show();
+  const loader = $loading.show()
   try {
-    newForm.value.updatedAt = moment().format("llll");
-    const res = await axios.put(
-      `/items/${id}`,
-      newForm.value
-    );
-    if (res.status === 200) {
-      toast.success("Item editado com sucesso", content);
+    const payload = {
+      id: id,
+      dataset: newForm.value
     }
-    origin === 'list' ? router.push({ name: "listItems" }) : router.push({ name: "dashboard" });
+    const res = await axios.patch(`/inventory/update`, payload)
+    if (res.status === 200) {
+      toast.success('Item editado com sucesso', content)
+    }
+    origin === 'list'
+      ? router.push({ name: 'listItems' })
+      : router.push({ name: 'dashboard' })
   } catch (error) {
-    toast.error(error.message, { timeout: 1500 });
+    toast.error(error.message, { timeout: 1500 })
   } finally {
     setTimeout(() => {
       loader.hide()
-    }, 500);
+    }, 500)
   }
 }
 
 function clearForm() {
-  form.value.id = '';
-  form.value.description = '';
-  url.value = null;
+  form.value.id = ''
+  form.value.description = ''
+  url.value = null
 }
 
 function cancelEdit() {
-  toast.warning("Edição cancelada!", { timeout: 1000 });
-  origin === 'list' ? router.push({ name: "listItems" }) : router.push({ name: "dashboard" });
+  toast.warning('Edição cancelada!', { timeout: 1000 })
+  origin === 'list'
+    ? router.push({ name: 'listItems' })
+    : router.push({ name: 'dashboard' })
 }
 
-function teste(objeto){
+function teste(objeto) {
   console.log(objeto)
-} 
+}
 </script>
 
 <style lang="scss" scoped>
@@ -337,5 +367,4 @@ function teste(objeto){
     font-weight: bold;
   }
 }
-
 </style>

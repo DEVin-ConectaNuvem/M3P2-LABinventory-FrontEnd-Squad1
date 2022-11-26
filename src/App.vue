@@ -1,16 +1,38 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import SidebarMain from './components/shared/SidebarMain.vue';
-import HeaderMain from './components/shared/HeaderMain.vue';
-import { useStore } from 'vuex';
+import SidebarMain from './components/shared/SidebarMain.vue'
+import HeaderMain from './components/shared/HeaderMain.vue'
+import { useStore } from 'vuex'
 import { computed } from 'vue'
 
+const token = localStorage.getItem('token')
 
-const store = useStore();
+function checkIsParsed(json) {
+  try {
+    JSON.parse(json)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+if (token && checkIsParsed(token)) {
+  const tokenPased = JSON.parse(token)
+  const exp = tokenPased.exp
+  const now = new Date().getTime() / 1000
+  if (exp > now) {
+    const store = useStore()
+    store.dispatch('authModule/logIn', tokenPased)
+  } else {
+    localStorage.removeItem('token')
+  }
+} else {
+  localStorage.removeItem('token')
+}
+const store = useStore()
 const isVisible = computed(() => {
-  return store.state.configModule.configs.sidebarVisible;
+  return store.state.configModule.configs.sidebarVisible
 })
-store.dispatch('authModule/updateToken');
+
 const statusLogin = computed(() => {
   return store.state.authModule.isLogged
 })
@@ -31,9 +53,7 @@ const statusLogin = computed(() => {
         <RouterView />
       </div>
     </main>
-
   </div>
-
 </template>
 
 <style lang="scss">

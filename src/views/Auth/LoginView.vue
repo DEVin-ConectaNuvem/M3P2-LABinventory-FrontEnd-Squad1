@@ -88,7 +88,6 @@
 </template>
 
 <script setup>
-import { uid } from 'uid';
 import { Field as Veefield, Form as VeeForm } from 'vee-validate';
 import { ref } from 'vue';
 import { useLoading } from 'vue-loading-overlay';
@@ -96,6 +95,10 @@ import { useRouter } from 'vue-router';
 import { useToast } from "vue-toastification";
 import { useStore } from 'vuex';
 import { validateEmail, validatePassword } from '../../validators/validators.js';
+import { useAxios } from "../../hooks";
+import jwt_decode from "jwt-decode";
+
+const { axios } = useAxios();
 
 const $loading = useLoading()
 const toast = useToast();
@@ -117,6 +120,11 @@ const register = ref({
   createAccount: 'Cadastre-se',
 });
 
+function decodeJwt(jwt) {
+  const decodedJwt = jwt_decode(jwt)
+  return decodedJwt
+}
+
 function validateConfirmPassword(value) {
   if (!value) {
     return 'A confirmação da senha é obrigatória';
@@ -137,50 +145,61 @@ function toggleRegister() {
 
 function onValidSubmit(values, actions) {
   if (register.value.register) {
-    let checkEmail = store.state.authModule.users.find(user => user.email === form.value.email);
-    if (checkEmail) {
-      toast.error('O e-mail informado já possui cadastro!', { timeout: 1500 });
-      actions.setFieldError('email', 'O e-mail informado já possui cadastro!')
-      return;
-    }
     registerUser(actions);
   } else {
     loginUser(actions);
   }
 }
 
-function registerUser(actions) {
+
+async function registerUser(actions) {
   const loader = $loading.show()
-  store.dispatch('authModule/updateUsers');
-  setTimeout(() => {
-    store.dispatch('authModule/registerUser', {
-      id: uid(),
+  try {
+    const payload = {
       email: form.value.email.toLowerCase(),
-      username: form.value.email.split('@')[0],
-      password: form.value.password,
-      password2: form.value.confirmPassword,
-    })
+      password: form.value.password
+    }
+    
+    const res = await axios.post('/users/create', payload);
+    if (res.status === 201) {
+      toast.success('Usuário cadastrado com sucesso!', { timeout: 1500 });
+      toggleRegister();
+      actions.resetForm();
+    } 
+    
+  } catch (error) {
+    if (error.response.data.error == 'Usuário já existente!') {
+      toast.error('O e-mail informado já possui cadastro!', { timeout: 1500 });
+      actions.setFieldError('email', 'O e-mail informado já possui cadastro!')
+    } else {
+      toast.error('Erro ao cadastrar usuário!', { timeout: 1500 });
+    }
+  } finally {
     loader.hide()
-    toast.success('Cadastro realizado com sucesso!', { timeout: 1500 })
-    toggleRegister();
-    actions.resetForm();
-  }, 1000)
+  }
 }
 
-function loginUser(actions) {
+
+async function loginUser(actions) {
   const loader = $loading.show();
-  setTimeout(async () => {
-    const logar = await store.dispatch('authModule/logIn', form.value)
-    if (logar) {
-      loader.hide()
+  try {
+    const payload = {
+      email: form.value.email.toLowerCase(),
+      password: form.value.password
+    }
+    const res = await axios.post('/users/login', payload);
+    if (res.status === 200) {
+      const decodedJwt = decodeJwt(res.data.token);
       toast.success('Login realizado com sucesso!', { timeout: 1500 });
-      router.push({ name: 'dashboard' })
-    } else {
-      loader.hide()
-      toast.error('Usuário ou senha inválidos!', { timeout: 1500 });
-      actions.setFieldError('password', 'Usuário ou senha incorretos!')
-    };
-  }, 1000)
+      store.dispatch('authModule/logIn', decodedJwt);
+      router.push('/dashboard');
+    }
+  } catch (error) {
+    toast.error('Usuário ou senha inválidos!', { timeout: 1500 });
+    actions.setFieldError('password', 'Usuário ou senha incorretos!')
+  } finally {
+    loader.hide()
+  }
 }
 
 function onInvalidSubmit({ errors }) {

@@ -1,3 +1,5 @@
+import { formatDate } from '../helpers/services/utils.js'
+
 describe('Verifica se é possível emprestar um item', () => {
   let collaborators = []
   let collab = {}
@@ -6,10 +8,12 @@ describe('Verifica se é possível emprestar um item', () => {
     cy.wait(1000)
     cy.openSidebar()
     cy.contains('Listar').click()
-    cy.request('GET', '/collaborators?_limit=5&_page=1')
+    cy.request('GET', '/employees/?limit=5&page=1')
       .as('getCollaborators')
-      .then((interception) => {
-        collaborators = interception.body
+      .then(response => {
+        console.log(response, 'response')
+        collaborators = response.body.rows
+        collab = collaborators[0]
       })
   })
 
@@ -25,21 +29,38 @@ describe('Verifica se é possível emprestar um item', () => {
   })
 
   it('Os dados são exibidos corretamente na tela', () => {
-    collab = collaborators[0]
-
     cy.contains('Lista de colaboradores').should('be.visible')
     cy.get('.accordion-button').should('have.length', 5)
     cy.get('.accordion-button').eq(0).click()
-    cy.get(`[data-testid="colab-list-name-${collab.id}"]`).should('have.text', collab.name)
-    cy.get(`[data-testid="colab-list-position-${collab.id}"]`).should('have.text', collab.position)
-    cy.get(`[data-testid="colab-list-email-${collab.id}"]`).should('have.text', collab.email)
-    cy.get(`[data-testid="colab-list-phone-${collab.id}"]`).should('have.text', collab.phone)
-    cy.get(`[data-testid="colab-list-createdAt-${collab.id}"]`).should('have.text', collab.createdAt)
+    cy.get(`[data-testid="colab-list-name-${collab.id}"]`).should(
+      'have.text',
+      collab.name
+    )
+    cy.get(`[data-testid="colab-list-position-${collab.id}"]`).should(
+      'have.text',
+      collab.position
+    )
+    cy.get(`[data-testid="colab-list-email-${collab.id}"]`).should(
+      'have.text',
+      collab.email
+    )
+    cy.get(`[data-testid="colab-list-phone-${collab.id}"]`).should(
+      'have.text',
+      collab.phone
+    )
+    cy.get(`[data-testid="colab-list-createdAt-${collab.id}"]`).should(
+      'have.text',
+      formatDate(collab.createdAt, 'DD/MM/YYYY hh:mm')
+    )
   })
 
   it('Verifica se há imagem de colaborador', () => {
     collab = collaborators[0]
-    cy.get(`[data-testid="colab-list-imageUser-${collab.id}"]`).should('have.attr', 'src', collab.imageUser)
+    cy.get(`[data-testid="colab-list-imageUser-${collab.id}"]`).should(
+      'have.attr',
+      'src',
+      collab.imageUser
+    )
   })
 
   it('Verifica alterações do titulo das páginas de edição/criação na navegação do usuario', () => {
@@ -67,4 +88,13 @@ describe('Verifica se é possível emprestar um item', () => {
     cy.contains('Edição cancelada')
   })
 
+  it('Teste de categoria de pesquisa de lista de colaboradores', () => {
+    cy.visit('http://localhost:3000/#/lista-colaboradores')
+
+    cy.wait(1500)
+
+    cy.get('select').select('Nome')
+    cy.get('select').select('Cargo')
+    cy.get('select').select('E-mail')
+  })
 })

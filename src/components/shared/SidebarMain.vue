@@ -1,11 +1,17 @@
 <template>
   <aside>
-    <div class="d-flex flex-column flex-shrink-0 text-white ">
+    <div class="d-flex flex-column flex-shrink-0 text-white">
       <div class="brand mx-auto mb-1">
-        <img src="../../assets/icons/logoInventary.svg" height="120" width="120" class="mx-auto mainIcon" alt="LABinventary">
+        <img
+          src="../../assets/icons/logoInventary.svg"
+          height="120"
+          width="120"
+          class="mx-auto mainIcon"
+          alt="LABinventary"
+        />
       </div>
       <span class="fs-4 text-white mx-auto mt-2 mainTitle">LabInventary</span>
-      <hr>
+      <hr />
       <ul class="nav nav-pills flex-column mb-auto">
         <span>Geral</span>
         <li class="nav-item">
@@ -14,32 +20,44 @@
             <span> Inventário</span>
           </RouterLink>
         </li>
-        <hr>
+        <hr />
         <span>Colaboradores</span>
         <li>
-          <RouterLink to="/colaboradores" @click="toggleVisibility" class="nav-link">
+          <RouterLink
+            to="/colaboradores"
+            @click="toggleVisibility"
+            class="nav-link"
+          >
             <i class="fa-solid fa-user-tie"></i>
             <span> Cadastrar</span>
           </RouterLink>
-          <RouterLink to="/lista-colaboradores" @click="toggleVisibility" class="nav-link">
+          <RouterLink
+            to="/lista-colaboradores"
+            @click="toggleVisibility"
+            class="nav-link"
+          >
             <i class="fa-solid fa-address-book"></i>
             <span> Listar</span>
           </RouterLink>
         </li>
-        <hr>
+        <hr />
         <span>Produtos</span>
         <li>
           <RouterLink to="/itens" @click="toggleVisibility" class="nav-link">
             <i class="fa-solid fa-circle-plus"></i>
             <span> Cadastrar</span>
           </RouterLink>
-          <RouterLink to="/lista-itens" @click="toggleVisibility" class="nav-link">
+          <RouterLink
+            to="/lista-itens"
+            @click="toggleVisibility"
+            class="nav-link"
+          >
             <i class="fa-solid fa-address-book"></i>
             <span> Empréstimo</span>
           </RouterLink>
         </li>
       </ul>
-      <hr>
+      <hr />
     </div>
   </aside>
 </template>
@@ -47,27 +65,24 @@
 <script setup>
 import { RouterLink } from 'vue-router'
 import { computed } from 'vue'
-import { useStore } from 'vuex';
+import { useStore } from 'vuex'
 
-const store = useStore();
+const store = useStore()
 
 store.commit('configModule/UPDATE_CONFIGS_LOCAL_STORAGE')
 
 const isVisible = computed(() => {
-  return store.state.configModule.configs.sidebarVisible;
+  return store.state.configModule.configs.sidebarVisible
 })
 
 function toggleVisibility() {
-    if (window.screen.width < 768) {
-      store.dispatch('configModule/toggleSidebar')
-    }
-    
+  if (window.screen.width < 768) {
+    store.dispatch('configModule/toggleSidebar')
+  }
 }
-
 </script>
 
 <style lang="scss" scoped>
-
 aside {
   top: 0;
   left: 0;
@@ -77,15 +92,15 @@ aside {
   overflow-y: none;
   z-index: 500;
   width: 200px;
-  background: linear-gradient(to right,  rgb(47, 0, 96), rgb(60, 10, 113));
-  
-  span{
-    padding-left: 10px ;
+  background: linear-gradient(to right, rgb(47, 0, 96), rgb(60, 10, 113));
+
+  span {
+    padding-left: 10px;
   }
-  i{
+  i {
     font-size: 1.2rem;
     cursor: pointer;
-    padding-left: 10px ;
+    padding-left: 10px;
   }
 }
 
@@ -93,7 +108,7 @@ aside {
   padding-left: 0px;
 }
 .mainIcon {
-  margin-top: 15px
+  margin-top: 15px;
 }
 .form-check {
   margin: 0 auto;
@@ -113,13 +128,11 @@ a:hover,
   transition: all 0.3s ease;
 }
 
-
 // Medium devices (tablets, 768px and up)
-@media (max-width: 768px) { 
+@media (max-width: 768px) {
   aside {
     width: 100vw;
     position: fixed;
   }
-
- }
+}
 </style>

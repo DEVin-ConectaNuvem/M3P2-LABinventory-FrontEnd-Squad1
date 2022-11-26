@@ -1,10 +1,10 @@
 const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
-  "component": {
-    "devServer": {
-      "framework": "vue-cli",
-      "bundler": "webpack"
+  component: {
+    devServer: {
+      framework: 'vue-cli',
+      bundler: 'webpack'
     }
   },
 
@@ -12,6 +12,6 @@ module.exports = defineConfig({
     setupNodeEvents(on, config) {
       // implement node event listeners here
     },
-    baseUrl: "http://localhost:3004"
+    baseUrl: 'http://localhost:5000'
   }
 })
