@@ -131,19 +131,19 @@ const perPage = ref(5);
 const itemsPaginate = ref([]);
 const parameterSearch = reactive({
   options: [
-    { "text": "Código", "value": "codPatrimonio", "operator": "=" },
-    { "text": "Título", "value": "title" },
-    { "text": "Categoria", "value": "category" },
-    { "text": "Descrição", "value": "description" },
-    { "text": "Marca", "value": "brand" },
-    { "text": "Modelo", "value": "model" },
-    { "text": "Colaborador", "value": "collaborator" }
+    { "text": "Código", "value": "codPatrimonio", "operatorSearch": "=" },
+    { "text": "Título", "value": "title", "operatorSearch": "like" },
+    { "text": "Categoria", "value": "category", "operatorSearch": "like" },
+    { "text": "Descrição", "value": "description", "operatorSearch": "like" },
+    { "text": "Marca", "value": "brand", "operatorSearch": "like" },
+    { "text": "Modelo", "value": "model", "operatorSearch": "like" },
+    { "text": "Colaborador", "value": "collaborator", "operatorSearch": "like" }
 
   ]
 })
 const inputConfig = reactive({
   searchText: '',
-  searchField: 'id',
+  searchField: 'codPatrimonio',
 })
 
 store.commit('configModule/SET_PAGE_NAME', 'Listagem de itens');
@@ -159,10 +159,15 @@ async function loadDataPagination() {
     let payload = {}
     let response = []
 
+    const operatorToSearch = parameterSearch.options.find(item => {
+      return item.value === inputConfig.searchField
+    }).operatorSearch
+
     inputConfig.searchText
       ? payload = {
         "searchField": inputConfig.searchField,
-        "searchValue": inputConfig.searchText
+        "searchValue": inputConfig.searchText,
+        "operatorSearch": operatorToSearch
       }
       : payload = {}
 
@@ -202,10 +207,11 @@ async function loadDataSearch(searchText, searchField) {
     await loadDataPagination()
   } else if (!searchText) {
     inputConfig.searchText = '';
-    inputConfig.searchField = '';
+    inputConfig.searchField = searchField;
     await loadDataPagination()
   } else {
     inputConfig.searchText = '';
+    inputConfig.searchField = searchField;
   }
 }
 
