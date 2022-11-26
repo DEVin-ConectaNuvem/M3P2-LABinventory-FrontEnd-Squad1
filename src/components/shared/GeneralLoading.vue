@@ -1,7 +1,7 @@
 <template>
     <div v-if="statusLoading">
         <div class="loading">
-            <div class="loading__spinner">
+            <div class="loading-spinner">
                 <img src="../../assets/icons/rocket.gif" alt="">   
             </div>
         </div>
@@ -30,7 +30,7 @@ const statusLoading = computed(() => {
     background-color: rgba(0, 0, 0, 0.6);
     position: fixed;
     z-index: 99999;
-    .loading__spinner{
+    .loading-spinner{
         img{
             width: 700px;
             height: 700px;
