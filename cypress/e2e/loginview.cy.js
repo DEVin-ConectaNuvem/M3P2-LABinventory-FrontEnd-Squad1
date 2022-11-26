@@ -7,19 +7,21 @@ describe("Testes da Tela de Login, LoginView.vue", () => {
 
     it('Ainda não há itens cadastrados com este termo de pesquisa - Realizar novo cadastro', () => {
         cy.login("teste@teste.com.br", "12345678")
-        cy.get("[data-testid=search-input-item]").type("teste")
+        cy.get("[data-testid=search-input-item]").type("teste999999999")
         cy.contains("p", "Ainda não há itens cadastrados com este termo de pesquisa - Realizar novo cadastro")
     })
 
     it("Tem que aparecer Usuário ou senha inválidos!", () => {
-        cy.login("teste@teste.com", "12345678")
+        cy.login("teste@teste.com", "12345678111111111")
         cy.contains("Usuário ou senha inválidos!")
     })
 
     it("Deve contar mensagem de criação realizada com sucesso", () => {
         cy.visit('http://localhost:3000')
-        cy.register("testcard11@gmail.com.br", "12345678", "12345678")
-        cy.contains("Cadastro realizado com sucesso!")
+        const random_str = Math.random().toString(36).substring(7)
+        cy.register(`testcard11${random_str}@gmail.com.br`, '12345678', '12345678')
+        cy.wait(1000)
+        cy.contains("Usuário cadastrado com sucesso!")
     })
 
     it('Tem que levar pra url ', () => {
@@ -37,10 +39,10 @@ describe("Testes da Tela de Login, LoginView.vue", () => {
         cy.contains("Função em desenvolvimento!")
     })
 
-    it("Retornar A senha deve ter no mínimo 8 caracteres, Um e-mail válido deve ser informado", () => {
-        cy.login("teste.com.br", "123456")
-        cy.contains("Um e-mail válido deve ser informado")
-        cy.contains("A senha deve ter no mínimo 8 caracteres")
+    it('Retornar A senha deve ter no mínimo 8 caracteres, Um e-mail válido deve ser informado', () => {
+      cy.login('teste.com.br', '123456')
+      cy.contains('Um e-mail válido deve ser informado')
+      cy.contains('A senha deve ter no mínimo 8 caracteres')
     })
   
     it("Login realizado com sucesso!", () => {
@@ -49,9 +51,4 @@ describe("Testes da Tela de Login, LoginView.vue", () => {
         cy.contains("Login realizado com sucesso!")
     })
 
-    it("Retornar A senha deve ter no mínimo 8 caracteres, Um e-mail válido deve ser informado", () => {
-        cy.login("teste.com.br", "123456")
-        cy.contains("Um e-mail válido deve ser informado")
-        cy.contains("A senha deve ter no mínimo 8 caracteres")
-    })
 })
