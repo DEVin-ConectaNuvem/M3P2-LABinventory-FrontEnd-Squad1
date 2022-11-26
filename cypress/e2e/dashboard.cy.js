@@ -1,6 +1,6 @@
 describe('Dashboard', () => {
     beforeEach(() => {
-		cy.login("admin@teste.com", "12345678")
+		cy.login('teste@teste.com.br', '12345678')
 
 		cy.wait(3000);
 	}),
