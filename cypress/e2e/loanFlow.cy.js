@@ -1,7 +1,8 @@
 import {
   selectARandomAvailableItem,
   selectARandomCollaborator,
-  selectARandomBorrowedItem
+  selectARandomBorrowedItem,
+  formatDate
 } from '../helpers/services/utils'
 
 describe('Verifica se é possível emprestar um item', () => {
@@ -20,13 +21,13 @@ describe('Verifica se é possível emprestar um item', () => {
     cy.request('GET', '/employees')
       .as('getCollaborators')
       .then((interception) => {
-        collaborators = interception.body
+        collaborators = interception.body.rows
       })
 
     cy.request('GET', '/inventory')
       .as('getItems')
       .then((interception) => {
-        items = interception.body
+        items = interception.body.rows
       })
   })
 
@@ -41,9 +42,15 @@ describe('Verifica se é possível emprestar um item', () => {
 
     cy.get(`[data-testid='item-${item.id}-description']`).should('include.text', item.description)
 
-    cy.get(`[data-testid='item-${item.id}-created-at']`).should('include.text', item.createdAt)
+    cy.get(`[data-testid='item-${item.id}-created-at']`).should(
+      'include.text',
+      formatDate(item.createdAt, 'DD/MM/YYYY hh:mm')
+    )
 
-    cy.get(`[data-testid='item-${item.id}-updated-at']`).should('include.text', item.updatedAt)
+    cy.get(`[data-testid='item-${item.id}-updated-at']`).should(
+      'include.text',
+      formatDate(item.updatedAt, 'DD/MM/YYYY hh:mm')
+    )
 
     cy.get(`[data-testid='item-${item.id}-loan-at']`).should('be.empty')
 
@@ -63,14 +70,10 @@ describe('Verifica se é possível emprestar um item', () => {
     cy.get("[data-testid='item-dialog-title']").should('include.text', item.title)
 
     cy.get(`[data-testid='img-dialog']`).should('have.attr', 'src', item.url)
-
-    cy.get('.collaborators').should(($lis) => {
-      expect($lis).to.have.length(collaborators.length)
-
-      collaborators.forEach(({ name }, index) => expect($lis.eq(index), name).to.contain(name))
+    console.log(collaborator.name)
+    cy.get(`[data-testid='select-collaborators']`).select(collaborator.name + ' - ' + collaborator.email, {
+      force: true
     })
-
-    cy.get(`[data-testid='select-collaborators']`).select(collaborator.name)
     cy.get(`[data-testid='save-button']`).click()
 
     cy.get(`[data-testid='item-${item.id}-status']`).should('include.text', collaborator.name)
@@ -89,10 +92,10 @@ describe('Verifica se é possível devolver um item', () => {
 
     cy.contains('Empréstimo').click()
 
-    cy.request('GET', '/items')
+    cy.request('GET', '/inventory')
       .as('getItems')
       .then((interception) => {
-        items = interception.body
+        items = interception.body.rows
       })
   })
 

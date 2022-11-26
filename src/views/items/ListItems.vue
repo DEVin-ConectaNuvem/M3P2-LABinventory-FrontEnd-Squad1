@@ -38,17 +38,17 @@
               <div class="col-sm-12 col-md-6">
                 <strong>Criado em: </strong>
                 <span :data-testid="`item-${item.id}-created-at`">
-                  {{ formatDate(item.createdAt, "DD/MM/yyyy hh:ss") }}
+                  {{ formatDate(item.createdAt, "DD/MM/yyyy hh:mm") }}
                 </span>
                 <br />
                 <strong>Última modificação: </strong>
                 <span :data-testid="`item-${item.id}-updated-at`">
-                  {{ formatDate(item.updatedAt, "DD/MM/yyyy hh:ss") }}
+                  {{ formatDate(item.updatedAt, "DD/MM/yyyy hh:mm") }}
                 </span>
                 <br />
                 <strong v-show="item.loanAt">Emprestado desde: </strong>
                 <span :data-testid="`item-${item.id}-loan-at`">
-                  {{ formatDate(item.loanAt, "DD/MM/yyyy hh:ss") }}
+                  {{ formatDate(item.loanAt, "DD/MM/yyyy hh:mm") }}
                 </span>
                 <hr>
               </div>
@@ -84,7 +84,8 @@
       <p>Colaborador:</p>
       <select data-testid="select-collaborators" class="form-select" v-model="item.collaborator">
         <optgroup label="Colaboradores">
-          <option v-for="collab in collaborators" :key="collab.id" class="collaborators" v-text="collab.name">
+          <option v-for="collab in collaborators" :key="collab.id" :value="collab.name" class="collaborators"
+            v-text="collab.name + ' - ' + collab.email">
           </option>
         </optgroup>
       </select>
