@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 export function selectARandomIndex(array) {
   const randomindex = Math.floor(Math.random() * array.length);
   return randomindex;
@@ -37,3 +39,6 @@ export function selectARandomItem(items) {
   return items[index];
 }
 
+export function formatDate(date, format){
+  return moment(date).format(format)
+}

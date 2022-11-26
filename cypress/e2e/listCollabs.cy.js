@@ -1,3 +1,5 @@
+import { formatDate } from '../helpers/services/utils.js';
+
 describe('Verifica se é possível emprestar um item', () => {
   let collaborators = []
   let collab = {}
@@ -6,10 +8,12 @@ describe('Verifica se é possível emprestar um item', () => {
     cy.wait(1000)
     cy.openSidebar()
     cy.contains('Listar').click()
-    cy.request('GET', '/employees?limit=5&page=1')
+    cy.request('GET', '/employees/?limit=5&page=1')
       .as('getCollaborators')
-      .then((interception) => {
-        collaborators = interception.body
+      .then((response) => {
+        console.log(response, 'response')
+        collaborators = response.body.rows
+        collab = collaborators[0]
       })
   })
 
@@ -25,8 +29,6 @@ describe('Verifica se é possível emprestar um item', () => {
   })
 
   it('Os dados são exibidos corretamente na tela', () => {
-    collab = collaborators[0]
-
     cy.contains('Lista de colaboradores').should('be.visible')
     cy.get('.accordion-button').should('have.length', 5)
     cy.get('.accordion-button').eq(0).click()
@@ -34,7 +36,7 @@ describe('Verifica se é possível emprestar um item', () => {
     cy.get(`[data-testid="colab-list-position-${collab.id}"]`).should('have.text', collab.position)
     cy.get(`[data-testid="colab-list-email-${collab.id}"]`).should('have.text', collab.email)
     cy.get(`[data-testid="colab-list-phone-${collab.id}"]`).should('have.text', collab.phone)
-    cy.get(`[data-testid="colab-list-createdAt-${collab.id}"]`).should('have.text', collab.createdAt)
+    cy.get(`[data-testid="colab-list-createdAt-${collab.id}"]`).should('have.text', formatDate(collab.createdAt, 'DD/MM/YYYY hh:mm'))
   })
 
   it('Verifica se há imagem de colaborador', () => {

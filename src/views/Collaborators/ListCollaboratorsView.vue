@@ -39,9 +39,9 @@
               </div>
               <div class="col-sm-12 col-md-6">
                 <strong>Criado em: </strong><span :data-testid="`colab-list-createdAt-${collaborator.id}`"> {{
-                formatDate(collaborator.createdAt, "DD/MM/yyyy hh:ss") }} </span>
+                formatDate(collaborator.createdAt, "DD/MM/yyyy hh:mm") }} </span>
                 <br />
-                <strong>última modificação: </strong><span data-testid="colab-list-updateAt"> {{ formatDate(collaborator.updatedAt, "DD/MM/yyyy hh:ss")
+                <strong>última modificação: </strong><span data-testid="colab-list-updateAt"> {{ formatDate(collaborator.updatedAt, "DD/MM/yyyy hh:mm")
                 }} </span>
                 <br />
               </div>
