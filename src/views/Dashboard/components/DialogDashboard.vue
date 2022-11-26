@@ -9,7 +9,7 @@
     >
       <div class="row text-center">
         <div class="col-sm-12 col-md-6">
-          <img :src="item.url" class="border imagemLoan" alt="imagem do item" />
+          <img :src="item.url || item.imageItem" class="border imagemLoan" alt="imagem do item" />
         </div>
         <div class="col-sm-12 col-md-6 ml-0">
           <p>

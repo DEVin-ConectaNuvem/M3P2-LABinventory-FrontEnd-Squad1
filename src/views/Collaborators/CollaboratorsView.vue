@@ -19,10 +19,11 @@
             v-model="form.imageUser"
             v-slot="{ field, errors, meta }"
           >
-            <avatar-user
+            <upload-image
               v-bind="field"
+              type="Avatar"
               @uploadSuccess="saveImageUser"
-            ></avatar-user>
+            ></upload-image>
             <div class="invalid-feedback animate__animated animate__shakeX">
               {{ meta.dirty && meta.touched ? errors.imageUser : '' }}
             </div>
@@ -357,7 +358,7 @@ import { ref, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useToast } from 'vue-toastification'
 import ToastNotification from '../../components/shared/ToastNotification.vue'
-import AvatarUser from '../../components/shared/AvatarUser.vue'
+import UploadImage from '../../components/shared/UploadImage.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useLoading } from 'vue-loading-overlay'
 import { Form as VeeForm, Field as Veefield } from 'vee-validate'
