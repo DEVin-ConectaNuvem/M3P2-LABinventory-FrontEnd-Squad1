@@ -1,6 +1,6 @@
 describe('Verificar se as categorias de pesquisa estão disponiveis no dropdown ao lado do input de pesquisa.',()=>{
     it('Teste de categoria de pesquisa de lista de contribuintes',()=>{
-        cy.login('test@test.com.br', '12345678')
+        cy.login('teste@teste.com.br', '12345678')
 
         cy.wait(1000)
 

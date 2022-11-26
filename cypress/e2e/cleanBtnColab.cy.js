@@ -1,6 +1,6 @@
 describe('Teste do Botão Limpar no cadastro de Contribuinte',()=>{
     it('Testar se o botão "limpar" está realmente limpando todos os campos', ()=>{
-        cy.login('test@test.com.br', '12345678');
+        cy.login('teste@teste.com.br', '12345678')
         cy.wait(3000);
         cy.visit('http://localhost:3000/#/colaboradores');
         cy.wait(1000);
