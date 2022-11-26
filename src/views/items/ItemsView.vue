@@ -210,18 +210,17 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
-import { useAxios } from '../../hooks'
+import { useAxios, useGeneralLoading } from '../../hooks'
 import { useToast } from 'vue-toastification'
 import ToastNotification from '../../components/shared/ToastNotification.vue'
 import UploadImage from '../../components/shared/UploadImage.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useLoading } from 'vue-loading-overlay'
 import { Form as VeeForm, Field as Veefield } from 'vee-validate'
 import { required, validateNumber } from '../../validators/validators'
 
+const { toggleLoading } = useGeneralLoading()
 const store = useStore()
 const route = useRoute()
-const $loading = useLoading()
 const toast = useToast()
 const router = useRouter()
 const { axios } = useAxios()
@@ -275,7 +274,7 @@ onMounted(async () => {
 })
 
 async function getInfoItemById(id) {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const res = await axios.get(`/inventory/${id}`)
     return res.data
@@ -283,7 +282,7 @@ async function getInfoItemById(id) {
     toast.error('Erro ao buscar item', content)
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }
@@ -310,7 +309,7 @@ function onInvalidSubmit({ errors }) {
 }
 
 async function newItem() {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const res = await axios.post('/inventory/create', newForm.value)
     if (res.status === 201) {
@@ -332,13 +331,13 @@ async function newItem() {
     throw new Error(error.response.data.error || 'Erro ao cadastrar item')
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }
 
 async function editItem() {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const payload = {
       id: id,
@@ -355,7 +354,7 @@ async function editItem() {
     throw new Error(error.response.data.error || 'Erro ao editar item')
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }

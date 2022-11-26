@@ -90,17 +90,15 @@
 <script setup>
 import { Field as Veefield, Form as VeeForm } from 'vee-validate';
 import { ref } from 'vue';
-import { useLoading } from 'vue-loading-overlay';
 import { useRouter } from 'vue-router';
 import { useToast } from "vue-toastification";
 import { useStore } from 'vuex';
 import { validateEmail, validatePassword } from '../../validators/validators.js';
-import { useAxios } from "../../hooks";
+import { useAxios, useGeneralLoading } from "../../hooks";
 import jwt_decode from "jwt-decode";
 
+const { toggleLoading } = useGeneralLoading()
 const { axios } = useAxios();
-
-const $loading = useLoading()
 const toast = useToast();
 const store = useStore();
 const router = useRouter();
@@ -153,7 +151,7 @@ function onValidSubmit(values, actions) {
 
 
 async function registerUser(actions) {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const payload = {
       email: form.value.email.toLowerCase(),
@@ -175,13 +173,13 @@ async function registerUser(actions) {
       toast.error('Erro ao cadastrar usuário!', { timeout: 1500 });
     }
   } finally {
-    loader.hide()
+    toggleLoading(false)
   }
 }
 
 
 async function loginUser(actions) {
-  const loader = $loading.show();
+  toggleLoading(true)
   try {
     const payload = {
       email: form.value.email.toLowerCase(),
@@ -198,7 +196,7 @@ async function loginUser(actions) {
     toast.error('Usuário ou senha inválidos!', { timeout: 1500 });
     actions.setFieldError('password', 'Usuário ou senha incorretos!')
   } finally {
-    loader.hide()
+    toggleLoading(false)
   }
 }
 

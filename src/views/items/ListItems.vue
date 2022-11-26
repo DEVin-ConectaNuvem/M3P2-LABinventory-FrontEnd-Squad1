@@ -210,13 +210,12 @@ import { createMessageBox } from 'vue-m-dialog'
 import { RouterLink, useRouter } from 'vue-router'
 import Paginate from 'vuejs-paginate-next'
 import { useStore } from 'vuex'
-import { useLoading } from 'vue-loading-overlay'
 import { useToast } from 'vue-toastification'
-import { useAxios } from '../../hooks'
+import { useAxios, useGeneralLoading } from '../../hooks'
 import { formatDate } from '../../utils'
 
+const { toggleLoading } = useGeneralLoading()
 const toast = useToast()
-const $loading = useLoading()
 const router = useRouter()
 const store = useStore()
 const { axios } = useAxios()
@@ -255,7 +254,7 @@ const totalPages = computed(() => {
 })
 
 async function loadDataPagination() {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const url = `/inventory/list?limit=${perPage.value}&page=${page.value}`
     let payload = {}
@@ -285,7 +284,7 @@ async function loadDataPagination() {
     toast.error(error.message)
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }
@@ -342,7 +341,7 @@ async function loanCollaborator(itemId, collaborator, codPatrimonio, title) {
 }
 
 async function setLoan(itemId, collaborator = null) {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const payload = {
       id: itemId,
@@ -360,7 +359,7 @@ async function setLoan(itemId, collaborator = null) {
   } catch (error) {
     throw new Error('Erro ao emprestar item')
   } finally {
-    loader.hide()
+    toggleLoading(false)
   }
 }
 
