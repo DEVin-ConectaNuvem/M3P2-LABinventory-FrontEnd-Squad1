@@ -19,7 +19,7 @@ describe('Teste do Botão Limpar no cadastro de Contribuinte',()=>{
         cy.get("[data-testid=colab-complement]").type("abcde");
         cy.get("[data-testid=colab-reference]").type("fghij");
         
-        cy.get("[data-testid=reset-button]").click();
+        cy.get('[data-testid=colab-reset-button]').click()
 
         cy.get("[data-testid=colab-name]").should('be.empty');
 
