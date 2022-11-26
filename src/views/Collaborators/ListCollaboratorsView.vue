@@ -91,14 +91,14 @@ const page = ref(1);
 const perPage = ref(5);
 const parameterSearch = reactive({
   options: [
-    { "text": "Nome", "value": "name" },
-    { "text": "Cargo", "value": "position" },
-    { "text": "E-mail", "value": "email" }
+    { "text": "Nome", "value": "name", "operatorSearch": "like" },
+    { "text": "Cargo", "value": "position", "operatorSearch": "like" },
+    { "text": "E-mail", "value": "email", "operatorSearch": "like" }
   ]
 })
 const inputConfig = reactive({
   searchText: '',
-  searchField: 'id',
+  searchField: 'nome',
 })
 
 store.commit('configModule/SET_PAGE_NAME', 'Listagem de colaboradores');
@@ -114,10 +114,15 @@ async function loadDataPagination() {
     let payload = {}
     let response = []
 
+    const operatorToSearch = parameterSearch.options.find(item => {
+      return item.value === inputConfig.searchField
+    }).operatorSearch
+
     inputConfig.searchText
       ? payload = {
         "searchField": inputConfig.searchField,
-        "searchValue": inputConfig.searchText
+        "searchValue": inputConfig.searchText,
+        "operatorSearch": operatorToSearch
       }
       : payload = {}
 
@@ -141,7 +146,8 @@ watch(page, async (newValue, oldValue) => {
   if (newValue !== oldValue) {
     await loadDataPagination()
   }
-});
+})
+
 async function loadDataSearch(searchText, searchField) {
   if (searchText && searchField) {
     inputConfig.searchText = searchText;
@@ -149,12 +155,14 @@ async function loadDataSearch(searchText, searchField) {
     await loadDataPagination()
   } else if (!searchText) {
     inputConfig.searchText = '';
-    inputConfig.searchField = '';
+    inputConfig.searchField = searchField;
     await loadDataPagination()
   } else {
     inputConfig.searchText = '';
+    inputConfig.searchField = searchField;
   }
 }
+
 function editCollab(id) {
   router.push({ name: 'colaboradores', params: { userId: id } });
 }
