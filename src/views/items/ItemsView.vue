@@ -9,7 +9,7 @@
         <div class="col-sm-12 col-md-6 col-lg-3">
           <label class="form-label">Cód. de Patrimônio <span>*</span></label>
           <Veefield type="text" name="codPatrimonio" class="form-control" :class="{ 'is-invalid': errors.title }"
-            :rules="required" placeholder="Cód. de patrimônio" v-model="form.codPatrimonio" />
+            :rules="required" placeholder="Cód. de patrimônio" v-model="form.codPatrimonio" data-testid="itemView-input-codPatrimonio" />
           <div class="invalid-feedback animate__animated animate__shakeX">
             {{ errors.codPatrimonio }}
           </div>
