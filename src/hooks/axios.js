@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useAuth } from './useAuth'
 
 /**
  * useAxios: hook to use axios instance
@@ -7,6 +8,12 @@ import axios from 'axios'
  *
  */
 export function useAxios() {
+  const token = useAuth()
+
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = token
+  }
+
   return {
     axios: axios.create({
       baseURL: 'http://localhost:5000',

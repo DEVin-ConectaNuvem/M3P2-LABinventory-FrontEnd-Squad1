@@ -9,7 +9,7 @@ export default {
       isLogged: false,
       userLogged: {},
       email: '',
-      token: {}
+      token: ''
     }
   },
   actions: {

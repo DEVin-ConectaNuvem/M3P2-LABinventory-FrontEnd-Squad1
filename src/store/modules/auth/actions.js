@@ -1,5 +1,9 @@
-const logIn = async ({ state, commit }, payload) => {
-  commit('SET_LOGIN_IN', payload)
+const logIn = async ({ commit }, payload) => {
+  try {
+    commit('SET_LOGIN_IN', payload)
+  } catch (error) {
+    throw new Error('Erro ao logar usuário')
+  }
 }
 
 const logOut = async ({ commit }) => {

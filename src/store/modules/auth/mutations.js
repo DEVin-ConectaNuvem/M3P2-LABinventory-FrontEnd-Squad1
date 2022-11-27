@@ -6,7 +6,8 @@ const SET_LOGIN_IN = (state, payload) => {
   state.email = payload['email']
   state.userLogged = payload['email'].split('@')[0]
   state.isLogged = true
-  state.token = payload['exp']
+  state.exp = payload['exp']
+  state.token = payload['token']
   localStorage.setItem('token', JSON.stringify(payload))
 }
 

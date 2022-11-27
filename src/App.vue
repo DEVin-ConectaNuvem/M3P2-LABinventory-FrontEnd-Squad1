@@ -25,30 +25,22 @@ import HeaderMain from './components/shared/HeaderMain.vue'
 import { useStore } from 'vuex'
 import { computed } from 'vue'
 
-const token = localStorage.getItem('token')
+const storedToken = localStorage.getItem('token')
+const store = useStore()
 
-function checkIsParsed(json) {
-  try {
-    JSON.parse(json)
-    return true
-  } catch (e) {
-    return false
-  }
-}
-if (token && checkIsParsed(token)) {
-  const tokenPased = JSON.parse(token)
-  const exp = tokenPased.exp
+if (storedToken) {
+  let token = JSON.parse(storedToken)
+  const exp = token['exp']
   const now = new Date().getTime() / 1000
   if (exp > now) {
-    const store = useStore()
-    store.dispatch('authModule/logIn', tokenPased)
+    store.dispatch('authModule/logIn', token)
   } else {
-    localStorage.removeItem('token')
+    store.dispatch('authModule/logOut')
   }
 } else {
-  localStorage.removeItem('token')
+  store.dispatch('authModule/logOut')
 }
-const store = useStore()
+
 const isVisible = computed(() => {
   return store.state.configModule.configs.sidebarVisible
 })

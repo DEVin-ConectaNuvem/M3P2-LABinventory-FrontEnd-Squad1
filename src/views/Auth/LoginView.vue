@@ -118,11 +118,6 @@ const register = ref({
   createAccount: 'Cadastre-se',
 });
 
-function decodeJwt(jwt) {
-  const decodedJwt = jwt_decode(jwt)
-  return decodedJwt
-}
-
 function validateConfirmPassword(value) {
   if (!value) {
     return 'A confirmação da senha é obrigatória';
@@ -187,9 +182,12 @@ async function loginUser(actions) {
     }
     const res = await axios.post('/users/login', payload);
     if (res.status === 200) {
-      const decodedJwt = decodeJwt(res.data.token);
+      const tokenParsed = jwt_decode(res.data.token);
+      const payloadToken = {
+        token: res.data.token, ...tokenParsed
+      }
       toast.success('Login realizado com sucesso!', { timeout: 1500 });
-      store.dispatch('authModule/logIn', decodedJwt);
+      store.dispatch('authModule/logIn', payloadToken);
       router.push('/dashboard');
     }
   } catch (error) {
