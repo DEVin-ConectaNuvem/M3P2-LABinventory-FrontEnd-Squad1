@@ -1,13 +1,7 @@
 export function useAuth() {
-  const storedToken = localStorage.getItem('token')
-  let token = ''
-  if (storedToken) {
-    token = JSON.parse(storedToken ? storedToken : '')
-  }
+  let storedToken = localStorage.getItem('token')
 
-  if (token && token.token) {
-    return 'Bearer ' + token.token
-  } else {
-    return false
-  }
+  storedToken = JSON.parse(storedToken) || null
+
+  return 'Bearer ' + storedToken?.token
 }

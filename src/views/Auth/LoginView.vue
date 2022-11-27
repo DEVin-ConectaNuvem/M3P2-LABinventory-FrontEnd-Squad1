@@ -51,7 +51,7 @@
                         <button :class="register.register ? 'btn btn-success me-3' : 'btn btn-info text-white me-3 btnLogin'"
                           type="submit" v-text="register.button">
                         </button>
-                        <button data-testid="login-google-button" class="btn btn-light" type="button" @click="alertUser"><i
+                        <button data-testid="login-google-button" class="btn btn-light" type="button" @click="loginGoogle"><i
                             class="fa-brands fa-google"></i></button>
                         <hr>
                         <a class="ms-2 text-white" v-show="!register.register" @click="alertUser">Esqueceu a senha?</a>
@@ -95,7 +95,7 @@ import { useToast } from "vue-toastification";
 import { useStore } from 'vuex';
 import { validateEmail, validatePassword } from '../../validators/validators.js';
 import { useAxios, useGeneralLoading } from "../../hooks";
-import jwt_decode from "jwt-decode";
+import jwt_decode from "jwt-decode"
 
 const { toggleLoading } = useGeneralLoading()
 const { axios } = useAxios();
@@ -206,6 +206,11 @@ function onInvalidSubmit({ errors }) {
 
 function alertUser() {
   toast.warning('Função em desenvolvimento!', { timeout: 1500 });
+}
+
+async function loginGoogle() {
+  const { data: { url } } = await axios.post('/users/auth/google')
+  window.location = url
 }
 </script>
 
