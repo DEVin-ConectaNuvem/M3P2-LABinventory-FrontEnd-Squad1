@@ -3,12 +3,16 @@
 </h1>
 
 <p align="center">
- <img alt="Licença" src="https://img.shields.io/badge/license-MIT-brightgreen">
-</p>
+  <a href="https://labinventary-369921.web.app/#/login">
+    <img src="https://img.shields.io/badge/site-online-brightgreen">
+  </a>
+</p>       
 
 # 💻 Sobre o projeto
 
 <p align="left">Este projeto foi criado para avaliação final do curso DEVInHouse em parceria com ACATE e ConectaNuvem. Foram utilizados vários dos conhecimentos adquiridos ao longo do curso.
+
+O site online está hospedado no link: https://labinventary-369921.web.app/#/login
 
 A ideia do projeto consiste na construção de uma aplicação com o framework Vue JS no Front-end e Python + Flask no BackEnd para uma **Single Page Application** de Inventário com a finalidade de controlar o empréstimo de itens aos colaboradores. Para alcançar o resultado almejado, os seguintes aprendizados foram aplicados na confecção do projeto:
 
