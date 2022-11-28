@@ -139,13 +139,12 @@ import { ref, computed, watch, reactive } from 'vue'
 import { useStore } from 'vuex'
 import Paginate from 'vuejs-paginate-next'
 import { RouterLink, useRouter } from 'vue-router'
-import { useAxios } from '../../hooks'
-import { useLoading } from 'vue-loading-overlay'
+import { useAxios, useGeneralLoading } from '../../hooks'
 import { useToast } from 'vue-toastification'
 import { formatDate } from '../../utils'
 
+const { toggleLoading } = useGeneralLoading()
 const $toast = useToast()
-const $loading = useLoading()
 const { axios } = useAxios()
 const allCollabs = ref([])
 const allCollabsCount = ref(0)
@@ -172,7 +171,7 @@ const totalPages = computed(() => {
 })
 
 async function loadDataPagination() {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const url = `/employees/?limit=${perPage.value}&page=${page.value}`
     let payload = {}
@@ -197,7 +196,7 @@ async function loadDataPagination() {
     $toast.error(error.message)
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }

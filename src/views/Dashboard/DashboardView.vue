@@ -37,7 +37,7 @@
             {{ item.codPatrimonio + ' - ' + item.title }}
           </p>
         </template>
-        <template v-slot:img><img :src="item.url" class="imageBg" /></template>
+        <template v-slot:img><img :src="item.url || item.imageItem" class="imageBg" /></template>
         <template v-slot:collab>
           <p
             :data-testid="`item-${item.id}-status`"
@@ -104,13 +104,14 @@ import { ref, computed, watch, onMounted, nextTick, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { RouterLink, useRouter } from 'vue-router'
 import { createMessageBox } from 'vue-m-dialog'
-import { useAxios } from '../../hooks'
-import { useLoading } from 'vue-loading-overlay'
+import { useAxios, useGeneralLoading } from '../../hooks'
 import { useToast } from 'vue-toastification'
 import { formatValueMoney } from '../../utils'
 
+
 const toast = useToast()
-const $loading = useLoading()
+const { toggleLoading } = useGeneralLoading()
+
 const { axios } = useAxios()
 const router = useRouter()
 const store = useStore()
@@ -212,7 +213,7 @@ async function loadDataDashboard() {
 }
 
 async function loadDataPagination() {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const url = `/inventory/?limit=${perPage.value}&page=${page.value}`
     let payload = {}
@@ -242,7 +243,7 @@ async function loadDataPagination() {
     toast.error(error.message)
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }

@@ -19,10 +19,11 @@
             v-model="form.imageUser"
             v-slot="{ field, errors, meta }"
           >
-            <avatar-user
+            <upload-image
               v-bind="field"
+              type="Avatar"
               @uploadSuccess="saveImageUser"
-            ></avatar-user>
+            ></upload-image>
             <div class="invalid-feedback animate__animated animate__shakeX">
               {{ meta.dirty && meta.touched ? errors.imageUser : '' }}
             </div>
@@ -357,9 +358,8 @@ import { ref, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
 import { useToast } from 'vue-toastification'
 import ToastNotification from '../../components/shared/ToastNotification.vue'
-import AvatarUser from '../../components/shared/AvatarUser.vue'
+import UploadImage from '../../components/shared/UploadImage.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useLoading } from 'vue-loading-overlay'
 import { Form as VeeForm, Field as Veefield } from 'vee-validate'
 import {
   validateEmail,
@@ -370,10 +370,10 @@ import {
   validateNumber,
   validateCEP
 } from '../../validators/validators'
-import { useAxios } from '../../hooks'
+import { useAxios, useGeneralLoading } from '../../hooks'
 
+const { toggleLoading } = useGeneralLoading();
 const { axios } = useAxios()
-const $loading = useLoading()
 const toast = useToast()
 const store = useStore()
 const route = useRoute()
@@ -447,7 +447,7 @@ onMounted(async () => {
 })
 
 async function getCollaboratorById(id) {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const res = await axios.get(`/employees/${id}`)
     return res.data
@@ -455,7 +455,7 @@ async function getCollaboratorById(id) {
     toast.error('Erro ao buscar colaborador')
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }
@@ -482,7 +482,7 @@ function onInvalidSubmit({ errors }) {
 }
 
 async function newCollaborator() {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const data = formatDataToBack(newForm.value)
     const res = await axios.post('/employees/create', data)
@@ -497,7 +497,7 @@ async function newCollaborator() {
     throw new Error(errMsg)
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }
@@ -514,7 +514,7 @@ function formatDataToBack(data) {
 }
 
 async function editCollaborator() {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const data = formatDataToBack(newForm.value)
     const payload = {
@@ -534,7 +534,7 @@ async function editCollaborator() {
     throw new Error(errMsg)
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }
@@ -549,7 +549,7 @@ function searchZipCode() {
   if (!form.value.zipcode || form.value.zipcode.length <= 8) {
     return
   }
-  const loader = $loading.show()
+  toggleLoading(true)
   axios
     .get(`https://viacep.com.br/ws/${form.value.zipcode}/json/`)
     .then(response => {
@@ -558,18 +558,18 @@ function searchZipCode() {
         form.value.state = ''
         form.value.neighborhood = ''
         form.value.street = ''
-        loader.hide()
+        toggleLoading(false)
         toast.error('CEP não encontrado', { timeout: 1500 })
         return
       }
-      loader.hide()
+      toggleLoading(false)
       form.value.city = response.data.localidade
       form.value.state = response.data.uf
       form.value.neighborhood = response.data.bairro
       form.value.street = response.data.logradouro
     })
     .catch(error => {
-      loader.hide()
+      toggleLoading(false)
       toast.error(error, { timeout: 1500 })
     })
 }

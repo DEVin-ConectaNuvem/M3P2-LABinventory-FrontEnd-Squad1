@@ -51,7 +51,7 @@
                         <button :class="register.register ? 'btn btn-success me-3' : 'btn btn-info text-white me-3 btnLogin'"
                           type="submit" v-text="register.button">
                         </button>
-                        <button data-testid="login-google-button" class="btn btn-light" type="button" @click="alertUser"><i
+                        <button data-testid="login-google-button" class="btn btn-light" type="button" @click="loginGoogle"><i
                             class="fa-brands fa-google"></i></button>
                         <hr>
                         <a class="ms-2 text-white" v-show="!register.register" @click="alertUser">Esqueceu a senha?</a>
@@ -90,17 +90,15 @@
 <script setup>
 import { Field as Veefield, Form as VeeForm } from 'vee-validate';
 import { ref } from 'vue';
-import { useLoading } from 'vue-loading-overlay';
 import { useRouter } from 'vue-router';
 import { useToast } from "vue-toastification";
 import { useStore } from 'vuex';
 import { validateEmail, validatePassword } from '../../validators/validators.js';
-import { useAxios } from "../../hooks";
-import jwt_decode from "jwt-decode";
+import { useAxios, useGeneralLoading } from "../../hooks";
+import jwt_decode from "jwt-decode"
 
+const { toggleLoading } = useGeneralLoading()
 const { axios } = useAxios();
-
-const $loading = useLoading()
 const toast = useToast();
 const store = useStore();
 const router = useRouter();
@@ -119,11 +117,6 @@ const register = ref({
   haveAccount: 'Não possui conta?',
   createAccount: 'Cadastre-se',
 });
-
-function decodeJwt(jwt) {
-  const decodedJwt = jwt_decode(jwt)
-  return decodedJwt
-}
 
 function validateConfirmPassword(value) {
   if (!value) {
@@ -153,7 +146,7 @@ function onValidSubmit(values, actions) {
 
 
 async function registerUser(actions) {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const payload = {
       email: form.value.email.toLowerCase(),
@@ -175,13 +168,13 @@ async function registerUser(actions) {
       toast.error('Erro ao cadastrar usuário!', { timeout: 1500 });
     }
   } finally {
-    loader.hide()
+    toggleLoading(false)
   }
 }
 
 
 async function loginUser(actions) {
-  const loader = $loading.show();
+  toggleLoading(true)
   try {
     const payload = {
       email: form.value.email.toLowerCase(),
@@ -189,16 +182,19 @@ async function loginUser(actions) {
     }
     const res = await axios.post('/users/login', payload);
     if (res.status === 200) {
-      const decodedJwt = decodeJwt(res.data.token);
+      const tokenParsed = jwt_decode(res.data.token);
+      const payloadToken = {
+        token: res.data.token, ...tokenParsed
+      }
       toast.success('Login realizado com sucesso!', { timeout: 1500 });
-      store.dispatch('authModule/logIn', decodedJwt);
+      store.dispatch('authModule/logIn', payloadToken);
       router.push('/dashboard');
     }
   } catch (error) {
     toast.error('Usuário ou senha inválidos!', { timeout: 1500 });
     actions.setFieldError('password', 'Usuário ou senha incorretos!')
   } finally {
-    loader.hide()
+    toggleLoading(false)
   }
 }
 
@@ -210,6 +206,11 @@ function onInvalidSubmit({ errors }) {
 
 function alertUser() {
   toast.warning('Função em desenvolvimento!', { timeout: 1500 });
+}
+
+async function loginGoogle() {
+  const { data: { url } } = await axios.post('/users/auth/google')
+  window.location = url
 }
 </script>
 

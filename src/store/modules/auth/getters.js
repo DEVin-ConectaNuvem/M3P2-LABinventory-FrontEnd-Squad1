@@ -6,4 +6,8 @@ const expToken = state => {
   return state.authModule.token.exp
 }
 
-export { checkEmailRegistered, expToken }
+const token = state => {
+  return state.authModule.token
+}
+
+export { checkEmailRegistered, expToken, token }

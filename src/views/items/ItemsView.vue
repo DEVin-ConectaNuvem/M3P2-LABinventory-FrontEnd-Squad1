@@ -11,65 +11,100 @@
       <div class="row mb-1">
         <h3>Dados do item</h3>
         <hr />
-        <div class="col-sm-12 col-md-6 col-lg-3">
-          <label class="form-label">Cód. de Patrimônio <span>*</span></label>
+        <div class="col-lg-2">
           <Veefield
-            type="text"
-            name="codPatrimonio"
-            class="form-control"
-            :class="{ 'is-invalid': errors.title }"
-            :rules="required"
-            placeholder="Cód. de patrimônio"
-            v-model="form.codPatrimonio"
-            data-testid="itemView-input-codPatrimonio"
-          />
-          <div class="invalid-feedback animate__animated animate__shakeX">
-            {{ errors.codPatrimonio }}
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Título do item <span>*</span></label>
-          <Veefield
-            data-testid="itemView-input-title"
-            type="text"
-            name="title"
-            class="form-control"
-            placeholder="Titulo do item"
-            v-model.trim="form.title"
-            required
-            v-focus
-            :class="{ 'is-invalid': errors.title }"
-            :rules="required"
-            maxlength="30"
-          />
-          <div class="invalid-feedback animate__animated animate__shakeX">
-            {{ errors.title }}
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-4">
-          <label class="form-label">Categoria <span>*</span></label>
-          <Veefield
-            data-testid="itemView-input-category"
-            as="select"
-            name="category"
-            class="form-select"
-            v-model="form.category"
-            required
-            :class="{ 'is-invalid': errors.category }"
-            :rules="required"
+            name="imageItem"
+            v-model="form.imageItem"
+            v-slot="{ field, errors, meta }"
           >
-            <option value="" disabled>Escolha a categoria</option>
-            <option value="Computador">Computador</option>
-            <option value="Periférico">Periférico</option>
-            <option value="Monitor">Cadeira</option>
-            <option value="Monitor">Outros</option>
+            <upload-image
+              v-bind="field"
+              @uploadSuccess="saveImageItem"
+            ></upload-image>
+            <div class="invalid-feedback animate__animated animate__shakeX">
+              {{ meta.dirty && meta.touched ? errors.imageItem : '' }}
+            </div>
           </Veefield>
-          <div class="invalid-feedback animate__animated animate__shakeX">
-            {{ errors.category }}
+        </div>
+        <div class="col-lg-10">
+          <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+              <label class="form-label"
+                >Cód. de Patrimônio <span>*</span></label
+              >
+              <Veefield
+                type="text"
+                name="codPatrimonio"
+                class="form-control"
+                :class="{ 'is-invalid': errors.title }"
+                :rules="required"
+                placeholder="Cód. de patrimônio"
+                v-model="form.codPatrimonio"
+                data-testid="itemView-input-codPatrimonio"
+              />
+              <div class="invalid-feedback animate__animated animate__shakeX">
+                {{ errors.codPatrimonio }}
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+              <label class="form-label">Título do item <span>*</span></label>
+              <Veefield
+                data-testid="itemView-input-title"
+                type="text"
+                name="title"
+                class="form-control"
+                placeholder="Titulo do item"
+                v-model.trim="form.title"
+                required
+                v-focus
+                :class="{ 'is-invalid': errors.title }"
+                :rules="required"
+                maxlength="30"
+              />
+              <div class="invalid-feedback animate__animated animate__shakeX">
+                {{ errors.title }}
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6">
+              <label class="form-label">Categoria <span>*</span></label>
+              <Veefield
+                data-testid="itemView-input-category"
+                as="select"
+                name="category"
+                class="form-select"
+                v-model="form.category"
+                required
+                :class="{ 'is-invalid': errors.category }"
+                :rules="required"
+              >
+                <option value="" disabled>Escolha a categoria</option>
+                <option value="Computador">Computador</option>
+                <option value="Periférico">Periférico</option>
+                <option value="Monitor">Cadeira</option>
+                <option value="Monitor">Outros</option>
+              </Veefield>
+              <div class="invalid-feedback animate__animated animate__shakeX">
+                {{ errors.category }}
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-6">
+              <label class="form-label">Arquivo do item</label>
+              <Veefield
+                type="file"
+                name="fileItem"
+                class="form-control"
+                :class="{ 'is-invalid': errors.fileItem }"
+                placeholder="Insira um arquivo"
+                v-model="form.fileItem"
+                data-testid="itemView-input-fileItem"
+              />
+              <div class="invalid-feedback animate__animated animate__shakeX">
+                {{ errors.fileItem }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
       <h4 class="mt-3">Dados Complementares</h4>
       <hr />
       <div class="row mb-1">
@@ -131,14 +166,6 @@
 
       <div class="row mt-3">
         <div class="col-sm-12 col-md-6">
-          <label class="form-label">Selecione uma imagem <span>*</span></label>
-          <upload-box
-            fileProps="image"
-            @file-ready="teste"
-            data-testid="item-upload"
-          ></upload-box>
-        </div>
-        <div class="col-sm-12 col-md-6">
           <label class="form-label">Descrição do item<span>*</span></label>
           <Veefield
             name="description"
@@ -183,18 +210,17 @@
 <script setup>
 import { ref, onMounted, reactive } from 'vue'
 import { useStore } from 'vuex'
-import { useAxios } from '../../hooks'
+import { useAxios, useGeneralLoading } from '../../hooks'
 import { useToast } from 'vue-toastification'
 import ToastNotification from '../../components/shared/ToastNotification.vue'
-import UploadBox from '../../components/shared/UploadBox.vue'
+import UploadImage from '../../components/shared/UploadImage.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useLoading } from 'vue-loading-overlay'
 import { Form as VeeForm, Field as Veefield } from 'vee-validate'
 import { required, validateNumber } from '../../validators/validators'
 
+const { toggleLoading } = useGeneralLoading()
 const store = useStore()
 const route = useRoute()
-const $loading = useLoading()
 const toast = useToast()
 const router = useRouter()
 const { axios } = useAxios()
@@ -230,7 +256,9 @@ const form = ref({
   collaborator: null,
   createdAt: null,
   updatedAt: null,
-  loanAt: null
+  loanAt: null,
+  imageItem: null,
+  fileItem: null
 })
 const newForm = ref({})
 const url = ref(null)
@@ -246,7 +274,7 @@ onMounted(async () => {
 })
 
 async function getInfoItemById(id) {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const res = await axios.get(`/inventory/${id}`)
     return res.data
@@ -254,21 +282,24 @@ async function getInfoItemById(id) {
     toast.error('Erro ao buscar item', content)
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }
 
 async function onValidSubmit(values, actions) {
-  newForm.value = { ...values }
-  newForm.value['value'] = parseFloat(newForm.value['value'])
-  if (id) {
-    await editItem(actions)
-  } else {
-    await newItem(actions)
-    toast.success('Cadastro realizado com sucesso!', { timeout: 1500 })
+  try {
+    newForm.value = { ...values }
+    newForm.value['value'] = parseFloat(newForm.value['value'])
+    if (id) {
+      await editItem(actions)
+    } else {
+      await newItem(actions)
+    }
+    actions.resetForm()
+  } catch (error) {
+    toast.error(error.message)
   }
-  actions.resetForm()
 }
 
 function onInvalidSubmit({ errors }) {
@@ -278,7 +309,7 @@ function onInvalidSubmit({ errors }) {
 }
 
 async function newItem() {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const res = await axios.post('/inventory/create', newForm.value)
     if (res.status === 201) {
@@ -297,16 +328,16 @@ async function newItem() {
     }
     clearForm()
   } catch (error) {
-    toast.error(error.message, { timeout: 1500 })
+    throw new Error(error.response.data.error || 'Erro ao cadastrar item')
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }
 
 async function editItem() {
-  const loader = $loading.show()
+  toggleLoading(true)
   try {
     const payload = {
       id: id,
@@ -320,10 +351,10 @@ async function editItem() {
       ? router.push({ name: 'listItems' })
       : router.push({ name: 'dashboard' })
   } catch (error) {
-    toast.error(error.message, { timeout: 1500 })
+    throw new Error(error.response.data.error || 'Erro ao editar item')
   } finally {
     setTimeout(() => {
-      loader.hide()
+      toggleLoading(false)
     }, 500)
   }
 }
@@ -341,8 +372,10 @@ function cancelEdit() {
     : router.push({ name: 'dashboard' })
 }
 
-function teste(objeto) {
-  console.log(objeto)
+function saveImageItem(imgBase64) {
+  if (imgBase64) {
+    form.value.imageItem = imgBase64
+  }
 }
 </script>
 
