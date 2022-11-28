@@ -18,18 +18,24 @@
 </template>
 
 <script setup>
-import GeneralLoading from './components/shared/GeneralLoading.vue'
-import { RouterView } from 'vue-router'
-import SidebarMain from './components/shared/SidebarMain.vue'
-import HeaderMain from './components/shared/HeaderMain.vue'
-import { useStore } from 'vuex'
 import { computed } from 'vue'
+import { RouterView } from 'vue-router'
+import { useStore } from 'vuex'
+import GeneralLoading from './components/shared/GeneralLoading.vue'
+import HeaderMain from './components/shared/HeaderMain.vue'
+import SidebarMain from './components/shared/SidebarMain.vue'
 
 const storedToken = localStorage.getItem('token')
 const store = useStore()
 
-if (storedToken) {
-  let token = JSON.parse(storedToken)
+const params = (new URL(window.location)).searchParams
+const jwtGoogle = params.get('jwt')
+
+
+if (jwtGoogle) {
+  store.dispatch('authModule/getCurrentUser', jwtGoogle);
+} else if (storedToken) {
+  const token = JSON.parse(storedToken)
   const exp = token['exp']
   const now = new Date().getTime() / 1000
   if (exp > now) {
