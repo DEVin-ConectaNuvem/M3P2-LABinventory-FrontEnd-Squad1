@@ -23,17 +23,19 @@ import { RouterView } from 'vue-router'
 import { useStore } from 'vuex'
 import GeneralLoading from './components/shared/GeneralLoading.vue'
 import HeaderMain from './components/shared/HeaderMain.vue'
+import jwt_decode from "jwt-decode"
 import SidebarMain from './components/shared/SidebarMain.vue'
 
 const storedToken = localStorage.getItem('token')
+
 const store = useStore()
 
 const params = (new URL(window.location)).searchParams
 const jwtGoogle = params.get('jwt')
 
-
 if (jwtGoogle) {
-  store.dispatch('authModule/getCurrentUser', jwtGoogle);
+  const tokenParsed = jwt_decode(jwtGoogle);
+  store.dispatch('authModule/logIn', tokenParsed);
 } else if (storedToken) {
   const token = JSON.parse(storedToken)
   const exp = token['exp']
