@@ -34,8 +34,8 @@ const params = (new URL(window.location)).searchParams
 const jwtGoogle = params.get('jwt')
 
 if (jwtGoogle) {
-  const tokenParsed = jwt_decode(jwtGoogle);
-  store.dispatch('authModule/logIn', tokenParsed);
+  const { email, exp } = jwt_decode(jwtGoogle);
+  store.dispatch('authModule/logIn', { email, exp, token: jwtGoogle });
 } else if (storedToken) {
   const token = JSON.parse(storedToken)
   const exp = token['exp']
