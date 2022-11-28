@@ -16,7 +16,7 @@ export function useAxios() {
 
   return {
     axios: axios.create({
-      baseURL: 'http://localhost:5000',
+      baseURL: 'https://labinventary-ow6376zhsq-uc.a.run.app',
       timeout: 8000,
       headers: {
         'Content-Type': 'application/json'
